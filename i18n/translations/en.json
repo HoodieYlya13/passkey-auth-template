@@ -1,0 +1,77 @@
+{
+  "COMMON": {
+    "LOADING": "Loading...",
+    "HELLO": "Hello, {value}!"
+  },
+  "HOME_PAGE": {
+    "META": {
+      "TITLE": "Library shop - {name}",
+      "DESCRIPTION": "Welcome to {name}'s library shop! Explore all our books."
+    }
+  },
+  "ERRORS": {
+    "GENERIC": "An unexpected error occurred.",
+    "AUTH_001": "Authentication failed",
+    "AUTH_002": "Unauthorized",
+    "AUTH_003": "Invalid session",
+    "AUTH_004": "Session expired",
+    "SYST_001": "Validation failed for at least one field",
+    "SYST_002": "System error",
+    "TOO_MANY_REQUESTS": "Too many requests. Please try again later.",
+    "PASSWORD_INCORRECT": "Incorrect password. Please try again.",
+    "PASSKEY_ERROR": "Login with Passkey took too long or was cancelled. Please try again.",
+    "PASSKEY_FAILED": "Passkey authentication failed.",
+    "PASSKEY_ALREADY_EXISTS": "Passkey already exists for this device",
+    "MAGIC_LINK_FAILED": "Failed to send Magic Link.",
+    "EMAIL_NOT_FOUND": "Could not retrieve user email. Please log in again.",
+    "CORRECT_FIELDS_BEFORE_SUBMIT": "Please correct the fields before submitting.",
+    "TOO_SHORT": "Password is too short.",
+    "TOO_LONG": "Password is too long.",
+    "PASSWORD_STARTS_OR_ENDS_WITH_WHITESPACE": "Password cannot start or end with whitespace.",
+    "USERNAME_UPDATE_FAILED": "Failed to update username.",
+    "USERNAME_HAS_WHITESPACE": "Username cannot have whitespace.",
+    "USERNAME_TOO_LONG": "Username is too long.",
+    "USERNAME_SAME": "New username cannot be the same as the current one."
+  },
+  "AUTH": {
+    "LOGIN": "Sign in",
+    "LOGIN_TITLE": "Sign in to your account",
+    "SIGN_IN_PASSKEY": "Sign in with Passkey",
+    "OR": "Or continue with email",
+    "EMAIL_LABEL": "Email address",
+    "SEND_MAGIC_LINK": "Send Magic Link",
+    "MAGIC_LINK_SENT": "Magic Link sent! Check your email.",
+    "CHECK_YOUR_EMAIL": "Check your email at ",
+    "PASSWORD": "Password",
+    "ACCESS_GRANTED": "Access granted!"
+  },
+  "PROFILE": {
+    "TITLE": "Profile",
+    "SECURITY": "Security",
+    "CHANGE_USER_NAME": "Change user name",
+    "PASSKEY": {
+      "TITLE": "Passkey",
+      "DESCRIPTION": "Register a passkey to log in without a password or email link.",
+      "BUTTON": "Register New Passkey",
+      "NAME_LABEL": "Passkey Name",
+      "PASSKEY_REGISTER_SUCCESS": "Passkey registered successfully."
+    },
+    "USERNAME": {
+      "TITLE": "Username",
+      "DESCRIPTION": "Register a username to log in without a password or email link.",
+      "BUTTON": "Register New Username",
+      "NAME_LABEL": "Username",
+      "UPDATE": "Update",
+      "USERNAME_UPDATED": "Username updated successfully."
+    }
+  },
+  "MAGIC_LINK": {
+    "VERIFYING": "Verifying your magic link..."
+  },
+  "LOCALE_MISMATCH": {
+    "TITLE": "Switch Language?",
+    "DESCRIPTION": "We detected that your preferred language is <important>{preferredLocale}</important>, but you are viewing the site in <important>{currentLocale}</important>.",
+    "KEEP": "Keep {locale}",
+    "SWITCH": "Switch to {locale}"
+  }
+}

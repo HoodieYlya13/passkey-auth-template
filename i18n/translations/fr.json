@@ -1,0 +1,77 @@
+{
+  "COMMON": {
+    "LOADING": "Chargement...",
+    "HELLO": "Bonjour, {value}!"
+  },
+  "HOME_PAGE": {
+    "META": {
+      "TITLE": "Librairie en ligne - {name}",
+      "DESCRIPTION": "Bienvenue dans la librairie en ligne de {name} ! Découvrez nos livres."
+    }
+  },
+  "ERRORS": {
+    "GENERIC": "Une erreur inattendue est survenue.",
+    "AUTH_001": "Échec de l'authentification",
+    "AUTH_002": "Non autorisé",
+    "AUTH_003": "Session invalide",
+    "AUTH_004": "Session expirée",
+    "SYST_001": "Validation échouée pour au moins un champ",
+    "SYST_002": "Erreur système",
+    "TOO_MANY_REQUESTS": "Trop de requêtes. Veuillez réessayer plus tard.",
+    "PASSWORD_INCORRECT": "Mot de passe incorrect. Veuillez réessayer.",
+    "PASSKEY_ERROR": "La connexion avec Passkey a pris trop de temps ou a été annulée. Veuillez réessayer.",
+    "PASSKEY_FAILED": "Échec de l'authentification Passkey.",
+    "PASSKEY_ALREADY_EXISTS": "Passkey déjà existante pour cet appareil",
+    "MAGIC_LINK_FAILED": "Échec de l'envoi du lien magique.",
+    "EMAIL_NOT_FOUND": "Impossible de récupérer l'email de l'utilisateur. Veuillez vous reconnecter.",
+    "CORRECT_FIELDS_BEFORE_SUBMIT": "Veuillez corriger les champs avant de soumettre.",
+    "TOO_SHORT": "Le mot de passe est trop court.",
+    "TOO_LONG": "Le mot de passe est trop long.",
+    "PASSWORD_STARTS_OR_ENDS_WITH_WHITESPACE": "Le mot de passe ne peut pas commencer ou se terminer par un espace.",
+    "USERNAME_UPDATE_FAILED": "Échec de la mise à jour du nom d'utilisateur.",
+    "USERNAME_HAS_WHITESPACE": "Le nom d'utilisateur ne peut pas contenir d'espace.",
+    "USERNAME_TOO_LONG": "Le nom d'utilisateur est trop long.",
+    "USERNAME_SAME": "Le nouveau nom d'utilisateur ne peut pas être identique à l'actuel."
+  },
+  "AUTH": {
+    "LOGIN": "Se connecter",
+    "LOGIN_TITLE": "Connectez-vous à votre compte",
+    "SIGN_IN_PASSKEY": "Se connecter avec une Passkey",
+    "OR": "Ou continuer avec l'email",
+    "EMAIL_LABEL": "Adresse email",
+    "SEND_MAGIC_LINK": "Envoyer un lien magique",
+    "MAGIC_LINK_SENT": "Lien magique envoyé ! Vérifiez votre email.",
+    "CHECK_YOUR_EMAIL": "Vérifiez votre email à ",
+    "PASSWORD": "Mot de passe",
+    "ACCESS_GRANTED": "Accès accordé!"
+  },
+  "PROFILE": {
+    "TITLE": "Profil",
+    "SECURITY": "Sécurité",
+    "CHANGE_USER_NAME": "Changer nom d'utilisateur",
+    "PASSKEY": {
+      "TITLE": "Passkey",
+      "DESCRIPTION": "Enregistrez une Passkey pour vous connecter sans mot de passe ni lien email.",
+      "BUTTON": "Enregistrer une nouvelle Passkey",
+      "NAME_LABEL": "Nom de la Passkey",
+      "PASSKEY_REGISTER_SUCCESS": "Passkey enregistrée avec succès."
+    },
+    "USERNAME": {
+      "TITLE": "Nom d'utilisateur",
+      "DESCRIPTION": "Enregistrez un nom d'utilisateur pour vous connecter sans mot de passe ni lien email.",
+      "BUTTON": "Enregistrer un nouveau nom d'utilisateur",
+      "NAME_LABEL": "Nom d'utilisateur",
+      "UPDATE": "Mettre à jour",
+      "USERNAME_UPDATED": "Nom d'utilisateur mis à jour avec succès."
+    }
+  },
+  "MAGIC_LINK": {
+    "VERIFYING": "Vérification de votre lien magique..."
+  },
+  "LOCALE_MISMATCH": {
+    "TITLE": "Changer de langue ?",
+    "DESCRIPTION": "Nous avons détecté que votre langue préférée est <important>{preferredLocale}</important>, mais vous consultez le site en <important>{currentLocale}</important>.",
+    "KEEP": "Garder en {locale}",
+    "SWITCH": "Passer en {locale}"
+  }
+}
