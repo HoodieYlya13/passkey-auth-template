@@ -172,7 +172,7 @@ export default function Auth() {
               focusOnMount
               error={
                 form.formState.errors.email?.message &&
-                t(form.formState.errors.email?.message)
+                errorT.getError(form.formState.errors.email?.message)
               }
             />
 

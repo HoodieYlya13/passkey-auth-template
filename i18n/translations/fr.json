@@ -10,13 +10,14 @@
     }
   },
   "ERRORS": {
-    "GENERIC": "Une erreur inattendue est survenue.",
+    "SYST_001": "Une erreur inattendue est survenue.",
+    "SYST_002": "Validation échouée pour au moins un champ.",
+    "JWT_001": "Clé privée invalide.",
+    "JWT_002": "Clé publique invalide.",
     "AUTH_001": "Échec de l'authentification",
     "AUTH_002": "Non autorisé",
     "AUTH_003": "Session invalide",
     "AUTH_004": "Session expirée",
-    "SYST_001": "Validation échouée pour au moins un champ",
-    "SYST_002": "Erreur système",
     "TOO_MANY_REQUESTS": "Trop de requêtes. Veuillez réessayer plus tard.",
     "PASSWORD_INCORRECT": "Mot de passe incorrect. Veuillez réessayer.",
     "PASSKEY_ERROR": "La connexion avec Passkey a pris trop de temps ou a été annulée. Veuillez réessayer.",

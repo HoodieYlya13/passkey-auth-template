@@ -11,7 +11,7 @@ export function getErrorMessage(
       else if (overrides[error.message]) message = overrides[error.message];
     }
 
-    if (message === (fallback ?? "")) {
+    if (message === (fallback ?? "")) { // FIXME: remove this
       switch (true) {
         case error.message.startsWith("AUTH_00"):
         case error.message.startsWith("SYST_00"):

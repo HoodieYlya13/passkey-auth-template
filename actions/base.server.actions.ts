@@ -1,6 +1,6 @@
 "use server";
 
-import { getErrorMessage } from "@/api/api.errors";
+import { getErrorMessage } from "@/utils/errors";
 import { checkRateLimit } from "@/utils/rateLimit";
 
 export async function baseServerAction<T>(

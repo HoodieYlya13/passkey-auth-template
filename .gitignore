@@ -56,3 +56,4 @@ next-env.d.ts
 
 # Editor-based HTTP Client requests
 /httpRequests/
+/app/generated/prisma

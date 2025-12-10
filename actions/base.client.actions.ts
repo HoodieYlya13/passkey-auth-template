@@ -1,4 +1,4 @@
-import { getErrorMessage } from "@/api/api.errors";
+import { getErrorMessage } from "@/utils/errors";
 
 export async function baseClientAction<T>(
   actionName: string,

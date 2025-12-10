@@ -1,0 +1,42 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // 1. The main url uses the POOLED connection (Vercel's default for fast apps)
+  url       = env("POSTGRES_PRISMA_URL")
+  // 2. The directUrl uses the DIRECT connection (Required for migrations to work)
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+// A simple User model to get you started with Auth
+model User {
+  id                       String               @id @default(uuid())
+  username                 String?
+  email                    String               @unique
+  magicLinkToken           String?
+  magicLinkTokenExpiration DateTime?
+  currentChallenge         String?
+  credentials              WebAuthnCredential[]
+  createdAt                DateTime             @default(now())
+  updatedAt                DateTime             @updatedAt
+
+  @@map("USERS")
+}
+
+model WebAuthnCredential {
+  id           String   @id @default(uuid())
+  credentialId String
+  publicKey    String
+  signCount    Int
+  name         String?
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("WEBAUTHN_CREDENTIALS")
+}

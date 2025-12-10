@@ -1,4 +1,4 @@
-import { BACKEND_URL } from "@/utils/config";
+import { ORIGIN } from "@/utils/config";
 import { getUserAccessToken } from "@/utils/cookies/cookiesServer";
 
 type FetchOptions = RequestInit & {
@@ -52,7 +52,7 @@ export async function fetchApi<T>(
     token = await getUserAccessToken();
     if (!token) throw new Error("AUTH_004");
   }
-  const url = `${BACKEND_URL}${
+  const url = `${ORIGIN}${
     endpoint.startsWith("/") ? endpoint : `/${endpoint}`
   }`;
 
