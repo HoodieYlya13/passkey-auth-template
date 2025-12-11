@@ -2,7 +2,7 @@ import { LocaleLanguages } from "@/i18n/utils";
 
 export const APP_NAME = "App Name";
 export const DEFAULT_LOCALE: LocaleLanguages = "en";
-export const ORIGIN = process.env.NEXT_PUBLIC_ORIGIN;
+export const ORIGIN = process.env.ORIGIN;
 
 // Serverless
 export const SERVERLESS = !!process.env.POSTGRES_URL;

@@ -24,7 +24,7 @@ export async function loginPasskeyAction() {
       return await verifyPasskeyLoginAction(asseResp);
     },
     {
-      fallback: "PASSKEY_ERROR",
+      fallback: "PASSKEY_ERROR_LOGIN",
     }
   );
 }
@@ -46,7 +46,7 @@ export async function registerPasskeyAction(
       return await verifyPasskeyRegistrationAction(attResp, email, passkeyName);
     },
     {
-      fallback: "PASSKEY_ERROR",
+      fallback: "PASSKEY_ERROR_REGISTER",
       overrides: {
         InvalidStateError: "PASSKEY_ALREADY_EXISTS",
       },

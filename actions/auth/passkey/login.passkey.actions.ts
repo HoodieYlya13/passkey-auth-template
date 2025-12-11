@@ -135,7 +135,7 @@ export async function verifyPasskeyLoginAction(
             data: { signCount: Number(newCounter) },
           });
 
-          const issuer = process.env.NEXT_PUBLIC_ISSUER;
+          const issuer = process.env.ISSUER;
           if (!issuer) throw new Error("SYST_001");
 
           const { token, expiresIn } = await generateSessionToken({

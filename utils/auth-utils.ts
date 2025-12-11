@@ -3,7 +3,7 @@ import { SignJWT, jwtVerify, type JWTPayload } from "jose";
 import { JWT_VALIDITY } from "./config"; 
 
 const alg = "HS256";
-const issuer = process.env.NEXT_PUBLIC_ISSUER;
+const issuer = process.env.ISSUER;
 
 export async function hashToken(token: string): Promise<string> {
   return crypto.createHash("sha256").update(token).digest("hex");
