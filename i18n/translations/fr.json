@@ -1,12 +1,12 @@
 {
   "COMMON": {
     "LOADING": "Chargement...",
-    "HELLO": "Bonjour, {value}!"
+    "HELLO": "Bonjour, {value} !"
   },
   "HOME_PAGE": {
     "META": {
-      "TITLE": "Librairie en ligne - {name}",
-      "DESCRIPTION": "Bienvenue dans la librairie en ligne de {name} ! Découvrez nos livres."
+      "TITLE": "App Name - {name}",
+      "DESCRIPTION": "Bienvenue dans {name} !"
     }
   },
   "ERRORS": {

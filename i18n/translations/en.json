@@ -5,8 +5,8 @@
   },
   "HOME_PAGE": {
     "META": {
-      "TITLE": "Library shop - {name}",
-      "DESCRIPTION": "Welcome to {name}'s library shop! Explore all our books."
+      "TITLE": "App Name - {name}",
+      "DESCRIPTION": "Welcome to {name}!"
     }
   },
   "ERRORS": {
