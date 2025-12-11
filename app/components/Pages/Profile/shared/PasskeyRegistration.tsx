@@ -34,7 +34,7 @@ export default function PasskeyRegistration({
         if (error instanceof Error) {
           form.setError("root", { message: error.message });
           if (
-            error.message !== "PASSKEY_ERROR" &&
+            error.message !== "PASSKEY_ERROR_REGISTER" &&
             error.message !== "PASSKEY_ALREADY_EXISTS"
           )
             reconnect();

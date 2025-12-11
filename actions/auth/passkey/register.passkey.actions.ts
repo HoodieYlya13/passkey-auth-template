@@ -23,7 +23,7 @@ export async function getPasskeyRegistrationOptionsAction(
           include: { credentials: true },
         });
 
-        if (!user) throw new Error("USER_001");
+        if (!user || !user.username) throw new Error("USER_001");
 
         const rpID = process.env.RP_ID;
         if (!rpID) throw new Error("SYST_001");
@@ -32,7 +32,7 @@ export async function getPasskeyRegistrationOptionsAction(
           rpName: APP_NAME,
           rpID,
           userID: new TextEncoder().encode(user.id),
-          userName: user.email,
+          userName: user.username,
           excludeCredentials: user.credentials.map((cred) => ({
             id: cred.credentialId,
             transports: ["internal"],
@@ -72,10 +72,11 @@ export async function verifyPasskeyRegistrationAction(
     async () => {
       if (SERVERLESS) {
         const user = await prisma.user.findUnique({ where: { email } });
-        if (!user || !user.currentChallenge) throw new Error("AUTH_001");
+        if (!user) throw new Error("AUTH_001");
 
         const expectedRPID = process.env.RP_ID;
-        if (!expectedRPID || !ORIGIN) throw new Error("SYST_001");
+        if (!expectedRPID || !ORIGIN || !user.currentChallenge)
+          throw new Error("SYST_001");
 
         const verification = await verifyRegistrationResponse({
           response: credential,
