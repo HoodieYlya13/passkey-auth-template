@@ -4,7 +4,9 @@ import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
 import { hashToken } from "@/utils/auth-utils";
 import { ORIGIN, SERVERLESS } from "@/utils/config";
+import { getPreferredLocale } from "@/utils/cookies/cookiesServer";
 import { prisma } from "@/utils/prisma";
+import { getTranslations } from "next-intl/server";
 
 export async function loginMagicLinkAction(email: string) {
   return baseServerAction(
@@ -31,10 +33,30 @@ export async function loginMagicLinkAction(email: string) {
 
         if (!ORIGIN) throw new Error("SYST_001");
 
-        if (process.env.NODE_ENV === "development")
-          console.log(`Magic Link: ${ORIGIN}/auth/magic-link?token=${token}`);
-        else
-          console.log(`Magic Link: ${ORIGIN}/auth/magic-link?token=${token}`); // TODO: implement production magic link
+        const magicLink = `${ORIGIN}/auth/magic-link?token=${token}`;
+
+        if (process.env.NODE_ENV === "production") {
+          const { Resend } = await import("resend");
+
+          const resendKey = process.env.RESEND_API_KEY;
+          const fromEmail = process.env.EMAIL_FROM;
+
+          if (!resendKey || !fromEmail) throw new Error("SYST_001");
+
+          const locale = await getPreferredLocale();
+          const t = await getTranslations({ locale, namespace: "MAGIC_LINK" });
+
+          const resend = new Resend(resendKey);
+
+          return await resend.emails.send({
+            from: fromEmail,
+            to: email,
+            subject: t("SUBJECT"),
+            html: (t.raw("BODY") as string).replace("{link}", magicLink),
+          });
+        }
+
+        console.log(`Magic Link: ${magicLink}`);
 
         return true;
       }

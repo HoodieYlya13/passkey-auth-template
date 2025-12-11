@@ -67,7 +67,9 @@
     }
   },
   "MAGIC_LINK": {
-    "VERIFYING": "Verifying your magic link..."
+    "VERIFYING": "Verifying your magic link...",
+    "SUBJECT": "Your Magic Link",
+    "BODY": "Click <a href=\"{link}\">here</a> to log in."
   },
   "LOCALE_MISMATCH": {
     "TITLE": "Switch Language?",
