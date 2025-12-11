@@ -13,8 +13,8 @@ export async function setClientCookie(
   name: string,
   value: string,
   options: Partial<{
-    maxAge: number;
-    path: string;
+    maxAge?: number;
+    path?: string;
     httpOnly?: boolean;
     secure?: boolean;
     sameSite?: "lax" | "strict" | "none";
