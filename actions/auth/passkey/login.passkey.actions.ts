@@ -8,7 +8,7 @@ import {
 } from "@/utils/cookies/cookiesServer";
 import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
-import { ISSUER, ORIGIN, RP_ID, SERVERLESS } from "@/utils/config";
+import { ORIGIN, SERVERLESS } from "@/utils/config";
 import {
   generateAuthenticationOptions,
   verifyAuthenticationResponse,
@@ -22,8 +22,11 @@ export async function getPasskeyLoginOptionsAction() {
     "authLoginStartPasskey",
     async () => {
       if (SERVERLESS) {
+        const rpID = process.env.RP_ID;
+        if (!rpID) throw new Error("SYST_001");
+
         const options = await generateAuthenticationOptions({
-          rpID: RP_ID,
+          rpID,
           userVerification: "preferred",
         });
 
@@ -110,11 +113,14 @@ export async function verifyPasskeyLoginAction(
 
         const user = dbCred.user;
 
+        const expectedRPID = process.env.RP_ID;
+        if (!expectedRPID || !ORIGIN) throw new Error("SYST_001");
+
         const verification = await verifyAuthenticationResponse({
           response: credential,
           expectedChallenge: expectedChallenge,
           expectedOrigin: ORIGIN,
-          expectedRPID: RP_ID,
+          expectedRPID,
           credential: {
             id: dbCred.credentialId,
             publicKey: Buffer.from(dbCred.publicKey, "base64"),
@@ -129,9 +135,12 @@ export async function verifyPasskeyLoginAction(
             data: { signCount: Number(newCounter) },
           });
 
+          const issuer = process.env.NEXT_PUBLIC_ISSUER;
+          if (!issuer) throw new Error("SYST_001");
+
           const { token, expiresIn } = await generateSessionToken({
             sub: user.email,
-            issuer: ISSUER,
+            issuer,
           });
 
           await setUserSessionCookies({

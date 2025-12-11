@@ -52,6 +52,9 @@ export async function fetchApi<T>(
     token = await getUserAccessToken();
     if (!token) throw new Error("AUTH_004");
   }
+
+  if (!ORIGIN) throw new Error("SYST_001");
+
   const url = `${ORIGIN}${
     endpoint.startsWith("/") ? endpoint : `/${endpoint}`
   }`;

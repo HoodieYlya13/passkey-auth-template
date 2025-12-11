@@ -2,7 +2,7 @@
 
 import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
-import { APP_NAME, ORIGIN, RP_ID, SERVERLESS } from "@/utils/config";
+import { APP_NAME, ORIGIN, SERVERLESS } from "@/utils/config";
 import { prisma } from "@/utils/prisma";
 import {
   generateRegistrationOptions,
@@ -25,9 +25,12 @@ export async function getPasskeyRegistrationOptionsAction(
 
         if (!user) throw new Error("USER_001");
 
+        const rpID = process.env.RP_ID;
+        if (!rpID) throw new Error("SYST_001");
+
         const options = await generateRegistrationOptions({
           rpName: APP_NAME,
-          rpID: RP_ID,
+          rpID,
           userID: new TextEncoder().encode(user.id),
           userName: user.email,
           excludeCredentials: user.credentials.map((cred) => ({
@@ -71,11 +74,14 @@ export async function verifyPasskeyRegistrationAction(
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user || !user.currentChallenge) throw new Error("AUTH_001");
 
+        const expectedRPID = process.env.RP_ID;
+        if (!expectedRPID || !ORIGIN) throw new Error("SYST_001");
+
         const verification = await verifyRegistrationResponse({
           response: credential,
           expectedChallenge: user.currentChallenge,
           expectedOrigin: ORIGIN,
-          expectedRPID: RP_ID,
+          expectedRPID,
         });
 
         if (verification.verified && verification.registrationInfo) {

@@ -29,6 +29,8 @@ export async function loginMagicLinkAction(email: string) {
           },
         });
 
+        if (!ORIGIN) throw new Error("SYST_001");
+
         if (process.env.NODE_ENV === "development")
           console.log(`Magic Link: ${ORIGIN}/auth/magic-link?token=${token}`);
         else

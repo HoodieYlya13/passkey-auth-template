@@ -3,7 +3,7 @@
 import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
 import { generateSessionToken, hashToken } from "@/utils/auth-utils";
-import { ISSUER, SERVERLESS } from "@/utils/config";
+import { SERVERLESS } from "@/utils/config";
 import { setUserSessionCookies } from "@/utils/cookies/cookiesServer";
 import { prisma } from "@/utils/prisma";
 
@@ -35,9 +35,12 @@ export async function verifyMagicLinkAction(magicLinkToken: string) {
           },
         });
 
+        const issuer = process.env.NEXT_PUBLIC_ISSUER;
+        if (!issuer) throw new Error("SYST_001");
+
         const { token, expiresIn } = await generateSessionToken({
           sub: user.email,
-          issuer: ISSUER,
+          issuer,
         });
 
         await setUserSessionCookies({
