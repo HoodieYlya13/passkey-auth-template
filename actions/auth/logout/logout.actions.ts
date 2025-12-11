@@ -2,7 +2,7 @@
 
 import { checkRateLimit } from "@/utils/rateLimit";
 import {
-  deleteServerUserCookies,
+  deleteUserSessionCookies,
   getUserAccessToken,
 } from "@/utils/cookies/cookiesServer";
 
@@ -13,5 +13,5 @@ export async function logoutAction() {
 
   if (userAccessToken) // TODO: delete the cookie in the backend too
 
-  await deleteServerUserCookies();
+  await deleteUserSessionCookies();
 }

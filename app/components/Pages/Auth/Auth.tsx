@@ -89,7 +89,7 @@ export default function Auth() {
     try {
       const username = await loginPasskeyAction();
       router.push("/profile");
-      toast.success(commonT.getCommon("HELLO", username));
+      toast.success(commonT.getCommon("HELLO", username ?? ""));
     } catch (error) {
       const errorFinal = error instanceof Error ? error.message : "";
       setErrorText(errorFinal);

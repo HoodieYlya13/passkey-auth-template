@@ -3,7 +3,7 @@
 import {
   deleteServerCookie,
   deleteServerCookies,
-  deleteServerUserCookies,
+  deleteUserSessionCookies,
   getServerCookie,
   getServerCookies,
   setServerCookie,
@@ -42,5 +42,5 @@ export async function deleteClientCookies(names: string[]) {
 }
 
 export async function deleteClientUserCookies() {
-  return deleteServerUserCookies();
+  return deleteUserSessionCookies();
 }

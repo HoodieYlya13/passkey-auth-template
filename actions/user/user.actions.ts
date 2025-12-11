@@ -86,7 +86,7 @@ export async function getCurrentUserAction() {
         try {
           payload = await verifySessionToken(token);
         } catch {
-          throw new Error("AUTH_003");
+          throw new Error("SYST_001");
         }
 
         if (!payload || !payload.sub) throw new Error("AUTH_003");

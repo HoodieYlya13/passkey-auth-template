@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { SignJWT, jwtVerify, type JWTPayload } from "jose";
-import { ISSUER, JWT_VALIDITY } from "./config";
+import { ALGORITHM_SIGNATURE, ISSUER, JWT_VALIDITY } from "./config";
 
 export async function hashToken(token: string): Promise<string> {
   return crypto.createHash("sha256").update(token).digest("hex");
@@ -18,7 +18,7 @@ export async function getJwtSecretKey() {
       if (decoded.includes("-----BEGIN")) pem = decoded;
     } catch {}
 
-    if (pem.includes("-----BEGIN")) return await importPKCS8(pem, "RS256");
+    if (pem.includes("-----BEGIN")) return await importPKCS8(pem, ALGORITHM_SIGNATURE);
   } catch (error) {
     console.warn("Failed to import PKCS8, falling back to secret", error);
   }
@@ -28,7 +28,7 @@ export async function getJwtSecretKey() {
 
 export async function generateSessionToken(payload: JWTPayload) {
   const key = await getJwtSecretKey();
-  const alg = key instanceof Uint8Array ? "HS256" : "RS256";
+  const alg = key instanceof Uint8Array ? "HS256" : ALGORITHM_SIGNATURE;
   const expiresIn = JWT_VALIDITY;
 
   const token = await new SignJWT(payload)

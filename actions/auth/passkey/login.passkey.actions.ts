@@ -4,6 +4,7 @@ import {
   getServerCookie,
   getServerCookies,
   setServerCookie,
+  setUserSessionCookies,
 } from "@/utils/cookies/cookiesServer";
 import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
@@ -90,10 +91,20 @@ export async function verifyPasskeyLoginAction(
         const credentialId = credential.id;
         const dbCred = await prisma.webAuthnCredential.findFirst({
           where: { credentialId },
-          include: { user: true },
+          select: {
+            id: true,
+            credentialId: true,
+            publicKey: true,
+            signCount: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                email: true,
+              },
+            },
+          },
         });
-
-        console.log("dbCred", dbCred);
 
         if (!dbCred) throw new Error("AUTH_001");
 
@@ -123,22 +134,11 @@ export async function verifyPasskeyLoginAction(
             issuer: ISSUER,
           });
 
-          await setServerCookie("user_access_token", token, {
-            maxAge: expiresIn,
+          await setUserSessionCookies({
+            ...user,
+            token,
+            expiresIn,
           });
-
-          await setServerCookie("user_id", user.id, {
-            maxAge: expiresIn,
-          });
-
-          await setServerCookie("user_email", user.email, {
-            maxAge: expiresIn,
-          });
-
-          if (user.username)
-            await setServerCookie("user_name", user.username, {
-              maxAge: expiresIn,
-            });
 
           return user.username;
         }
@@ -149,22 +149,7 @@ export async function verifyPasskeyLoginAction(
 
       const user = await authApi.loginPasskeyFinish(credential, cookieHeader);
 
-      // TODO: create a full session cookie with all user info
-      await setServerCookie("user_access_token", user.token, {
-        maxAge: user.expiresIn,
-      });
-
-      await setServerCookie("user_id", user.userId, {
-        maxAge: user.expiresIn,
-      });
-
-      await setServerCookie("user_email", user.email, {
-        maxAge: user.expiresIn,
-      });
-
-      await setServerCookie("user_name", user.username, {
-        maxAge: user.expiresIn,
-      });
+      await setUserSessionCookies(user);
 
       return user.username;
     },
