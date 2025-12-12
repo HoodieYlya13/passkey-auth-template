@@ -12,6 +12,7 @@ interface SwitcherProps {
   }[];
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  activeKey?: string;
 }
 
 export default function Switcher({
@@ -19,6 +20,7 @@ export default function Switcher({
   elements,
   isOpen,
   setIsOpen,
+  activeKey,
 }: SwitcherProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -37,6 +39,13 @@ export default function Switcher({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen, setIsOpen]);
+
+  const sortedElements = activeKey
+    ? [
+        ...elements.filter((e) => e.key !== activeKey),
+        ...elements.filter((e) => e.key === activeKey),
+      ]
+    : elements;
 
   return (
     <motion.div
@@ -64,7 +73,7 @@ export default function Switcher({
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
           >
-            {elements.map(({ key, content, onClick }) => (
+            {sortedElements.map(({ key, content, onClick }) => (
               <button
                 key={key}
                 onClick={() => {

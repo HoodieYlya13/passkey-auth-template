@@ -92,6 +92,7 @@ export default function LocaleSwitcher({
       isOpen={showAll}
       setIsOpen={setShowAll}
       currentElement={renderIcon(currentLanguage)}
+      activeKey={currentLanguage}
       elements={languages.map((code) => ({
         key: code,
         content: renderIcon(code),

@@ -37,6 +37,7 @@ export default function ThemeSwitcher() {
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       currentElement={renderIcon(theme)}
+      activeKey={theme}
       elements={["light", "dark"].map((t) => ({
         key: t,
         content: renderIcon(t),
