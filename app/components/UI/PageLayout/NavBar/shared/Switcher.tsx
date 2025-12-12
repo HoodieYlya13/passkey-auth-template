@@ -56,21 +56,26 @@ export default function Switcher({
             {currentElement}
           </motion.button>
         ) : (
-          elements.map(({ key, content, onClick }) => (
-            <motion.button
-              key={key}
-              initial={{ opacity: 0, x: 20, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 20, scale: 0.9 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => {
-                onClick();
-                setIsOpen(false);
-              }}
-            >
-              {content}
-            </motion.button>
-          ))
+          <motion.div
+            key="options"
+            className="flex space-x-2"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.2 }}
+          >
+            {elements.map(({ key, content, onClick }) => (
+              <button
+                key={key}
+                onClick={() => {
+                  onClick();
+                  setIsOpen(false);
+                }}
+              >
+                {content}
+              </button>
+            ))}
+          </motion.div>
         )}
       </AnimatePresence>
     </motion.div>
