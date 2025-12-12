@@ -48,12 +48,16 @@ export async function loginMagicLinkAction(email: string) {
 
           const resend = new Resend(resendKey);
 
-          return await resend.emails.send({
+          const { error } = await resend.emails.send({
             from: fromEmail,
             to: email,
             subject: t("SUBJECT"),
             html: (t.raw("BODY") as string).replace("{link}", magicLink),
           });
+
+          if (error) throw error;
+
+          return true;
         }
 
         console.log(`Magic Link: ${magicLink}`);
