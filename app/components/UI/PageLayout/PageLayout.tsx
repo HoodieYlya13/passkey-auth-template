@@ -44,7 +44,7 @@ export default async function PageLayout({
       <div className="flex flex-col z-10">
         <main
           className={clsx("grow flex flex-col min-h-dvh", {
-            "p-5 pb-0 md:p-10 md:pb-0 pt-20 md:pt-30": padding,
+            "p-5 pb-0 md:p-10 md:pb-0 pt-20": padding,
           })}
         >
           {children}

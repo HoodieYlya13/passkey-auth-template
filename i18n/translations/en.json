@@ -5,7 +5,7 @@
   },
   "HOME_PAGE": {
     "META": {
-      "TITLE": "App Name - {name}",
+      "TITLE": "{name}",
       "DESCRIPTION": "Welcome to {name}!"
     }
   },

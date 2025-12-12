@@ -40,7 +40,7 @@ const renderIcon = (t: string) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 513 342"
-    className="cursor-pointer custom-shadow custom-shadow-hover h-4 w-6"
+    className="cursor-pointer custom-shadow custom-shadow-hover h-5 w-auto"
   >
     {getIconPath(t)}
   </svg>

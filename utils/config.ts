@@ -1,6 +1,6 @@
 import { LocaleLanguages } from "@/i18n/utils";
 
-export const APP_NAME = "App Name";
+export const APP_NAME = "Passkey";
 export const DEFAULT_LOCALE: LocaleLanguages = "en";
 export const ORIGIN = process.env.NEXT_PUBLIC_ORIGIN;
 

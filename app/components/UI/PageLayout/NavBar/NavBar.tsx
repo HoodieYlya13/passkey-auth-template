@@ -11,7 +11,7 @@ export default async function NavBar({ locale, localeMismatch }: NavBarProps) {
   const token = await getUserAccessToken();
 
   return (
-    <header className="fixed w-full z-20 h-20 md:h-30 backdrop-blur-md liquid-glass-background border-b liquid-glass-border-color shadow-xl flex">
+    <header className="fixed w-full z-20 h-20 backdrop-blur-md liquid-glass-background border-b liquid-glass-border-color shadow-xl flex">
       <NavBarClient
         locale={locale}
         localeMismatch={localeMismatch}
