@@ -39,9 +39,9 @@ export default function NavBarClient({
         <Image
           src="/favicon.ico"
           alt="Logo"
-          width={32}
-          height={32}
-          className="size-10 md:size-15 select-none"
+          width={40}
+          height={40}
+          className="size-10 select-none"
           priority
         />
         <span>{APP_NAME}</span>
