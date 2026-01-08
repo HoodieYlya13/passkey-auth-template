@@ -1,52 +1,65 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import SignInTestingMode from "./shared/SignInTestingMode";
+import Input from "../../UI/shared/elements/Input";
 import Form from "../../UI/shared/components/Form";
 import { useAuthTestingModeForm } from "@/hooks/forms/useAuthTestingModeForm";
-import { useCallback } from "react";
-import { toast } from "sonner";
+
 import { useRouter } from "next/navigation";
 import { loginTestingModeAction } from "@/actions/auth/testing-mode/auth.testing.mode.actions";
+import { useErrors } from "@/hooks/useErrors";
+
+import { useFormState } from "react-hook-form";
+import { useState } from "react";
+import { ERROR_CODES } from "@/utils/errors";
+import { tryCatch } from "@/utils/tryCatch";
 
 export default function AuthTestingMode() {
   const t = useTranslations("AUTH");
+  const { errorT } = useErrors();
   const router = useRouter();
   const form = useAuthTestingModeForm();
 
-  const onSubmit = useCallback(
-    async (data: { password: string }) => {
-      form.clearErrors();
-      try {
-        await loginTestingModeAction(data.password);
-        router.push("/");
-        toast.success(t("ACCESS_GRANTED"));
-      } catch (error) {
-        if (error instanceof Error) {
-          form.setError(
-            error.message === "PASSWORD_INCORRECT" ? "password" : "root",
-            {
-              message: error.message,
-            }
-          );
-        } else {
-          form.setError("root", { message: "" });
+  const [successText, setSuccessText] = useState<string | undefined>(undefined);
+
+  const { handleSubmit, register, control, setError, clearErrors } = form;
+  const { errors } = useFormState({
+    control,
+  });
+
+  const onSubmit = async (data: { password: string }) => {
+    clearErrors();
+
+    const [, error] = await tryCatch(loginTestingModeAction(data.password));
+
+    if (error)
+      return setError(
+        error.message === ERROR_CODES.PASSWORD.INCORRECT ? "password" : "root",
+        {
+          message: error.message,
         }
-      }
-    },
-    [form, router, t]
-  );
+      );
+
+    setSuccessText(t("ACCESS_GRANTED"));
+    router.push("/");
+  };
 
   return (
     <section className="flex flex-1 w-full items-center justify-center p-4">
       <Form
         form={form}
-        handleSubmit={form.handleSubmit(onSubmit)}
+        handleSubmit={handleSubmit(onSubmit)}
         buttonLabel={t("LOGIN")}
+        successText={successText}
       >
-        <SignInTestingMode
-          register={form.register}
-          errors={form.formState.isSubmitted ? form.formState.errors : {}}
+        <Input
+          id="password"
+          type="password"
+          label={t("PASSWORD")}
+          {...register("password")}
+          error={errors.password?.message && errorT(errors.password.message)}
+          autoComplete="current-password"
+          focusOnMount
         />
       </Form>
     </section>

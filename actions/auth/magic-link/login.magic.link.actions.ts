@@ -5,6 +5,7 @@ import { authApi } from "@/api/auth.api";
 import { hashToken } from "@/utils/auth-utils";
 import { ORIGIN, SERVERLESS } from "@/utils/config";
 import { getPreferredLocale } from "@/utils/cookies/cookiesServer";
+import { ERROR_CODES } from "@/utils/errors";
 import { prisma } from "@/utils/prisma";
 import { getTranslations } from "next-intl/server";
 
@@ -31,7 +32,7 @@ export async function loginMagicLinkAction(email: string) {
           },
         });
 
-        if (!ORIGIN) throw new Error("SYST_001");
+        if (!ORIGIN) throw new Error(ERROR_CODES.SYST[1]);
 
         const magicLink = `${ORIGIN}/auth/magic-link?token=${token}`;
 
@@ -41,7 +42,7 @@ export async function loginMagicLinkAction(email: string) {
           const resendKey = process.env.RESEND_API_KEY;
           const fromEmail = process.env.EMAIL_FROM;
 
-          if (!resendKey || !fromEmail) throw new Error("SYST_001");
+          if (!resendKey || !fromEmail) throw new Error(ERROR_CODES.SYST[1]);
 
           const locale = await getPreferredLocale();
           const t = await getTranslations({ locale, namespace: "MAGIC_LINK" });
@@ -68,7 +69,7 @@ export async function loginMagicLinkAction(email: string) {
       return await authApi.loginMagicLink(email);
     },
     {
-      fallback: "MAGIC_LINK_FAILED",
+      fallback: ERROR_CODES.MAGIC_LINK.FAILED,
     }
   );
 }

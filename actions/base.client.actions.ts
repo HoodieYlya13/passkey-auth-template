@@ -1,4 +1,5 @@
 import { getErrorMessage } from "@/utils/errors";
+import { tryCatch } from "@/utils/tryCatch";
 
 export async function baseClientAction<T>(
   actionName: string,
@@ -8,10 +9,10 @@ export async function baseClientAction<T>(
     overrides?: Record<string, string>;
     rawError?: boolean;
   } = {}
-) {
-  try {
-    return await actions();
-  } catch (error) {
+): Promise<T> {
+  const [data, error] = await tryCatch(actions);
+
+  if (error) {
     console.error(actionName + " error:", error);
 
     if (errorHandling.rawError) throw error;
@@ -24,4 +25,6 @@ export async function baseClientAction<T>(
 
     throw new Error(message);
   }
+
+  return data as T;
 }

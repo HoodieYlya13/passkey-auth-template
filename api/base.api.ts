@@ -1,5 +1,7 @@
 import { ORIGIN } from "@/utils/config";
 import { getUserAccessToken } from "@/utils/cookies/cookiesServer";
+import { ERROR_CODES } from "@/utils/errors";
+import { tryCatch } from "@/utils/tryCatch";
 
 type FetchOptions = RequestInit & {
   userAuthenticated?: boolean;
@@ -50,10 +52,10 @@ export async function fetchApi<T>(
   let token = null;
   if (userAuthenticated) {
     token = await getUserAccessToken();
-    if (!token) throw new Error("AUTH_004");
+    if (!token) throw new Error(ERROR_CODES.AUTH[4]);
   }
 
-  if (!ORIGIN) throw new Error("SYST_001");
+  if (!ORIGIN) throw new Error(ERROR_CODES.SYST[1]);
 
   const url = `${ORIGIN}${
     endpoint.startsWith("/") ? endpoint : `/${endpoint}`
@@ -65,32 +67,29 @@ export async function fetchApi<T>(
 
   if (token) defaultHeaders["Authorization"] = `Bearer ${token}`;
 
-  try {
-    const response = await fetch(url, {
+  const [response, fetchError] = await tryCatch(
+    fetch(url, {
       headers: { ...defaultHeaders, ...headers },
       ...rest,
-    });
+    })
+  );
 
-    if (!response.ok) {
-      let errorData;
-      let message = response.statusText || "";
+  if (fetchError) throw fetchError;
 
-      try {
-        errorData = await response.json();
-        if (errorData && typeof errorData === "object" && "code" in errorData)
-          message = (errorData as APIErrorResponse).code;
-      } catch {
-        errorData = null;
-      }
-      throw new ApiError(response.status, message, errorData);
-    }
+  if (!response.ok) {
+    const [errorData] = await tryCatch(response.json());
 
-    if (response.status === 204) return {} as T;
+    const message =
+      errorData && typeof errorData === "object" && "code" in errorData
+        ? (errorData as APIErrorResponse).code
+        : response.statusText || "";
 
-    if (rawResponse) return response;
-
-    return response.json();
-  } catch (error) {
-    throw error;
+    throw new ApiError(response.status, message, errorData);
   }
+
+  if (response.status === 204) return {} as T;
+
+  if (rawResponse) return response;
+
+  return response.json();
 }

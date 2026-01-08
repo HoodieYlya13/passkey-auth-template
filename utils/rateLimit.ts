@@ -1,6 +1,7 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { getUserIp } from "./cookies/cookiesServer";
+import { ERROR_CODES } from "./errors";
 
 function getRedisClient() {
   const url = process.env.UPSTASH_REDIS_REST_URL;
@@ -51,6 +52,6 @@ export async function checkRateLimit(identifier: string) {
     const limiter = getLimiter(identifier, redis);
     const { success } = await limiter.limit(`${identifier}-${ip}`);
 
-    if (!success) throw new Error("TOO_MANY_REQUESTS");
+    if (!success) throw new Error(ERROR_CODES.TOO_MANY_REQUESTS);
   }
 }

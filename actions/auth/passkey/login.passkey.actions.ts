@@ -16,6 +16,8 @@ import {
 } from "@simplewebauthn/server";
 import { generateSessionToken, verifySessionToken } from "@/utils/auth-utils";
 import { prisma } from "@/utils/prisma";
+import { tryCatch } from "@/utils/tryCatch";
+import { ERROR_CODES } from "@/utils/errors";
 
 export async function getPasskeyLoginOptionsAction() {
   return baseServerAction(
@@ -23,7 +25,7 @@ export async function getPasskeyLoginOptionsAction() {
     async () => {
       if (SERVERLESS) {
         const rpID = process.env.RP_ID;
-        if (!rpID) throw new Error("SYST_001");
+        if (!rpID) throw new Error(ERROR_CODES.SYST[1]);
 
         const options = await generateAuthenticationOptions({
           rpID,
@@ -44,7 +46,7 @@ export async function getPasskeyLoginOptionsAction() {
 
       const response = await authApi.loginStartPasskey();
 
-      if (!response.ok) throw new Error("AUTH_002");
+      if (!response.ok) throw new Error(ERROR_CODES.AUTH[2]);
 
       let [name, value] = ["", ""];
       const setCookieHeader = response.headers.get("set-cookie");
@@ -74,22 +76,16 @@ export async function verifyPasskeyLoginAction(
     async () => {
       if (SERVERLESS) {
         const challengeToken = await getServerCookie("passkey_challenge");
-        if (!challengeToken) throw new Error("AUTH_003");
+        if (!challengeToken) throw new Error(ERROR_CODES.AUTH[3]);
 
-        let payload;
-        try {
-          payload = await verifySessionToken(challengeToken);
-        } catch {
-          throw new Error("AUTH_003");
-        }
+        const [payload, error] = await tryCatch(verifySessionToken(challengeToken));
 
-        if (!payload || !payload.challenge || payload.type !== "challenge")
-          throw new Error("AUTH_003");
+        if (error || !payload || !payload.challenge || payload.type !== "challenge") throw new Error(ERROR_CODES.AUTH[3]);
 
         const expectedChallenge = payload.challenge as string;
 
         const userHandle = credential.response.userHandle;
-        if (!userHandle) throw new Error("AUTH_001");
+        if (!userHandle) throw new Error(ERROR_CODES.AUTH[1]);
 
         const credentialId = credential.id;
         const dbCred = await prisma.webAuthnCredential.findFirst({
@@ -109,12 +105,12 @@ export async function verifyPasskeyLoginAction(
           },
         });
 
-        if (!dbCred) throw new Error("AUTH_001");
+        if (!dbCred) throw new Error(ERROR_CODES.AUTH[1]);
 
         const user = dbCred.user;
 
         const expectedRPID = process.env.RP_ID;
-        if (!expectedRPID || !ORIGIN) throw new Error("SYST_001");
+        if (!expectedRPID || !ORIGIN) throw new Error(ERROR_CODES.SYST[1]);
 
         const verification = await verifyAuthenticationResponse({
           response: credential,
@@ -136,7 +132,7 @@ export async function verifyPasskeyLoginAction(
           });
 
           const issuer = process.env.ISSUER;
-          if (!issuer) throw new Error("SYST_001");
+          if (!issuer) throw new Error(ERROR_CODES.SYST[1]);
 
           const { token, expiresIn } = await generateSessionToken({
             sub: user.email,
@@ -152,7 +148,7 @@ export async function verifyPasskeyLoginAction(
           return user.username;
         }
 
-        throw new Error("AUTH_001");
+        throw new Error(ERROR_CODES.AUTH[1]);
       }
       const cookieHeader = await getServerCookies();
 

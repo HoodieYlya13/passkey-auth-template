@@ -1,8 +1,8 @@
 import Footer from "./Footer/Footer";
 import NavBar from "./NavBar/NavBar";
-import UserGeoInfo from "./CustomerGeoInfo/UserGeoInfo";
+import UserGeoInfo from "./UserGeoInfo/UserGeoInfo";
 import clsx from "clsx";
-import Aurora from "./NavBar/shared/Aurora";
+import Aurora from "../shared/components/Aurora";
 import LocaleMismatch from "./LocaleMismatch";
 import { LocaleLanguages } from "@/i18n/utils";
 import {

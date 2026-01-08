@@ -1,3 +1,4 @@
+import { ERROR_CODES } from "@/utils/errors";
 import { z } from "zod";
 
 const noWhitespace = (val: string) => !/\s/.test(val);
@@ -6,12 +7,12 @@ export const createUpdateUsernameSchema = (defaultUsername = "") =>
   z.object({
     username: z
       .string()
-      .max(30, "USERNAME_TOO_LONG")
+      .max(30, ERROR_CODES.USERNAME.TOO_LONG)
       .refine(noWhitespace, {
-        message: "USERNAME_HAS_WHITESPACE",
+        message: ERROR_CODES.USERNAME.HAS_WHITESPACE,
       })
       .refine((val) => val !== defaultUsername, {
-        message: "USERNAME_SAME",
+        message: ERROR_CODES.USERNAME.SAME,
       }),
   });
 

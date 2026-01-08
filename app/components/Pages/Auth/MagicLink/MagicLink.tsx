@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { verifyMagicLinkAction } from "@/actions/auth/magic-link/verify.magic.link.actions";
 import { useErrors } from "@/hooks/useErrors";
 import { useCommon } from "@/hooks/useCommon";
+import { tryCatch } from "@/utils/tryCatch";
 
 interface MagicLinkProps {
   token: string;
@@ -14,25 +15,23 @@ interface MagicLinkProps {
 
 export default function MagicLink({ token }: MagicLinkProps) {
   const t = useTranslations("MAGIC_LINK");
-  const errorT = useErrors();
-  const commonT = useCommon();
+  const { errorT } = useErrors();
+  const { commonT } = useCommon();
   const router = useRouter();
 
   useEffect(() => {
     if (!token) return;
 
     const verifyMagicLink = async () => {
-      try {
-        const username = await verifyMagicLinkAction(token);
-        if (!username) return router.push("/profile/user-name");
-        toast.success(commonT.getCommon("HELLO", username));
-        router.push("/profile");
-      } catch (error) {
-        toast.error(
-          errorT.getError(error instanceof Error ? error.message : "")
-        );
-        router.push("/auth");
-      }
+      const [username, error] = await tryCatch(verifyMagicLinkAction(token));
+
+      if (error)
+        return toast.error(errorT(error.message)), router.push("/auth");
+
+      if (!username) return router.push("/profile/user-name");
+
+      toast.success(commonT("HELLO", username));
+      router.push("/profile");
     };
 
     verifyMagicLink();

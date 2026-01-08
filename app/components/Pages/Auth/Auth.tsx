@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import Input from "../../UI/shared/elements/Input";
 import Button from "../../UI/shared/elements/Button";
@@ -13,8 +13,10 @@ import { loginMagicLinkAction } from "@/actions/auth/magic-link/login.magic.link
 import { loginPasskeyAction } from "@/actions/auth/passkey/client.paskey.actions";
 import { useErrors } from "@/hooks/useErrors";
 import { useCommon } from "@/hooks/useCommon";
+import { useFormState, useWatch } from "react-hook-form";
+import { tryCatch } from "@/utils/tryCatch";
 
-function getEmailProvider(email: string) {
+function getEmailProvider(email?: string) {
   if (!email) return null;
 
   const domainParts = email.split("@")[1]?.toLowerCase().split(".");
@@ -66,71 +68,64 @@ function getEmailProvider(email: string) {
 
 export default function Auth() {
   const t = useTranslations("AUTH");
-  const errorT = useErrors();
-  const commonT = useCommon();
+  const { errorT } = useErrors();
+  const { commonT } = useCommon();
   const form = useAuthMagicLinkForm();
   const router = useRouter();
-
+  
   const [isPasskeyLogin, setIsPasskeyLogin] = useState(false);
   const [emailProviderLink, setEmailProviderLink] = useState<{
     name: string;
     url: string;
   } | null>(null);
   const [loading, setLoading] = useState(false);
-  const [successText, setSuccessText] = useState<string | null>(null);
+  const [successText, setSuccessText] = useState<string | undefined>(undefined);
   const [errorText, setErrorText] = useState<string | null>(null);
+  
+  const { handleSubmit, register, control, setError, clearErrors } = form;
+  const { errors } = useFormState({ control });
+  const values = useWatch({ control });
+  
+  const emailProviderLinkMemo = getEmailProvider(values.email);
 
-  const emailProviderLinkMemo = useMemo(
-    () => getEmailProvider(form.watch("email")),
-    [form]
-  );
+  const onPasskeySubmit = async () => {
+    const [username, error] = await tryCatch(loginPasskeyAction());
 
-  const onPasskeySubmit = useCallback(async () => {
-    try {
-      const username = await loginPasskeyAction();
-      router.push("/profile");
-      toast.success(commonT.getCommon("HELLO", username ?? ""));
-    } catch (error) {
-      const errorFinal = error instanceof Error ? error.message : "";
-      setErrorText(errorFinal);
-      toast.error(errorT.getError(errorFinal));
-    } finally {
-      setLoading(false);
-    }
-  }, [router, errorT, commonT, setErrorText, setLoading]);
+    setLoading(false);
+    
+    if (error)
+      return setErrorText(error.message), toast.error(errorT(error.message));
+
+    router.push("/profile");
+    toast.success(commonT("HELLO", username ?? ""));
+  };
 
   const onPasskeyLogin = () => {
     setIsPasskeyLogin(true);
     setEmailProviderLink(null);
     setErrorText(null);
-    form.clearErrors();
-    setSuccessText(null);
+    clearErrors();
+    setSuccessText(undefined);
     setLoading(true);
     onPasskeySubmit();
   };
 
-  const onMagicLinkSubmit = useCallback(
-    async (data: { email: string }) => {
-      try {
-        await loginMagicLinkAction(data.email);
-        setSuccessText("MAGIC_LINK_SENT");
-        toast.success(t("MAGIC_LINK_SENT"));
-      } catch (error) {
-        form.setError("root", {
-          message: error instanceof Error ? error.message : "",
-        });
-      }
-    },
-    [form, t, setSuccessText]
-  );
+  const onMagicLinkSubmit = async (data: { email: string }) => {
+    const [, error] = await tryCatch(loginMagicLinkAction(data.email));
+
+    if (error) return setError("root", { message: error.message });
+
+    const message = t("MAGIC_LINK_SENT");
+    setSuccessText(message);
+  };
 
   const onMagicLinkLogin = (e: React.FormEvent<HTMLFormElement>) => {
     setIsPasskeyLogin(false);
     setEmailProviderLink(emailProviderLinkMemo);
-    form.clearErrors();
+    clearErrors();
     setErrorText(null);
-    setSuccessText(null);
-    form.handleSubmit(onMagicLinkSubmit)(e);
+    setSuccessText(undefined);
+    handleSubmit(onMagicLinkSubmit)(e);
   };
 
   return (
@@ -139,7 +134,7 @@ export default function Auth() {
         form={form}
         handleSubmit={onMagicLinkLogin}
         buttonLabel={t("SEND_MAGIC_LINK")}
-        successText={successText ? t(successText) : undefined}
+        successText={successText}
       >
         <h2 className="text-2xl font-bold text-center">{t("LOGIN_TITLE")}</h2>
         <div className="flex flex-col gap-4">
@@ -147,11 +142,11 @@ export default function Auth() {
             onClick={onPasskeyLogin}
             type="button"
             disabled={loading}
-            child={loading ? commonT.getCommon("") : t("SIGN_IN_PASSKEY")}
+            child={loading ? commonT("") : t("SIGN_IN_PASSKEY")}
           />
           {errorText && (
             <p className="ml-1 sm:ml-2 mt-1 text-xs sm:text-sm md:text-base text-red-500">
-              {errorT.getError(errorText)}
+              {errorT(errorText)}
             </p>
           )}
 
@@ -168,12 +163,10 @@ export default function Auth() {
               id="email"
               type="email"
               label={t("EMAIL_LABEL")}
-              {...form.register("email")}
+              {...register("email")}
+              error={errors.email?.message && errorT(errors.email?.message)}
+              autoComplete="email"
               focusOnMount
-              error={
-                form.formState.errors.email?.message &&
-                errorT.getError(form.formState.errors.email?.message)
-              }
             />
 
             {/* TODO: Maybe use <Activity /> component ? */}

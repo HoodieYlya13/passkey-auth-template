@@ -1,10 +1,16 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import SubmitButton from "../elements/SubmitButton";
-import { UseFormReturn, FieldValues } from "react-hook-form";
+import {
+  UseFormReturn,
+  FieldValues,
+  useWatch,
+  useFormState,
+} from "react-hook-form";
 import { toast } from "sonner";
 import { useErrors } from "@/hooks/useErrors";
 import { useCommon } from "@/hooks/useCommon";
+import { ERROR_CODES } from "@/utils/errors";
 
 interface FormProps<T extends FieldValues> {
   children: React.ReactNode;
@@ -21,26 +27,29 @@ export default function Form<T extends FieldValues>({
   buttonLabel,
   successText,
 }: FormProps<T>) {
-  const errorT = useErrors();
-  const commonT = useCommon();
+  const { errorT } = useErrors();
+  const { commonT } = useCommon();
   const [isCoolingDown, setIsCoolingDown] = useState(false);
 
+  const { control } = form;
+  const { isSubmitting, isSubmitted, errors, isValid } = useFormState({
+    control,
+  });
+  const values = useWatch({ control });
+
   const buttonError =
-    form.formState.isSubmitted &&
-    Object.keys(form.formState.errors).some((k) => k !== "root")
-      ? errorT.getError("CORRECT_FIELDS_BEFORE_SUBMIT")
+    isSubmitted && !isValid && !errors.root
+      ? errorT(ERROR_CODES.CORRECT_FIELDS_BEFORE_SUBMIT)
       : undefined;
+
+  const isFormEmpty = Object.values(values || {}).every((value) => !value);
+
   const buttonDisabled =
-    form.formState.isSubmitting ||
-    Object.values(form.watch()).every((value) => !value) ||
-    (form.formState.isSubmitted &&
-      Object.keys(form.formState.errors).filter((k) => k !== "root").length >
-        0) ||
-    isCoolingDown;
-  const rootErrors = form.formState.errors.root?.message;
+    isSubmitting || isFormEmpty || (isSubmitted && !isValid) || isCoolingDown;
+  const rootErrors = errors.root?.message;
 
   useEffect(() => {
-    if (rootErrors) toast.error(errorT.getError(rootErrors));
+    if (rootErrors) toast.error(errorT(rootErrors));
     if (successText) toast.success(successText);
   }, [rootErrors, successText, errorT]);
 
@@ -61,13 +70,13 @@ export default function Form<T extends FieldValues>({
       {children}
 
       <SubmitButton
-        label={form.formState.isSubmitting ? commonT.getCommon("") : buttonLabel}
+        label={isSubmitting ? commonT("") : buttonLabel}
         error={buttonError}
         disabled={buttonDisabled}
       />
 
       {rootErrors && (
-        <p className="text-red-500 text-shadow-md">{errorT.getError(rootErrors)}</p>
+        <p className="text-red-500 text-shadow-md">{errorT(rootErrors)}</p>
       )}
     </form>
   );

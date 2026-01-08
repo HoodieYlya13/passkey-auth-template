@@ -10,30 +10,44 @@
     }
   },
   "ERRORS": {
-    "SYST_001": "An unexpected error occurred.",
-    "SYST_002": "Validation failed for at least one field.",
-    "JWT_001": "Private key is invalid.",
-    "JWT_002": "Public key is invalid.",
-    "AUTH_001": "Authentication failed.",
-    "AUTH_002": "Unauthorized.",
-    "AUTH_003": "Invalid session.",
-    "AUTH_004": "Session expired.",
     "TOO_MANY_REQUESTS": "Too many requests. Please try again later.",
-    "PASSWORD_INCORRECT": "Incorrect password. Please try again.",
-    "PASSKEY_ERROR_LOGIN": "Login with Passkey took too long or was cancelled. Please try again.",
-    "PASSKEY_ERROR_REGISTER": "Register a Passkey took too long or was cancelled. Please try again.",
-    "PASSKEY_FAILED": "Passkey authentication failed.",
-    "PASSKEY_ALREADY_EXISTS": "Passkey already exists for this device",
-    "MAGIC_LINK_FAILED": "Failed to send Magic Link.",
-    "EMAIL_NOT_FOUND": "Could not retrieve user email. Please log in again.",
     "CORRECT_FIELDS_BEFORE_SUBMIT": "Please correct the fields before submitting.",
-    "TOO_SHORT": "Password is too short.",
-    "TOO_LONG": "Password is too long.",
-    "PASSWORD_STARTS_OR_ENDS_WITH_WHITESPACE": "Password cannot start or end with whitespace.",
-    "USERNAME_UPDATE_FAILED": "Failed to update username.",
-    "USERNAME_HAS_WHITESPACE": "Username cannot have whitespace.",
-    "USERNAME_TOO_LONG": "Username is too long.",
-    "USERNAME_SAME": "New username cannot be the same as the current one."
+    "SYST": {
+      "001": "An unexpected error occurred.",
+      "002": "Validation failed for at least one field."
+    },
+    "JWT": {
+      "001": "Private key is invalid.",
+      "002": "Public key is invalid."
+    },
+    "AUTH": {
+      "001": "Authentication failed.",
+      "002": "Unauthorized.",
+      "003": "Invalid session.",
+      "004": "Session expired."
+    },
+    "PASSKEY": {
+      "ERROR_LOGIN": "Login with Passkey took too long or was cancelled. Please try again.",
+      "ERROR_REGISTER": "Register a Passkey took too long or was cancelled. Please try again.",
+      "FAILED": "Passkey authentication failed.",
+      "ALREADY_EXISTS": "Passkey already exists for this device",
+      "EMAIL_NOT_FOUND": "Could not retrieve user email. Please log in again."
+    },
+    "MAGIC_LINK": {
+      "FAILED": "Failed to send Magic Link."
+    },
+    "PASSWORD": {
+      "INCORRECT": "Incorrect password. Please try again.",
+      "TOO_SHORT": "Password is too short.",
+      "TOO_LONG": "Password is too long.",
+      "STARTS_OR_ENDS_WITH_WHITESPACE": "Password cannot start or end with whitespace."
+    },
+    "USERNAME": {
+      "UPDATE_FAILED": "Failed to update username.",
+      "HAS_WHITESPACE": "Username cannot have whitespace.",
+      "TOO_LONG": "Username is too long.",
+      "SAME": "New username cannot be the same as the current one."
+    }
   },
   "AUTH": {
     "LOGIN": "Sign in",

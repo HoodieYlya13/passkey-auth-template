@@ -10,30 +10,44 @@
     }
   },
   "ERRORS": {
-    "SYST_001": "Une erreur inattendue est survenue.",
-    "SYST_002": "Validation échouée pour au moins un champ.",
-    "JWT_001": "Clé privée invalide.",
-    "JWT_002": "Clé publique invalide.",
-    "AUTH_001": "Échec de l'authentification",
-    "AUTH_002": "Non autorisé",
-    "AUTH_003": "Session invalide",
-    "AUTH_004": "Session expirée",
     "TOO_MANY_REQUESTS": "Trop de requêtes. Veuillez réessayer plus tard.",
-    "PASSWORD_INCORRECT": "Mot de passe incorrect. Veuillez réessayer.",
-    "PASSKEY_ERROR_LOGIN": "La connexion avec Passkey a pris trop de temps ou a été annulée. Veuillez réessayer.",
-    "PASSKEY_ERROR_REGISTER": "L'enregistrement d'une Passkey a pris trop de temps ou a été annulée. Veuillez réessayer.",
-    "PASSKEY_FAILED": "Échec de l'authentification Passkey.",
-    "PASSKEY_ALREADY_EXISTS": "Passkey déjà existante pour cet appareil",
-    "MAGIC_LINK_FAILED": "Échec de l'envoi du lien magique.",
-    "EMAIL_NOT_FOUND": "Impossible de récupérer l'email de l'utilisateur. Veuillez vous reconnecter.",
     "CORRECT_FIELDS_BEFORE_SUBMIT": "Veuillez corriger les champs avant de soumettre.",
-    "TOO_SHORT": "Le mot de passe est trop court.",
-    "TOO_LONG": "Le mot de passe est trop long.",
-    "PASSWORD_STARTS_OR_ENDS_WITH_WHITESPACE": "Le mot de passe ne peut pas commencer ou se terminer par un espace.",
-    "USERNAME_UPDATE_FAILED": "Échec de la mise à jour du nom d'utilisateur.",
-    "USERNAME_HAS_WHITESPACE": "Le nom d'utilisateur ne peut pas contenir d'espace.",
-    "USERNAME_TOO_LONG": "Le nom d'utilisateur est trop long.",
-    "USERNAME_SAME": "Le nouveau nom d'utilisateur ne peut pas être identique à l'actuel."
+    "SYST": {
+      "001": "Une erreur inattendue est survenue.",
+      "002": "Validation échouée pour au moins un champ."
+    },
+    "JWT": {
+      "001": "Clé privée invalide.",
+      "002": "Clé publique invalide."
+    },
+    "AUTH": {
+      "001": "Échec de l'authentification",
+      "002": "Non autorisé",
+      "003": "Session invalide",
+      "004": "Session expirée"
+    },
+    "PASSKEY": {
+      "ERROR_LOGIN": "La connexion avec Passkey a pris trop de temps ou a été annulée. Veuillez réessayer.",
+      "ERROR_REGISTER": "L'enregistrement d'une Passkey a pris trop de temps ou a été annulée. Veuillez réessayer.",
+      "FAILED": "Échec de l'authentification Passkey.",
+      "ALREADY_EXISTS": "Passkey déjà existante pour cet appareil",
+      "EMAIL_NOT_FOUND": "Impossible de récupérer l'email de l'utilisateur. Veuillez vous reconnecter."
+    },
+    "MAGIC_LINK": {
+      "FAILED": "Échec de l'envoi du lien magique."
+    },
+    "PASSWORD": {
+      "INCORRECT": "Mot de passe incorrect. Veuillez réessayer.",
+      "TOO_SHORT": "Le mot de passe est trop court.",
+      "TOO_LONG": "Le mot de passe est trop long.",
+      "STARTS_OR_ENDS_WITH_WHITESPACE": "Le mot de passe ne peut pas commencer ou se terminer par un espace."
+    },
+    "USERNAME": {
+      "UPDATE_FAILED": "Échec de la mise à jour du nom d'utilisateur.",
+      "HAS_WHITESPACE": "Le nom d'utilisateur ne peut pas contenir d'espace.",
+      "TOO_LONG": "Le nom d'utilisateur est trop long.",
+      "SAME": "Le nouveau nom d'utilisateur ne peut pas être identique à l'actuel."
+    }
   },
   "AUTH": {
     "LOGIN": "Se connecter",

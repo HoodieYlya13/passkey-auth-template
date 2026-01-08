@@ -3,6 +3,7 @@
 import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
 import { APP_NAME, ORIGIN, SERVERLESS } from "@/utils/config";
+import { ERROR_CODES } from "@/utils/errors";
 import { prisma } from "@/utils/prisma";
 import {
   generateRegistrationOptions,
@@ -23,10 +24,10 @@ export async function getPasskeyRegistrationOptionsAction(
           include: { credentials: true },
         });
 
-        if (!user || !user.username) throw new Error("USER_001");
+        if (!user || !user.username) throw new Error(ERROR_CODES.AUTH[1]);
 
         const rpID = process.env.RP_ID;
-        if (!rpID) throw new Error("SYST_001");
+        if (!rpID) throw new Error(ERROR_CODES.SYST[1]);
 
         const options = await generateRegistrationOptions({
           rpName: APP_NAME,
@@ -72,11 +73,11 @@ export async function verifyPasskeyRegistrationAction(
     async () => {
       if (SERVERLESS) {
         const user = await prisma.user.findUnique({ where: { email } });
-        if (!user) throw new Error("AUTH_001");
+        if (!user) throw new Error(ERROR_CODES.AUTH[1]);
 
         const expectedRPID = process.env.RP_ID;
         if (!expectedRPID || !ORIGIN || !user.currentChallenge)
-          throw new Error("SYST_001");
+          throw new Error(ERROR_CODES.SYST[1]);
 
         const verification = await verifyRegistrationResponse({
           response: credential,
@@ -109,7 +110,7 @@ export async function verifyPasskeyRegistrationAction(
 
           return true;
         }
-        throw new Error("AUTH_001");
+        throw new Error(ERROR_CODES.AUTH[1]);
       }
       await authApi.registerPasskeyFinish(credential, email, passkeyName);
 

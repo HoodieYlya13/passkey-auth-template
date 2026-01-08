@@ -12,6 +12,7 @@ import {
 } from "./register.passkey.actions";
 
 import { baseClientAction } from "@/actions/base.client.actions";
+import { ERROR_CODES } from "@/utils/errors";
 
 export async function loginPasskeyAction() {
   return await baseClientAction(
@@ -24,7 +25,7 @@ export async function loginPasskeyAction() {
       return await verifyPasskeyLoginAction(asseResp);
     },
     {
-      fallback: "PASSKEY_ERROR_LOGIN",
+      fallback: ERROR_CODES.PASSKEY.ERROR_LOGIN,
     }
   );
 }
@@ -46,9 +47,9 @@ export async function registerPasskeyAction(
       return await verifyPasskeyRegistrationAction(attResp, email, passkeyName);
     },
     {
-      fallback: "PASSKEY_ERROR_REGISTER",
+      fallback: ERROR_CODES.PASSKEY.ERROR_REGISTER,
       overrides: {
-        InvalidStateError: "PASSKEY_ALREADY_EXISTS",
+        InvalidStateError: ERROR_CODES.PASSKEY.ALREADY_EXISTS,
       },
     }
   );

@@ -5,6 +5,7 @@ import {
 } from "@/utils/cookies/cookiesServer";
 import { redirect } from "next/navigation";
 import Profile from "@/app/components/Pages/Profile/Profile";
+import MagicLinkToast from "@/app/components/Pages/Auth/MagicLink/MagicLinkToast";
 
 export default async function ProfilePage() {
   const token = await getUserAccessToken();
@@ -14,6 +15,7 @@ export default async function ProfilePage() {
 
   return (
     <PageLayout>
+      <MagicLinkToast />
       <Profile email={email} />
     </PageLayout>
   );

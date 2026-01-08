@@ -1,3 +1,4 @@
+import { ERROR_CODES } from '@/utils/errors';
 import { z } from 'zod';
 
 const noLeadingOrTrailingWhitespace = (val: string) =>
@@ -6,10 +7,10 @@ const noLeadingOrTrailingWhitespace = (val: string) =>
 export const LoginTestingModeSchema = z.object({
   password: z
     .string()
-    .min(4, { message: "TOO_SHORT" })
-    .max(30, { message: "TOO_LONG" })
+    .min(4, { message: ERROR_CODES.PASSWORD.TOO_SHORT })
+    .max(30, { message: ERROR_CODES.PASSWORD.TOO_LONG })
     .refine(noLeadingOrTrailingWhitespace, {
-      message: "PASSWORD_STARTS_OR_ENDS_WITH_WHITESPACE",
+      message: ERROR_CODES.PASSWORD.STARTS_OR_ENDS_WITH_WHITESPACE,
     }),
 });
 

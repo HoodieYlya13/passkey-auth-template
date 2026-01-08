@@ -1,17 +1,30 @@
 "use server";
 
-import { checkRateLimit } from "@/utils/rateLimit";
 import {
   deleteUserSessionCookies,
   getUserAccessToken,
 } from "@/utils/cookies/cookiesServer";
+import { SERVERLESS } from "@/utils/config";
+import { baseServerAction } from "@/actions/base.server.actions";
 
 export async function logoutAction() {
-  await checkRateLimit("authLogout");
+  return baseServerAction(
+      "authLogout",
+      async () => {
+        if (SERVERLESS) {
+          const userAccessToken = await getUserAccessToken();
 
-  const userAccessToken = await getUserAccessToken();
+          if (userAccessToken) // TODO: delete the cookie in the backend too
 
-  if (userAccessToken) // TODO: delete the cookie in the backend too
+          await deleteUserSessionCookies();
+        }
 
-  await deleteUserSessionCookies();
+        const userAccessToken = await getUserAccessToken();
+
+        if (userAccessToken) // TODO: delete the cookie in the backend too
+
+        await deleteUserSessionCookies();
+      },
+      {}
+    );
 }

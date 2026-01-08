@@ -2,6 +2,7 @@
 
 import { getErrorMessage } from "@/utils/errors";
 import { checkRateLimit } from "@/utils/rateLimit";
+import { tryCatch } from "@/utils/tryCatch";
 
 export async function baseServerAction<T>(
   actionName: string,
@@ -10,14 +11,15 @@ export async function baseServerAction<T>(
     fallback?: string;
     overrides?: Record<string, string>;
     rawError?: boolean;
-  }
+  } = {}
 ) {
-  try {
+  const [data, error] = await tryCatch(async () => {
     await checkRateLimit(actionName);
-
     return await actions();
-  } catch (error) {
-    console.error(actionName + " error:");
+  });
+
+  if (error) {
+    console.error(`${actionName} error:`);
 
     if (errorHandling.rawError) throw error;
 
@@ -29,4 +31,6 @@ export async function baseServerAction<T>(
 
     throw new Error(message);
   }
+
+  return data as T;
 }

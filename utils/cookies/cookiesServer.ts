@@ -89,7 +89,7 @@ export async function getPreferredLocale(toUpperCase = false) {
 }
 
 export async function getUserAccessToken(): Promise<string | undefined> {
-  return getServerCookie("user_access_token");
+  return await getServerCookie("user_access_token");
 }
 
 export async function getUserCountry() {
@@ -101,5 +101,5 @@ export async function getUserCountry() {
 }
 
 export async function getUserIp(): Promise<string | undefined> {
-  return getServerCookie("user_ip");
+  return await getServerCookie("user_ip");
 }

@@ -5,6 +5,7 @@ import { authApi } from "@/api/auth.api";
 import { generateSessionToken, hashToken } from "@/utils/auth-utils";
 import { SERVERLESS } from "@/utils/config";
 import { setUserSessionCookies } from "@/utils/cookies/cookiesServer";
+import { ERROR_CODES } from "@/utils/errors";
 import { prisma } from "@/utils/prisma";
 
 export async function verifyMagicLinkAction(magicLinkToken: string) {
@@ -25,7 +26,7 @@ export async function verifyMagicLinkAction(magicLinkToken: string) {
           },
         });
 
-        if (!user) throw new Error("AUTH_001");
+        if (!user) throw new Error(ERROR_CODES.AUTH[1]);
 
         await prisma.user.update({
           where: { id: user.id },
@@ -36,7 +37,7 @@ export async function verifyMagicLinkAction(magicLinkToken: string) {
         });
 
         const issuer = process.env.ISSUER;
-        if (!issuer) throw new Error("SYST_001");
+        if (!issuer) throw new Error(ERROR_CODES.SYST[1]);
 
         const { token, expiresIn } = await generateSessionToken({
           sub: user.email,
