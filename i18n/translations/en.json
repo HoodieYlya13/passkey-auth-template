@@ -30,8 +30,7 @@
       "ERROR_LOGIN": "Login with Passkey took too long or was cancelled. Please try again.",
       "ERROR_REGISTER": "Register a Passkey took too long or was cancelled. Please try again.",
       "FAILED": "Passkey authentication failed.",
-      "ALREADY_EXISTS": "Passkey already exists for this device",
-      "EMAIL_NOT_FOUND": "Could not retrieve user email. Please log in again."
+      "ALREADY_EXISTS": "Passkey already exists for this device"
     },
     "MAGIC_LINK": {
       "FAILED": "Failed to send Magic Link."

@@ -11,14 +11,12 @@ function ToastLogic() {
   const { commonT } = useCommon();
 
   useEffect(() => {
-    const verified = searchParams.get("verified");
     const username = searchParams.get("username");
 
-    if (verified === "true" && username) {
+    if (username) {
       toast.success(commonT("HELLO", username));
 
       const newParams = new URLSearchParams(searchParams.toString());
-      newParams.delete("verified");
       newParams.delete("username");
 
       router.replace(`?${newParams.toString()}`, { scroll: false });

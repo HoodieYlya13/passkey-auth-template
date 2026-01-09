@@ -9,9 +9,8 @@ import MagicLinkToast from "@/app/components/Pages/Auth/MagicLink/MagicLinkToast
 
 export default async function ProfilePage() {
   const token = await getUserAccessToken();
-  if (!token) redirect("/auth");
-
   const email = await getServerCookie("user_email");
+  if (!token || !email) redirect("/auth");
 
   return (
     <PageLayout>

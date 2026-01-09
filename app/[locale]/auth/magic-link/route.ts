@@ -8,16 +8,19 @@ export async function GET(request: NextRequest) {
   const token = searchParams.get("token");
   const origin = request.nextUrl.origin;
 
-  if (!token) return NextResponse.redirect(new URL("/auth?error=" + ERROR_CODES.AUTH[4], origin));
+  if (!token)
+    return NextResponse.redirect(
+      new URL("/auth?error=" + ERROR_CODES.AUTH[4], origin)
+    );
 
   const [username, error] = await tryCatch(verifyMagicLinkAction(token));
 
-  if (error) {
-    console.error("Magic Link Route Handler Error:", error);
-    return NextResponse.redirect(new URL("/auth?error=" + ERROR_CODES.AUTH[1], origin));
-  }
+  if (error)
+    return NextResponse.redirect(
+      new URL("/auth?error=" + ERROR_CODES.AUTH[1], origin)
+    );
 
   return NextResponse.redirect(
-    new URL(`/profile?verified=true&username=${username}`, origin)
+    new URL(`/profile?username=${username}`, origin)
   );
 }
