@@ -1,5 +1,5 @@
 import NavBarClient from "./shared/NavBarClient";
-import { getUserAccessToken } from "@/utils/cookies/cookiesServer";
+import { getUserAccessToken } from "@/utils/cookies/cookies.server";
 import { LocaleLanguages } from "@/i18n/utils";
 
 interface NavBarProps {

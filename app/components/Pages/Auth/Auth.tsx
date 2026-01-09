@@ -79,7 +79,7 @@ export default function Auth() {
     url: string;
   } | null>(null);
   const [loading, setLoading] = useState(false);
-  const [successText, setSuccessText] = useState<string | undefined>(undefined);
+  const [successText, setSuccessText] = useState<string | null>(null);
   const [errorText, setErrorText] = useState<string | null>(null);
   
   const { handleSubmit, register, control, setError, clearErrors } = form;
@@ -105,7 +105,7 @@ export default function Auth() {
     setEmailProviderLink(null);
     setErrorText(null);
     clearErrors();
-    setSuccessText(undefined);
+    setSuccessText(null);
     setLoading(true);
     onPasskeySubmit();
   };
@@ -124,7 +124,7 @@ export default function Auth() {
     setEmailProviderLink(emailProviderLinkMemo);
     clearErrors();
     setErrorText(null);
-    setSuccessText(undefined);
+    setSuccessText(null);
     handleSubmit(onMagicLinkSubmit)(e);
   };
 

@@ -2,9 +2,11 @@
 
 import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
-import { APP_NAME, ORIGIN, SERVERLESS } from "@/utils/config";
+import { APP_NAME } from "@/utils/config/config.client";
+import { SERVERLESS } from "@/utils/config/config.client";
+import { ORIGIN, RP_ID } from "@/utils/config/config.server";
 import { ERROR_CODES } from "@/utils/errors";
-import { prisma } from "@/utils/prisma";
+import { prisma } from "@/utils/config/prisma";
 import {
   generateRegistrationOptions,
   verifyRegistrationResponse,
@@ -26,12 +28,11 @@ export async function getPasskeyRegistrationOptionsAction(
 
         if (!user || !user.username) throw new Error(ERROR_CODES.AUTH[1]);
 
-        const rpID = process.env.RP_ID;
-        if (!rpID) throw new Error(ERROR_CODES.SYST[1]);
+        if (!RP_ID) throw new Error(ERROR_CODES.SYST[1]);
 
         const options = await generateRegistrationOptions({
           rpName: APP_NAME,
-          rpID,
+          rpID: RP_ID,
           userID: new TextEncoder().encode(user.id),
           userName: user.username,
           excludeCredentials: user.credentials.map((cred) => ({
@@ -112,6 +113,7 @@ export async function verifyPasskeyRegistrationAction(
         }
         throw new Error(ERROR_CODES.AUTH[1]);
       }
+
       await authApi.registerPasskeyFinish(credential, email, passkeyName);
 
       return true;

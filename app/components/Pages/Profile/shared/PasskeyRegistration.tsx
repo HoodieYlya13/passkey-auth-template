@@ -23,7 +23,7 @@ export default function PasskeyRegistration({
   const { errorT } = useErrors();
   const form = useUpdatePasskeyNameForm();
   const { reconnect } = useAuth();
-  const [successText, setSuccessText] = useState<string | undefined>(undefined);
+  const [successText, setSuccessText] = useState<string | null>(null);
 
   const { handleSubmit, register, control, setError, clearErrors, reset } =
     form;
@@ -31,7 +31,7 @@ export default function PasskeyRegistration({
 
   const onSubmit = async (data: { name: string }) => {
     clearErrors();
-    setSuccessText(undefined);
+    setSuccessText(null);
 
     const [, error] = await tryCatch(registerPasskeyAction(email, data.name));
 

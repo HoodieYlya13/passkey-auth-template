@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { APP_NAME } from "@/utils/config";
+import { APP_NAME } from "@/utils/config/config.client";
 
 export default function Home() {
   const t = useTranslations("HOME_PAGE");

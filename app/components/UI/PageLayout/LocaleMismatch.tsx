@@ -6,7 +6,7 @@ import { LocaleLanguages } from "@/i18n/utils";
 import {
   deleteClientCookie,
   setClientCookie,
-} from "@/utils/cookies/cookiesClient";
+} from "@/utils/cookies/cookies.client";
 import { useTranslations } from "next-intl";
 
 interface LocaleMismatchProps {
@@ -33,9 +33,7 @@ export default function LocaleMismatch({
     segments[1] = localeMismatch;
     const newPath = segments.join("/") + search + hash;
 
-    await setClientCookie("preferred_locale", localeMismatch, {
-      httpOnly: false,
-    });
+    setClientCookie("preferred_locale", localeMismatch);
 
     deleteClientCookie("locale_mismatch");
 
@@ -52,7 +50,7 @@ export default function LocaleMismatch({
     const newPath = segments.join("/") + search + hash;
 
     setIsVisible(false);
-    await setClientCookie("preferred_locale", locale, { httpOnly: false });
+    setClientCookie("preferred_locale", locale);
     deleteClientCookie("locale_mismatch");
 
     router.push(newPath);
@@ -69,23 +67,23 @@ export default function LocaleMismatch({
                 {chunks}
               </span>
             ),
-            preferredLocale: localeMismatch,
-            currentLocale: locale,
+            preferredLocale: locale,
+            currentLocale: localeMismatch,
           })}
         </p>
       </div>
       <div className="flex gap-3">
         <button
-          onClick={handleStay}
+          onClick={handleSwitch}
           className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
         >
-          {t("KEEP", { locale: locale.toUpperCase() })}
+          {t("KEEP", { locale: localeMismatch.toUpperCase() })}
         </button>
         <button
-          onClick={handleSwitch}
+          onClick={handleStay}
           className="flex-1 px-4 py-2 text-sm font-medium text-foreground bg-background hover:bg-gray-800 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
         >
-          {t("SWITCH", { locale: localeMismatch.toUpperCase() })}
+          {t("SWITCH", { locale: locale.toUpperCase() })}
         </button>
       </div>
     </div>

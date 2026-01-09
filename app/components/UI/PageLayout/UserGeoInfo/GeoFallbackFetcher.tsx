@@ -1,6 +1,6 @@
 "use client";
 
-import { setClientCookie } from "@/utils/cookies/cookiesClient";
+import { setClientCookie } from "@/utils/cookies/cookies.client";
 import { useEffect } from "react";
 
 export default function GeoFallbackFetcher() {
@@ -8,8 +8,7 @@ export default function GeoFallbackFetcher() {
     fetch("https://ipinfo.io/json")
       .then((res) => res.json())
       .then((geo) => {
-        if (geo?.ip)
-          setClientCookie("user_ip", geo.ip);
+        if (geo?.ip) setClientCookie("user_ip", geo.ip);
         let country = "unknown";
         if (typeof geo?.country === "string" && geo.country.length === 2)
           country = geo.country.toUpperCase();

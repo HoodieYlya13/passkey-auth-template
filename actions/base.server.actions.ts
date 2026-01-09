@@ -1,7 +1,7 @@
 "use server";
 
 import { getErrorMessage } from "@/utils/errors";
-import { checkRateLimit } from "@/utils/rateLimit";
+import { checkRateLimit } from "@/utils/config/rateLimit";
 import { tryCatch } from "@/utils/tryCatch";
 
 export async function baseServerAction<T>(

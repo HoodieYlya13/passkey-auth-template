@@ -5,17 +5,18 @@ import {
   getServerCookies,
   setServerCookie,
   setUserSessionCookies,
-} from "@/utils/cookies/cookiesServer";
+} from "@/utils/cookies/cookies.server";
 import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
-import { ORIGIN, SERVERLESS } from "@/utils/config";
+import { SERVERLESS } from "@/utils/config/config.client";
+import { ISSUER, ORIGIN, RP_ID } from "@/utils/config/config.server";
 import {
   generateAuthenticationOptions,
   verifyAuthenticationResponse,
   AuthenticationResponseJSON,
 } from "@simplewebauthn/server";
-import { generateSessionToken, verifySessionToken } from "@/utils/auth-utils";
-import { prisma } from "@/utils/prisma";
+import { generateSessionToken, verifySessionToken } from "@/utils/auth.utils";
+import { prisma } from "@/utils/config/prisma";
 import { tryCatch } from "@/utils/tryCatch";
 import { ERROR_CODES } from "@/utils/errors";
 
@@ -24,11 +25,10 @@ export async function getPasskeyLoginOptionsAction() {
     "authLoginStartPasskey",
     async () => {
       if (SERVERLESS) {
-        const rpID = process.env.RP_ID;
-        if (!rpID) throw new Error(ERROR_CODES.SYST[1]);
+        if (!RP_ID) throw new Error(ERROR_CODES.SYST[1]);
 
         const options = await generateAuthenticationOptions({
-          rpID,
+          rpID: RP_ID,
           userVerification: "preferred",
         });
 
@@ -78,9 +78,17 @@ export async function verifyPasskeyLoginAction(
         const challengeToken = await getServerCookie("passkey_challenge");
         if (!challengeToken) throw new Error(ERROR_CODES.AUTH[3]);
 
-        const [payload, error] = await tryCatch(verifySessionToken(challengeToken));
+        const [payload, error] = await tryCatch(
+          verifySessionToken(challengeToken)
+        );
 
-        if (error || !payload || !payload.challenge || payload.type !== "challenge") throw new Error(ERROR_CODES.AUTH[3]);
+        if (
+          error ||
+          !payload ||
+          !payload.challenge ||
+          payload.type !== "challenge"
+        )
+          throw new Error(ERROR_CODES.AUTH[3]);
 
         const expectedChallenge = payload.challenge as string;
 
@@ -131,12 +139,11 @@ export async function verifyPasskeyLoginAction(
             data: { signCount: Number(newCounter) },
           });
 
-          const issuer = process.env.ISSUER;
-          if (!issuer) throw new Error(ERROR_CODES.SYST[1]);
+          if (!ISSUER) throw new Error(ERROR_CODES.SYST[1]);
 
           const { token, expiresIn } = await generateSessionToken({
             sub: user.email,
-            issuer,
+            issuer: ISSUER,
           });
 
           await setUserSessionCookies({
@@ -150,6 +157,7 @@ export async function verifyPasskeyLoginAction(
 
         throw new Error(ERROR_CODES.AUTH[1]);
       }
+
       const cookieHeader = await getServerCookies();
 
       const user = await authApi.loginPasskeyFinish(credential, cookieHeader);

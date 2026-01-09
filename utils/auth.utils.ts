@@ -1,32 +1,29 @@
 import crypto from "crypto";
 import { SignJWT, jwtVerify, type JWTPayload } from "jose";
-import { JWT_VALIDITY } from "./config"; 
+import { JWT_VALIDITY } from "./config/config.client";
 import { ERROR_CODES } from "./errors";
-
-const alg = "HS256";
-const issuer = process.env.ISSUER;
+import { JWT_PRIVATE_KEY, ISSUER, JWT_ALG } from "./config/config.server";
 
 export async function hashToken(token: string): Promise<string> {
   return crypto.createHash("sha256").update(token).digest("hex");
 }
 
 export function getJwtSecretKey() {
-  const secret = process.env.JWT_PRIVATE_KEY;
-  
-  if (!secret || secret.length === 0) throw new Error(ERROR_CODES.JWT[1]);
+  if (!JWT_PRIVATE_KEY || JWT_PRIVATE_KEY.length === 0)
+    throw new Error(ERROR_CODES.JWT[1]);
 
-  return new TextEncoder().encode(secret);
+  return new TextEncoder().encode(JWT_PRIVATE_KEY);
 }
 
 export async function generateSessionToken(payload: JWTPayload) {
   const key = getJwtSecretKey();
 
-  if (!issuer) throw new Error(ERROR_CODES.SYST[1]);
+  if (!ISSUER) throw new Error(ERROR_CODES.SYST[1]);
 
   const token = await new SignJWT(payload)
-    .setProtectedHeader({ alg })
+    .setProtectedHeader({ alg: JWT_ALG })
     .setIssuedAt()
-    .setIssuer(issuer)
+    .setIssuer(ISSUER)
     .setExpirationTime(JWT_VALIDITY + "s")
     .sign(key);
 
@@ -36,12 +33,12 @@ export async function generateSessionToken(payload: JWTPayload) {
 export async function verifySessionToken(token: string) {
   const key = getJwtSecretKey();
 
-  if (!issuer) throw new Error(ERROR_CODES.SYST[1]);
+  if (!ISSUER) throw new Error(ERROR_CODES.SYST[1]);
 
   const { payload } = await jwtVerify(token, key, {
-    issuer,
-    algorithms: [alg],
+    issuer: ISSUER,
+    algorithms: [JWT_ALG],
   });
-  
+
   return payload;
 }

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Logout from "./Logout";
-import { APP_NAME } from "@/utils/config";
+import { APP_NAME } from "@/utils/config/config.client";
 import LocaleSwitcher from "./LocaleSwitcher";
 import { LocaleLanguages } from "@/i18n/utils";
 import ThemeSwitcher from "./ThemeSwitcher";

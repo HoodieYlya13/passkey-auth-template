@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
-import { DEFAULT_LOCALE } from "./utils/config";
+import { DEFAULT_LOCALE } from "./utils/config/config.client";
 import { SUPPORTED_LOCALES } from "./i18n/utils";
-import {
-  getProxyCookie,
-  setProxyCookie,
-} from "./utils/cookies/cookiesProxy";
+import { getProxyCookie, setProxyCookie } from "./utils/cookies/cookies.proxy";
 
 const intlMiddleware = createMiddleware(routing);
 

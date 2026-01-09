@@ -2,11 +2,12 @@
 
 import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
-import { hashToken } from "@/utils/auth-utils";
-import { ORIGIN, SERVERLESS } from "@/utils/config";
-import { getPreferredLocale } from "@/utils/cookies/cookiesServer";
+import { hashToken } from "@/utils/auth.utils";
+import { SERVERLESS } from "@/utils/config/config.client";
+import { ORIGIN } from "@/utils/config/config.server";
+import { getPreferredLocale } from "@/utils/cookies/cookies.server";
 import { ERROR_CODES } from "@/utils/errors";
-import { prisma } from "@/utils/prisma";
+import { prisma } from "@/utils/config/prisma";
 import { getTranslations } from "next-intl/server";
 
 export async function loginMagicLinkAction(email: string) {

@@ -20,7 +20,7 @@ export default function AuthTestingMode() {
   const router = useRouter();
   const form = useAuthTestingModeForm();
 
-  const [successText, setSuccessText] = useState<string | undefined>(undefined);
+  const [successText, setSuccessText] = useState<string | null>(null);
 
   const { handleSubmit, register, control, setError, clearErrors } = form;
   const { errors } = useFormState({
@@ -29,6 +29,7 @@ export default function AuthTestingMode() {
 
   const onSubmit = async (data: { password: string }) => {
     clearErrors();
+    setSuccessText(null);
 
     const [, error] = await tryCatch(loginTestingModeAction(data.password));
 

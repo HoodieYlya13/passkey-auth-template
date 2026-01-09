@@ -21,7 +21,7 @@ export default function UserName({ username }: UserNameProps) {
   const t = useTranslations("PROFILE.USERNAME");
   const { errorT } = useErrors();
   const form = useUpdateUsernameForm(username);
-  const [successText, setSuccessText] = useState<string | undefined>(undefined);
+  const [successText, setSuccessText] = useState<string | null>(null);
   const router = useRouter();
   const { reconnect } = useAuth();
 
@@ -30,7 +30,7 @@ export default function UserName({ username }: UserNameProps) {
 
   const onSubmit = async (data: { username: string }) => {
     clearErrors();
-    setSuccessText(undefined);
+    setSuccessText(null);
 
     const [, error] = await tryCatch(updateUsernameAction(data.username));
 

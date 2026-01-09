@@ -17,7 +17,7 @@ interface FormProps<T extends FieldValues> {
   form: UseFormReturn<T>;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   buttonLabel: string;
-  successText?: string;
+  successText: string | null;
 }
 
 export default function Form<T extends FieldValues>({
@@ -37,8 +37,10 @@ export default function Form<T extends FieldValues>({
   });
   const values = useWatch({ control });
 
+  const rootErrors = errors.root?.message;
+
   const buttonError =
-    isSubmitted && !isValid && !errors.root
+    isSubmitted && !isValid && !rootErrors && !successText
       ? errorT(ERROR_CODES.CORRECT_FIELDS_BEFORE_SUBMIT)
       : undefined;
 
@@ -46,7 +48,6 @@ export default function Form<T extends FieldValues>({
 
   const buttonDisabled =
     isSubmitting || isFormEmpty || (isSubmitted && !isValid) || isCoolingDown;
-  const rootErrors = errors.root?.message;
 
   useEffect(() => {
     if (rootErrors) toast.error(errorT(rootErrors));

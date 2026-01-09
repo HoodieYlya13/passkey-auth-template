@@ -1,6 +1,6 @@
 import PageLayout from "../../components/UI/PageLayout/PageLayout";
 import Auth from "../../components/Pages/Auth/Auth";
-import { getUserAccessToken } from "@/utils/cookies/cookiesServer";
+import { getUserAccessToken } from "@/utils/cookies/cookies.server";
 import { redirect } from "next/navigation";
 
 export default async function LoginPage() {

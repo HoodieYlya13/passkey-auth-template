@@ -8,7 +8,7 @@ import { LocaleLanguages } from "@/i18n/utils";
 import {
   getPreferredLocale,
   getServerCookie,
-} from "@/utils/cookies/cookiesServer";
+} from "@/utils/cookies/cookies.server";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -44,7 +44,7 @@ export default async function PageLayout({
       <div className="flex flex-col z-10">
         <main
           className={clsx("grow flex flex-col min-h-dvh", {
-            "p-5 pb-0 md:p-10 md:pb-0 pt-20": padding,
+            "p-5 pb-0 pt-20 md:px-10": padding,
           })}
         >
           {children}

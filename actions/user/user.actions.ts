@@ -5,13 +5,14 @@ import {
   getServerCookie,
   getUserAccessToken,
   setServerCookie,
-} from "@/utils/cookies/cookiesServer";
+} from "@/utils/cookies/cookies.server";
 import { baseServerAction } from "../base.server.actions";
-import { SERVERLESS } from "@/utils/config";
-import { prisma } from "@/utils/prisma";
-import { verifySessionToken } from "@/utils/auth-utils";
+import { SERVERLESS } from "@/utils/config/config.client";
+import { prisma } from "@/utils/config/prisma";
+import { verifySessionToken } from "@/utils/auth.utils";
 import { tryCatch } from "@/utils/tryCatch";
 import { ERROR_CODES } from "@/utils/errors";
+import { decodeJwt } from "jose";
 
 export async function updateUsernameAction(username: string) {
   return baseServerAction(
@@ -31,7 +32,8 @@ export async function updateUsernameAction(username: string) {
 
         const [payload, error] = await tryCatch(verifySessionToken(token));
 
-        if (error || !payload || !payload.exp) throw new Error(ERROR_CODES.AUTH[1]);
+        if (error || !payload || !payload.exp)
+          throw new Error(ERROR_CODES.SYST[1]);
 
         const now = Math.floor(Date.now() / 1000);
         const maxAge = payload.exp - now;
@@ -47,9 +49,10 @@ export async function updateUsernameAction(username: string) {
       const token = await getUserAccessToken();
       if (!token) throw new Error(ERROR_CODES.AUTH[4]);
 
-      const [payload, error] = await tryCatch(verifySessionToken(token));
+      const [payload, jwtError] = await tryCatch(async () => decodeJwt(token));
 
-      if (error || !payload || !payload.exp) throw new Error(ERROR_CODES.AUTH[1]);
+      if (jwtError || !payload || !payload.exp)
+        throw new Error(ERROR_CODES.SYST[1]);
 
       const now = Math.floor(Date.now() / 1000);
       const maxAge = payload.exp - now;

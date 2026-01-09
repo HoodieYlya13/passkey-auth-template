@@ -2,11 +2,12 @@
 
 import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
-import { generateSessionToken, hashToken } from "@/utils/auth-utils";
-import { SERVERLESS } from "@/utils/config";
-import { setUserSessionCookies } from "@/utils/cookies/cookiesServer";
+import { generateSessionToken, hashToken } from "@/utils/auth.utils";
+import { SERVERLESS } from "@/utils/config/config.client";
+import { ISSUER } from "@/utils/config/config.server";
+import { setUserSessionCookies } from "@/utils/cookies/cookies.server";
 import { ERROR_CODES } from "@/utils/errors";
-import { prisma } from "@/utils/prisma";
+import { prisma } from "@/utils/config/prisma";
 
 export async function verifyMagicLinkAction(magicLinkToken: string) {
   return baseServerAction(
@@ -36,12 +37,11 @@ export async function verifyMagicLinkAction(magicLinkToken: string) {
           },
         });
 
-        const issuer = process.env.ISSUER;
-        if (!issuer) throw new Error(ERROR_CODES.SYST[1]);
+        if (!ISSUER) throw new Error(ERROR_CODES.SYST[1]);
 
         const { token, expiresIn } = await generateSessionToken({
           sub: user.email,
-          issuer,
+          issuer: ISSUER,
         });
 
         await setUserSessionCookies({

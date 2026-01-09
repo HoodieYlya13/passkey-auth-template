@@ -1,10 +1,11 @@
+import "server-only";
 import {
   DEFAULT_LOCALE_UPPERCASE,
   LocaleLanguages,
   LocaleLanguagesUpperCase,
 } from "@/i18n/utils";
 import { AuthResponse } from "@/models/auth.models";
-import { DEFAULT_LOCALE } from "@/utils/config";
+import { DEFAULT_LOCALE } from "@/utils/config/config.client";
 import { cookies } from "next/headers";
 
 export async function setServerCookie(

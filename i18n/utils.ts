@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE } from "@/utils/config";
+import { DEFAULT_LOCALE } from "@/utils/config/config.client";
 import en from "react-phone-number-input/locale/en";
 import fr from "react-phone-number-input/locale/fr";
 

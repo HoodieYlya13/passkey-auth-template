@@ -1,11 +1,11 @@
 "use client";
 
 import { LocaleLanguages } from "@/i18n/utils";
-import { setClientCookie } from "@/utils/cookies/cookiesClient";
+import { setClientCookie } from "@/utils/cookies/cookies.client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Switcher from "./Switcher";
-import { DEFAULT_LOCALE } from "@/utils/config";
+import { DEFAULT_LOCALE } from "@/utils/config/config.client";
 
 const getIconPath = (t: string) => {
   switch (t) {
@@ -59,7 +59,7 @@ export default function LocaleSwitcher({
   const [showAll, setShowAll] = useState(false);
 
   const switchTo = async (locale: LocaleLanguages) => {
-    await setClientCookie("preferred_locale", locale);
+    setClientCookie("preferred_locale", locale);
 
     const pathname = window.location.pathname;
     const search = window.location.search;

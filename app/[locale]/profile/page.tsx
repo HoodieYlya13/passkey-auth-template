@@ -2,7 +2,7 @@ import PageLayout from "../../components/UI/PageLayout/PageLayout";
 import {
   getServerCookie,
   getUserAccessToken,
-} from "@/utils/cookies/cookiesServer";
+} from "@/utils/cookies/cookies.server";
 import { redirect } from "next/navigation";
 import Profile from "@/app/components/Pages/Profile/Profile";
 import MagicLinkToast from "@/app/components/Pages/Auth/MagicLink/MagicLinkToast";
