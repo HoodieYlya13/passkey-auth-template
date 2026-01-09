@@ -76,7 +76,7 @@ export async function verifyPasskeyRegistrationAction(
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user) throw new Error(ERROR_CODES.AUTH[1]);
 
-        const expectedRPID = process.env.RP_ID;
+        const expectedRPID = RP_ID;
         if (!expectedRPID || !ORIGIN || !user.currentChallenge)
           throw new Error(ERROR_CODES.SYST[1]);
 

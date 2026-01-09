@@ -6,5 +6,3 @@ export const DEFAULT_LOCALE = (process.env.NEXT_PUBLIC_DEFAULT_LOCALE || "en") a
 
 // Serverless
 export const SERVERLESS = process.env.NEXT_PUBLIC_SERVERLESS || "true";
-export const JWT_VALIDITY = 3600; // 1 hour
-export const EMAIL_FROM = process.env.NEXT_PUBLIC_EMAIL_FROM || "Magic Link <magic-link@noreply.hy13dev.com>";

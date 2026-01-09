@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
-import { DEFAULT_LOCALE } from "./utils/config/config.client";
+import { DEFAULT_LOCALE, TESTING_MODE } from "./utils/config/config.client";
 import { SUPPORTED_LOCALES } from "./i18n/utils";
 import { getProxyCookie, setProxyCookie } from "./utils/cookies/cookies.proxy";
 
@@ -12,7 +12,7 @@ export async function proxy(req: NextRequest) {
 
   let res: NextResponse = NextResponse.next();
 
-  const isTesting = process.env.NEXT_PUBLIC_TESTING_MODE === "true";
+  const isTesting = TESTING_MODE === "true";
 
   res = intlMiddleware(req);
 

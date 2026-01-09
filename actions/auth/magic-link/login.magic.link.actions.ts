@@ -4,7 +4,7 @@ import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
 import { hashToken } from "@/utils/auth.utils";
 import { SERVERLESS } from "@/utils/config/config.client";
-import { ORIGIN } from "@/utils/config/config.server";
+import { EMAIL_FROM, ORIGIN, RESEND_API_KEY } from "@/utils/config/config.server";
 import { getPreferredLocale } from "@/utils/cookies/cookies.server";
 import { ERROR_CODES } from "@/utils/errors";
 import { prisma } from "@/utils/config/prisma";
@@ -40,8 +40,8 @@ export async function loginMagicLinkAction(email: string) {
         if (process.env.NODE_ENV === "production") {
           const { Resend } = await import("resend");
 
-          const resendKey = process.env.RESEND_API_KEY;
-          const fromEmail = process.env.EMAIL_FROM;
+          const resendKey = RESEND_API_KEY;
+          const fromEmail = EMAIL_FROM;
 
           if (!resendKey || !fromEmail) throw new Error(ERROR_CODES.SYST[1]);
 

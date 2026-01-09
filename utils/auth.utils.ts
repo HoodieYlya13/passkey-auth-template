@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { SignJWT, jwtVerify, type JWTPayload } from "jose";
-import { JWT_VALIDITY } from "./config/config.client";
+import { JWT_VALIDITY } from "./config/config.server";
 import { ERROR_CODES } from "./errors";
 import { JWT_PRIVATE_KEY, ISSUER, JWT_ALG } from "./config/config.server";
 
