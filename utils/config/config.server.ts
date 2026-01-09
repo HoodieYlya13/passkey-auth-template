@@ -10,4 +10,4 @@ export const RP_ID = process.env.RP_ID || "localhost";
 export const ISSUER = process.env.ISSUER || "app-name-passkey-auth-template";
 export const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY;
 export const JWT_ALG = process.env.JWT_ALG || "HS256";
-export const JWT_VALIDITY = process.env.JWT_VALIDITY || 3600; // 1 hour
+export const JWT_VALIDITY = Number(process.env.JWT_VALIDITY) || 3600; // 1 hour
