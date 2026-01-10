@@ -5,12 +5,10 @@ export const userApi = {
   updateUsername: (username: string) =>
     fetchApi<UserDto>(`/users/${username}`, {
       method: "PUT",
-      userAuthenticated: true,
     }),
 
   getMe: () =>
     fetchApi<UserDto>("/users/me", {
       method: "GET",
-      userAuthenticated: true,
     }),
 };

@@ -59,6 +59,7 @@ export async function verifyMagicLinkAction(magicLinkToken: string) {
 
       return user.username;
     },
-    {}
+    {},
+    false
   );
 }

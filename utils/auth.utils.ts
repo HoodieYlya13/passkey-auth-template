@@ -1,8 +1,11 @@
+import "server-only";
 import crypto from "crypto";
 import { SignJWT, jwtVerify, type JWTPayload } from "jose";
 import { JWT_VALIDITY } from "./config/config.server";
 import { ERROR_CODES } from "./errors";
 import { JWT_PRIVATE_KEY, ISSUER, JWT_ALG } from "./config/config.server";
+import { SERVERLESS } from "./config/config.client";
+import { getUserAccessToken } from "./cookies/cookies.server";
 
 export async function hashToken(token: string): Promise<string> {
   return crypto.createHash("sha256").update(token).digest("hex");
@@ -41,4 +44,13 @@ export async function verifySessionToken(token: string) {
   });
 
   return payload;
+}
+
+export async function isAuthenticated(authenticationNeeded?: boolean) {
+  if (SERVERLESS && authenticationNeeded) {
+    const token = await getUserAccessToken();
+    if (!token) throw new Error(ERROR_CODES.AUTH[4]);
+    return true;
+  }
+  return true;
 }

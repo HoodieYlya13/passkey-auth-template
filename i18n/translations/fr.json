@@ -69,7 +69,14 @@
       "DESCRIPTION": "Enregistrez une Passkey pour vous connecter sans mot de passe ni lien email.",
       "BUTTON": "Enregistrer une nouvelle Passkey",
       "NAME_LABEL": "Nom de la Passkey",
-      "PASSKEY_REGISTER_SUCCESS": "Passkey enregistrée avec succès."
+      "PASSKEY_REGISTER_SUCCESS": "Passkey enregistrée avec succès.",
+      "PASSKEY_LIST_TITLE": "Vos Passkeys",
+      "NO_PASSKEYS": "Aucune Passkey trouvée.",
+      "RENAME": "Renommer",
+      "RENAME_PLACEHOLDER": "Nouveau nom",
+      "SAVE": "Sauvegarder",
+      "CANCEL": "Annuler",
+      "RENAME_SUCCESS": "Passkey renommée avec succès."
     },
     "USERNAME": {
       "TITLE": "Nom d'utilisateur",

@@ -1,8 +1,8 @@
-"use server";
-
+import "server-only";
 import { getErrorMessage } from "@/utils/errors";
 import { checkRateLimit } from "@/utils/config/rateLimit";
 import { tryCatch } from "@/utils/tryCatch";
+import { isAuthenticated } from "@/utils/auth.utils";
 
 export async function baseServerAction<T>(
   actionName: string,
@@ -11,10 +11,12 @@ export async function baseServerAction<T>(
     fallback?: string;
     overrides?: Record<string, string>;
     rawError?: boolean;
-  } = {}
+  } = {},
+  authenticationNeeded = true
 ) {
   const [data, error] = await tryCatch(async () => {
     await checkRateLimit(actionName);
+    await isAuthenticated(authenticationNeeded);
     return await actions();
   });
 

@@ -48,7 +48,8 @@ export async function fetchApi<T>(
   options: FetchOptions = {},
   rawResponse: boolean = false
 ): Promise<T | Response> {
-  const { userAuthenticated, headers, ...rest } = options;
+  const { userAuthenticated = true, headers, ...rest } = options;
+  
   let token = null;
   if (userAuthenticated) {
     token = await getUserAccessToken();

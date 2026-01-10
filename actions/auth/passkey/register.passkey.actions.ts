@@ -13,6 +13,7 @@ import {
   RegistrationResponseJSON,
 } from "@simplewebauthn/server";
 
+// TODO: send email to user
 export async function getPasskeyRegistrationOptionsAction(
   email: string,
   passkeyName: string
@@ -22,7 +23,7 @@ export async function getPasskeyRegistrationOptionsAction(
     async () => {
       if (SERVERLESS) {
         const user = await prisma.user.findUnique({
-          where: { email },
+          where: { email }, // TODO: replace by userId
           include: { credentials: true },
         });
 
@@ -60,7 +61,8 @@ export async function getPasskeyRegistrationOptionsAction(
     },
     {
       rawError: true,
-    }
+    },
+    false
   );
 }
 
@@ -120,6 +122,7 @@ export async function verifyPasskeyRegistrationAction(
     },
     {
       rawError: true,
-    }
+    },
+    false
   );
 }

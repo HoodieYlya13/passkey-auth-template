@@ -74,7 +74,6 @@ export async function getCurrentUserAction() {
     async () => {
       if (SERVERLESS) {
         const token = await getUserAccessToken();
-
         if (!token) throw new Error(ERROR_CODES.AUTH[4]);
 
         const [payload, error] = await tryCatch(verifySessionToken(token));

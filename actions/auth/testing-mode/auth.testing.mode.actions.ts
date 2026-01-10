@@ -29,6 +29,7 @@ export async function loginTestingModeAction(password: string) {
         maxAge: 60 * 60 * 24 * 31,
       });
     },
-    {}
+    {},
+    false
   );
 }

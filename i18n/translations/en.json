@@ -69,7 +69,14 @@
       "DESCRIPTION": "Register a passkey to log in without a password or email link.",
       "BUTTON": "Register New Passkey",
       "NAME_LABEL": "Passkey Name",
-      "PASSKEY_REGISTER_SUCCESS": "Passkey registered successfully."
+      "PASSKEY_REGISTER_SUCCESS": "Passkey registered successfully.",
+      "PASSKEY_LIST_TITLE": "Your Passkeys",
+      "NO_PASSKEYS": "No Passkeys found.",
+      "RENAME": "Rename",
+      "RENAME_PLACEHOLDER": "New name",
+      "SAVE": "Save",
+      "CANCEL": "Cancel",
+      "RENAME_SUCCESS": "Passkey renamed successfully."
     },
     "USERNAME": {
       "TITLE": "Username",

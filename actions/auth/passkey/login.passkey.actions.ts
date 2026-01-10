@@ -64,7 +64,8 @@ export async function getPasskeyLoginOptionsAction() {
     },
     {
       rawError: true,
-    }
+    },
+    false
   );
 }
 
@@ -168,6 +169,7 @@ export async function verifyPasskeyLoginAction(
     },
     {
       rawError: true,
-    }
+    },
+    false
   );
 }

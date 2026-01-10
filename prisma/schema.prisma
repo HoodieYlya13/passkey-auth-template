@@ -32,7 +32,7 @@ model WebAuthnCredential {
   credentialId String
   publicKey    String
   signCount    Int
-  name         String?
+  name         String
   userId       String
   user         User     @relation(fields: [userId], references: [id])
   createdAt    DateTime @default(now())

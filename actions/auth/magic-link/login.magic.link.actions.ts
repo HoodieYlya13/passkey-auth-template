@@ -71,6 +71,7 @@ export async function loginMagicLinkAction(email: string) {
     },
     {
       fallback: ERROR_CODES.MAGIC_LINK.FAILED,
-    }
+    },
+    false
   );
 }

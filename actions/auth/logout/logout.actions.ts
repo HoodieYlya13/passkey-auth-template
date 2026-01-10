@@ -17,7 +17,7 @@ export async function logoutAction() {
         if (userAccessToken)
           // TODO: delete the cookie in the backend too
 
-          await deleteUserSessionCookies();
+        await deleteUserSessionCookies();
       }
 
       const userAccessToken = await getUserAccessToken();
@@ -25,8 +25,9 @@ export async function logoutAction() {
       if (userAccessToken)
         // TODO: delete the cookie in the backend too
 
-        await deleteUserSessionCookies();
+      await deleteUserSessionCookies();
     },
-    {}
+    {},
+    false
   );
 }
