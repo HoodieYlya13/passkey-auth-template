@@ -51,7 +51,10 @@ export default function RenamePasskeyForm({
     }
 
     setSuccessText(t("RENAME_SUCCESS"));
-    // onCancel();
+    
+    setTimeout(() => {
+      onCancel();
+    }, 1500);
   };
 
   return (
@@ -61,6 +64,8 @@ export default function RenamePasskeyForm({
       buttonLabel={t("SAVE")}
       successText={successText}
     >
+      <h3 className="text-2xl font-bold text-center mb-4">{t("RENAME")}</h3>
+
       <Input
         id={`rename-${id}`}
         label={t("RENAME_PLACEHOLDER")}

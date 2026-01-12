@@ -81,7 +81,7 @@ export default function LocaleMismatch({
         </button>
         <button
           onClick={handleStay}
-          className="flex-1 px-4 py-2 text-sm font-medium text-foreground bg-background hover:bg-gray-800 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
+          className="flex-1 px-4 py-2 text-sm font-medium hover:bg-gray-800 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
         >
           {t("SWITCH", { locale: locale.toUpperCase() })}
         </button>

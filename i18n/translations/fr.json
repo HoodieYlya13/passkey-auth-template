@@ -83,7 +83,8 @@
       "CANCEL": "Annuler",
       "RENAME_SUCCESS": "Passkey renommée avec succès.",
       "DELETE": "Supprimer",
-      "DELETE_SUCCESS": "Passkey supprimée avec succès."
+      "DELETE_SUCCESS": "Passkey supprimée avec succès.",
+      "RENAME_PASSKEY_ARIA_LABEL": "Renommer Passkey"
     },
     "USERNAME": {
       "TITLE": "Nom d'utilisateur",

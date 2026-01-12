@@ -28,7 +28,7 @@
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: gray black;
+  scrollbar-color: gray var(--background);
 }
 
 /* WebKit browsers (Chrome, Safari, Edge) */
@@ -44,11 +44,11 @@
 *::-webkit-scrollbar-thumb {
   background-color: gray;
   border-radius: 6px;
-  border: 2px solid black;
+  border: 2px solid var(--background);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: black;
+  background-color: var(--background);
 }
 
 @layer utilities {
@@ -62,9 +62,11 @@
   }
 }
 
-html,
-body {
-  background-color: var(--background);
+@layer base {
+  html,
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 .input-focus-glow:focus-within::after {

@@ -91,7 +91,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
   return (
     <>
-      <div className="relative input-focus-glow">
+      <div className="relative input-focus-glow rounded-2xl sm:rounded-3xl md:rounded-[1.75rem]">
         <input
           {...rest}
           id={id}
