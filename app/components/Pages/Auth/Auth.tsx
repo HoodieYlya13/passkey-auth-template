@@ -115,8 +115,7 @@ export default function Auth() {
 
     if (error) return setError("root", { message: error.message });
 
-    const message = t("MAGIC_LINK_SENT");
-    setSuccessText(message);
+    setSuccessText(t("MAGIC_LINK_SENT"));
   };
 
   const onMagicLinkLogin = (e: React.FormEvent<HTMLFormElement>) => {

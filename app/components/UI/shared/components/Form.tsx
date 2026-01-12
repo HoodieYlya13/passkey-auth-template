@@ -58,8 +58,11 @@ export default function Form<T extends FieldValues>({
 
   useEffect(() => {
     if (rootErrors) toast.error(errorT(rootErrors));
-    if (successText) toast.success(successText);
-  }, [rootErrors, successText, errorT]);
+    if (successText) {
+      toast.success(successText);
+      modal?.onClose();
+    }
+  }, [rootErrors, successText, errorT, modal]);
 
   const handleSubmitWithCooldown = (e: React.FormEvent<HTMLFormElement>) => {
     if (isCoolingDown) return e.preventDefault();

@@ -51,10 +51,6 @@ export default function RenamePasskeyModal({
     }
 
     setSuccessText(t("RENAME_SUCCESS"));
-
-    setTimeout(() => {
-      onClose();
-    }, 1500);
   };
 
   return (
