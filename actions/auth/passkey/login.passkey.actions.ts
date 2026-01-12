@@ -17,8 +17,7 @@ import {
 } from "@simplewebauthn/server";
 import { generateSessionToken, verifySessionToken } from "@/utils/auth.utils";
 import { prisma } from "@/utils/config/prisma";
-import { tryCatch } from "@/utils/tryCatch";
-import { ERROR_CODES } from "@/utils/errors";
+import { ERROR_CODES, tryCatch } from "@/utils/errors.utils";
 
 export async function getPasskeyLoginOptionsAction() {
   return baseServerAction(

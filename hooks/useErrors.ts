@@ -1,4 +1,4 @@
-import { ERROR_CODES } from "@/utils/errors";
+import { ERROR_CODES } from "@/utils/errors.utils";
 import { useTranslations } from "next-intl";
 
 export const useErrors = () => {

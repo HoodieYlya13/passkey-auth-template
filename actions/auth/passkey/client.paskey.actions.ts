@@ -12,7 +12,7 @@ import {
 } from "./register.passkey.actions";
 
 import { baseClientAction } from "@/actions/base.client.actions";
-import { ERROR_CODES } from "@/utils/errors";
+import { ERROR_CODES } from "@/utils/errors.utils";
 
 export async function loginPasskeyAction() {
   return await baseClientAction(

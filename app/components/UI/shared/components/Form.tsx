@@ -10,7 +10,7 @@ import {
 import { toast } from "sonner";
 import { useErrors } from "@/hooks/useErrors";
 import { useCommon } from "@/hooks/useCommon";
-import { ERROR_CODES } from "@/utils/errors";
+import { ERROR_CODES } from "@/utils/errors.utils";
 
 interface FormProps<T extends FieldValues> {
   children: React.ReactNode;

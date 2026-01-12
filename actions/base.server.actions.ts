@@ -1,7 +1,6 @@
 import "server-only";
-import { getErrorMessage } from "@/utils/errors";
+import { getErrorMessage, tryCatch } from "@/utils/errors.utils";
 import { checkRateLimit } from "@/utils/config/rateLimit";
-import { tryCatch } from "@/utils/tryCatch";
 import { isAuthenticated } from "@/utils/auth.utils";
 
 export async function baseServerAction<T>(

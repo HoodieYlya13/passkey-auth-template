@@ -3,16 +3,15 @@
 import { useState } from "react";
 import { useTranslations, useFormatter } from "next-intl";
 import { Passkey } from "@/models/passkey.models";
+import RenamePasskeyForm from "./RenamePasskeyForm";
 
 interface AllPasskeysProps {
   passkeys: Passkey[];
-  renamePasskey: (id: string, newName: string) => void;
+  renamePasskey: (
+    id: string,
+    newName: string
+  ) => Promise<{ error: Error | null }>;
   deletePasskey: (id: string) => void;
-  // renamePasskey: (
-  //   id: string,
-  //   newName: string
-  // ) => Promise<{ error: Error | null }>;
-  // deletePasskey: (id: string) => Promise<{ error: Error | null }>;
 }
 
 export default function AllPasskeys({
@@ -24,13 +23,6 @@ export default function AllPasskeys({
   const format = useFormatter();
 
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [newName, setNewName] = useState("");
-
-  const handleRenameSubmit = (id: string) => {
-    renamePasskey(id, newName);
-    setEditingId(null);
-    setNewName("");
-  };
 
   return (
     <div className="flex flex-col gap-4 w-full max-w-md mx-auto">
@@ -46,28 +38,12 @@ export default function AllPasskeys({
               className="flex items-center justify-between p-3 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700"
             >
               {editingId === passkey.id ? (
-                <div className="flex gap-2 w-full">
-                  <input
-                    type="text"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    className="flex-1 px-2 py-1 border rounded"
-                    placeholder={t("RENAME_PLACEHOLDER")}
-                    autoFocus
-                  />
-                  <button
-                    onClick={() => handleRenameSubmit(passkey.id)}
-                    className="text-sm text-green-600 font-medium hover:underline"
-                  >
-                    {t("SAVE")}
-                  </button>
-                  <button
-                    onClick={() => setEditingId(null)}
-                    className="text-sm text-gray-500 font-medium hover:underline"
-                  >
-                    {t("CANCEL")}
-                  </button>
-                </div>
+                <RenamePasskeyForm
+                  id={passkey.id}
+                  currentName={passkey.name}
+                  renamePasskey={renamePasskey}
+                  onCancel={() => setEditingId(null)}
+                />
               ) : (
                 <>
                   <div className="flex flex-col">
@@ -85,10 +61,7 @@ export default function AllPasskeys({
 
                   <div className="flex gap-3">
                     <button
-                      onClick={() => {
-                        setEditingId(passkey.id);
-                        setNewName(passkey.name || "");
-                      }}
+                      onClick={() => setEditingId(passkey.id)}
                       className="text-sm text-blue-600 font-medium hover:underline"
                     >
                       {t("RENAME")}

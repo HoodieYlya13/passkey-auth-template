@@ -1,7 +1,6 @@
 import { ORIGIN } from "@/utils/config/config.server";
 import { getUserAccessToken } from "@/utils/cookies/cookies.server";
-import { ERROR_CODES } from "@/utils/errors";
-import { tryCatch } from "@/utils/tryCatch";
+import { ERROR_CODES, tryCatch } from "@/utils/errors.utils";
 
 type FetchOptions = RequestInit & {
   userAuthenticated?: boolean;
@@ -49,7 +48,7 @@ export async function fetchApi<T>(
   rawResponse: boolean = false
 ): Promise<T | Response> {
   const { userAuthenticated = true, headers, ...rest } = options;
-  
+
   let token = null;
   if (userAuthenticated) {
     token = await getUserAccessToken();

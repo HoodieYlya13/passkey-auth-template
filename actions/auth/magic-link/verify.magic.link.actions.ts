@@ -6,7 +6,7 @@ import { generateSessionToken, hashToken } from "@/utils/auth.utils";
 import { SERVERLESS } from "@/utils/config/config.client";
 import { ISSUER } from "@/utils/config/config.server";
 import { setUserSessionCookies } from "@/utils/cookies/cookies.server";
-import { ERROR_CODES } from "@/utils/errors";
+import { ERROR_CODES } from "@/utils/errors.utils";
 import { prisma } from "@/utils/config/prisma";
 
 export async function verifyMagicLinkAction(magicLinkToken: string) {

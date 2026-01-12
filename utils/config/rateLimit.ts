@@ -2,7 +2,7 @@ import "server-only";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { getUserIp } from "../cookies/cookies.server";
-import { ERROR_CODES } from "../errors";
+import { ERROR_CODES } from "../errors.utils";
 import { TESTING_MODE } from "./config.client";
 
 function getRedisClient() {

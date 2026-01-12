@@ -1,8 +1,7 @@
-import { ERROR_CODES } from '@/utils/errors';
-import { z } from 'zod';
+import { ERROR_CODES } from "@/utils/errors.utils";
+import { z } from "zod";
 
-const noLeadingOrTrailingWhitespace = (val: string) =>
-  val === val.trim();
+const noLeadingOrTrailingWhitespace = (val: string) => val === val.trim();
 
 export const LoginTestingModeSchema = z.object({
   password: z

@@ -1,6 +1,5 @@
 import { verifyMagicLinkAction } from "@/actions/auth/magic-link/verify.magic.link.actions";
-import { ERROR_CODES } from "@/utils/errors";
-import { tryCatch } from "@/utils/tryCatch";
+import { ERROR_CODES, tryCatch } from "@/utils/errors.utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {

@@ -5,7 +5,7 @@ import { authApi } from "@/api/auth.api";
 import { APP_NAME } from "@/utils/config/config.client";
 import { SERVERLESS } from "@/utils/config/config.client";
 import { ORIGIN, RP_ID } from "@/utils/config/config.server";
-import { ERROR_CODES } from "@/utils/errors";
+import { ERROR_CODES } from "@/utils/errors.utils";
 import { prisma } from "@/utils/config/prisma";
 import {
   generateRegistrationOptions,

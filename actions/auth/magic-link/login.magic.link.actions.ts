@@ -4,9 +4,13 @@ import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
 import { hashToken } from "@/utils/auth.utils";
 import { SERVERLESS } from "@/utils/config/config.client";
-import { EMAIL_FROM, ORIGIN, RESEND_API_KEY } from "@/utils/config/config.server";
+import {
+  EMAIL_FROM,
+  ORIGIN,
+  RESEND_API_KEY,
+} from "@/utils/config/config.server";
 import { getPreferredLocale } from "@/utils/cookies/cookies.server";
-import { ERROR_CODES } from "@/utils/errors";
+import { ERROR_CODES } from "@/utils/errors.utils";
 import { prisma } from "@/utils/config/prisma";
 import { getTranslations } from "next-intl/server";
 

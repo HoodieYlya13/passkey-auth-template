@@ -1,7 +1,5 @@
-import { ERROR_CODES } from "@/utils/errors";
+import { ERROR_CODES, noWhitespace } from "@/utils/errors.utils";
 import { z } from "zod";
-
-const noWhitespace = (val: string) => !/\s/.test(val);
 
 export const createUpdateUsernameSchema = (defaultUsername = "") =>
   z.object({

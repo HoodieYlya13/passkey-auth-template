@@ -32,7 +32,10 @@
       "FAILED": "Passkey authentication failed.",
       "ALREADY_EXISTS": "Passkey already exists for this device",
       "RENAME_FAILED": "Failed to rename passkey.",
-      "DELETE_FAILED": "Failed to delete passkey."
+      "DELETE_FAILED": "Failed to delete passkey.",
+      "HAS_WHITESPACE": "Passkey name cannot have whitespace.",
+      "TOO_LONG": "Passkey name is too long.",
+      "SAME": "New passkey name cannot be the same as the current one."
     },
     "MAGIC_LINK": {
       "FAILED": "Failed to send Magic Link."

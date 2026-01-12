@@ -8,10 +8,10 @@ import { useUpdatePasskeyNameForm } from "@/hooks/forms/useUpdatePasskeyNameForm
 import { useAuth } from "@/hooks/useAuth";
 import { useErrors } from "@/hooks/useErrors";
 import { useFormState } from "react-hook-form";
-import { ERROR_CODES } from "@/utils/errors";
+import { ERROR_CODES } from "@/utils/errors.utils";
 
 interface PasskeyRegistrationProps {
-  addPasskey: (name: string) => Promise<{ error: Error | null }>;
+  addPasskey: (passkeyName: string) => Promise<{ error: Error | null }>;
 }
 
 export default function PasskeyRegistration({
@@ -27,11 +27,11 @@ export default function PasskeyRegistration({
     form;
   const { errors } = useFormState({ control });
 
-  const onSubmit = async (data: { name: string }) => {
+  const onSubmit = async (data: { passkeyName: string }) => {
     clearErrors();
     setSuccessText(null);
 
-    const { error } = await addPasskey(data.name);
+    const { error } = await addPasskey(data.passkeyName);
 
     if (error) {
       setError("root", { message: error.message });
@@ -64,9 +64,11 @@ export default function PasskeyRegistration({
           id="passkey-name"
           label={t("NAME_LABEL")}
           type="text"
-          {...register("name")}
+          {...register("passkeyName")}
           focusOnMount
-          error={errors.name?.message && errorT(errors.name?.message)}
+          error={
+            errors.passkeyName?.message && errorT(errors.passkeyName?.message)
+          }
         />
       </Form>
     </div>

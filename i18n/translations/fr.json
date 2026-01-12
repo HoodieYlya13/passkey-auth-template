@@ -32,7 +32,10 @@
       "FAILED": "Échec de l'authentification Passkey.",
       "ALREADY_EXISTS": "Passkey déjà existante pour cet appareil",
       "RENAME_FAILED": "Échec de la mise à jour du nom de la Passkey.",
-      "DELETE_FAILED": "Échec de la suppression de la Passkey."
+      "DELETE_FAILED": "Échec de la suppression de la Passkey.",
+      "HAS_WHITESPACE": "Le nom de la Passkey ne peut pas contenir d'espace.",
+      "TOO_LONG": "Le nom de la Passkey est trop long.",
+      "SAME": "Le nouveau nom de la Passkey ne peut pas être identique à l'actuel."
     },
     "MAGIC_LINK": {
       "FAILED": "Échec de l'envoi du lien magique."

@@ -3,7 +3,7 @@
 import { baseServerAction } from "@/actions/base.server.actions";
 // import { authApi } from "@/api/auth.api";
 import { SERVERLESS } from "@/utils/config/config.client";
-import { ERROR_CODES } from "@/utils/errors";
+import { ERROR_CODES } from "@/utils/errors.utils";
 import { prisma } from "@/utils/config/prisma";
 import { getServerCookie } from "@/utils/cookies/cookies.server";
 import { revalidatePath } from "next/cache";
@@ -82,7 +82,7 @@ export async function renamePasskeyAction(
       throw new Error("Not implemented for external API");
     },
     {
-        fallback: ERROR_CODES.PASSKEY.RENAME_FAILED,
+      fallback: ERROR_CODES.PASSKEY.RENAME_FAILED,
     }
   );
 }
@@ -124,7 +124,7 @@ export async function deletePasskeyAction(credentialId: string) {
       throw new Error("Not implemented for external API");
     },
     {
-        fallback: ERROR_CODES.PASSKEY.DELETE_FAILED,
+      fallback: ERROR_CODES.PASSKEY.DELETE_FAILED,
     }
   );
 }

@@ -2,7 +2,7 @@ import "server-only";
 import crypto from "crypto";
 import { SignJWT, jwtVerify, type JWTPayload } from "jose";
 import { JWT_VALIDITY } from "./config/config.server";
-import { ERROR_CODES } from "./errors";
+import { ERROR_CODES } from "./errors.utils";
 import { JWT_PRIVATE_KEY, ISSUER, JWT_ALG } from "./config/config.server";
 import { SERVERLESS } from "./config/config.client";
 import { getUserAccessToken } from "./cookies/cookies.server";

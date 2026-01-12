@@ -8,7 +8,7 @@ import {
   renamePasskeyAction,
   deletePasskeyAction,
 } from "@/actions/auth/passkey/management.passkey.actions";
-import { tryCatch } from "@/utils/tryCatch";
+import { tryCatch } from "@/utils/errors.utils";
 import PasskeyRegistration from "./PasskeyRegistration";
 import AllPasskeys from "./AllPasskeys";
 import { toast } from "sonner";
@@ -73,13 +73,14 @@ export default function PasskeyManager({
   };
 
   const handleRenamePasskey = async (id: string, newName: string) => {
-    startTransition(async () => {
-      dispatch({ type: "RENAME", payload: { id, newName } });
-      
-      const [, error] = await tryCatch(renamePasskeyAction(id, newName));
+    return new Promise<{ error: Error | null }>(async (resolve) => {
+      startTransition(async () => {
+        dispatch({ type: "RENAME", payload: { id, newName } });
 
-      if (error) toast.error(errorT(error.message));
-      else toast.success(t("RENAME_SUCCESS"));
+        const [, error] = await tryCatch(renamePasskeyAction(id, newName));
+
+        resolve({ error });
+      });
     });
   };
 
@@ -93,30 +94,6 @@ export default function PasskeyManager({
       else toast.success(t("DELETE_SUCCESS"));
     });
   };
-
-  // const handleRenamePasskey = async (id: string, newName: string) => {
-  //   return new Promise<{ error: Error | null }>(async (resolve) => {
-  //     startTransition(async () => {
-  //       dispatch({ type: "RENAME", payload: { id, newName } });
-
-  //       const [, error] = await tryCatch(renamePasskeyAction(id, newName));
-
-  //       resolve({ error });
-  //     });
-  //   });
-  // };
-
-  // const handleDeletePasskey = async (id: string) => {
-  //   return new Promise<{ error: Error | null }>(async (resolve) => {
-  //     startTransition(async () => {
-  //       dispatch({ type: "DELETE", payload: id });
-
-  //       const [, error] = await tryCatch(deletePasskeyAction(id));
-
-  //       resolve({ error });
-  //     });
-  //   });
-  // };
 
   return (
     <>

@@ -11,6 +11,9 @@ export const ERROR_CODES = {
     ALREADY_EXISTS: "PASSKEY.ALREADY_EXISTS",
     RENAME_FAILED: "PASSKEY.RENAME_FAILED",
     DELETE_FAILED: "PASSKEY.DELETE_FAILED",
+    HAS_WHITESPACE: "PASSKEY.HAS_WHITESPACE",
+    TOO_LONG: "PASSKEY.TOO_LONG",
+    SAME: "PASSKEY.SAME",
   },
   MAGIC_LINK: { FAILED: "MAGIC_LINK.FAILED" },
   PASSWORD: {
@@ -58,4 +61,19 @@ export function getErrorMessage(
   }
 
   return fallback ?? "";
+}
+
+export const noWhitespace = (val: string) => !/\s/.test(val);
+
+type Result<T, E = Error> = [T, null] | [null, E];
+
+export async function tryCatch<T, E = Error>(
+  promiseOrFn: Promise<T> | (() => Promise<T>)
+): Promise<Result<T, E>> {
+  try {
+    const data = await (promiseOrFn instanceof Function ? promiseOrFn() : promiseOrFn);
+    return [data, null];
+  } catch (error) {
+    return [null, error as E];
+  }
 }

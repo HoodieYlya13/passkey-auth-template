@@ -4,15 +4,12 @@ import { useTranslations } from "next-intl";
 import Input from "../../UI/shared/elements/Input";
 import Form from "../../UI/shared/components/Form";
 import { useAuthTestingModeForm } from "@/hooks/forms/useAuthTestingModeForm";
-
 import { useRouter } from "next/navigation";
 import { loginTestingModeAction } from "@/actions/auth/testing-mode/auth.testing.mode.actions";
 import { useErrors } from "@/hooks/useErrors";
-
 import { useFormState } from "react-hook-form";
 import { useState } from "react";
-import { ERROR_CODES } from "@/utils/errors";
-import { tryCatch } from "@/utils/tryCatch";
+import { ERROR_CODES, tryCatch } from "@/utils/errors.utils";
 
 export default function AuthTestingMode() {
   const t = useTranslations("AUTH");

@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { logoutAction } from "@/actions/auth/logout/logout.actions";
-import { tryCatch } from "@/utils/tryCatch";
+import { tryCatch } from "@/utils/errors.utils";
 
 export const useAuth = () => {
   const router = useRouter();
@@ -12,7 +12,7 @@ export const useAuth = () => {
     router.refresh();
   };
 
-  const reconnect = async () => {
+  const reconnect = async () => { // TODO: reconnect in the server action
     const [, error] = await tryCatch(logoutAction());
 
     if (error) console.error("Reconnect failed", error);

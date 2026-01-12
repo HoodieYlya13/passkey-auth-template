@@ -10,8 +10,7 @@ import { baseServerAction } from "../base.server.actions";
 import { SERVERLESS } from "@/utils/config/config.client";
 import { prisma } from "@/utils/config/prisma";
 import { verifySessionToken } from "@/utils/auth.utils";
-import { tryCatch } from "@/utils/tryCatch";
-import { ERROR_CODES } from "@/utils/errors";
+import { ERROR_CODES, tryCatch } from "@/utils/errors.utils";
 import { decodeJwt } from "jose";
 
 export async function updateUsernameAction(username: string) {

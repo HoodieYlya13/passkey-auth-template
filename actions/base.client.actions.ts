@@ -1,5 +1,4 @@
-import { getErrorMessage } from "@/utils/errors";
-import { tryCatch } from "@/utils/tryCatch";
+import { getErrorMessage, tryCatch } from "@/utils/errors.utils";
 
 export async function baseClientAction<T>(
   actionName: string,
