@@ -81,6 +81,50 @@ export async function renamePasskeyAction(
       // TODO: Implement external API call if not serverless
       throw new Error("Not implemented for external API");
     },
-    {}
+    {
+        fallback: ERROR_CODES.PASSKEY.RENAME_FAILED,
+    }
+  );
+}
+
+// TODO: send email notification
+export async function deletePasskeyAction(credentialId: string) {
+  return baseServerAction(
+    "deletePasskeyAction",
+    async () => {
+      const userId = await getServerCookie("user_id");
+      if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
+
+      if (SERVERLESS) {
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+        });
+
+        if (!user) throw new Error(ERROR_CODES.AUTH[1]);
+
+        const credential = await prisma.webAuthnCredential.findFirst({
+          where: {
+            id: credentialId,
+            userId: user.id,
+          },
+        });
+
+        if (!credential) throw new Error(ERROR_CODES.SYST[2]);
+
+        await prisma.webAuthnCredential.delete({
+          where: { id: credentialId },
+        });
+
+        revalidatePath("/profile");
+
+        return true;
+      }
+
+      // TODO: Implement external API call if not serverless
+      throw new Error("Not implemented for external API");
+    },
+    {
+        fallback: ERROR_CODES.PASSKEY.DELETE_FAILED,
+    }
   );
 }

@@ -30,7 +30,9 @@
       "ERROR_LOGIN": "La connexion avec Passkey a pris trop de temps ou a été annulée. Veuillez réessayer.",
       "ERROR_REGISTER": "L'enregistrement d'une Passkey a pris trop de temps ou a été annulée. Veuillez réessayer.",
       "FAILED": "Échec de l'authentification Passkey.",
-      "ALREADY_EXISTS": "Passkey déjà existante pour cet appareil"
+      "ALREADY_EXISTS": "Passkey déjà existante pour cet appareil",
+      "RENAME_FAILED": "Échec de la mise à jour du nom de la Passkey.",
+      "DELETE_FAILED": "Échec de la suppression de la Passkey."
     },
     "MAGIC_LINK": {
       "FAILED": "Échec de l'envoi du lien magique."
@@ -76,7 +78,9 @@
       "RENAME_PLACEHOLDER": "Nouveau nom",
       "SAVE": "Sauvegarder",
       "CANCEL": "Annuler",
-      "RENAME_SUCCESS": "Passkey renommée avec succès."
+      "RENAME_SUCCESS": "Passkey renommée avec succès.",
+      "DELETE": "Supprimer",
+      "DELETE_SUCCESS": "Passkey supprimée avec succès."
     },
     "USERNAME": {
       "TITLE": "Nom d'utilisateur",

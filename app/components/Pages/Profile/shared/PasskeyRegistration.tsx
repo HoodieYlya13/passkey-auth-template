@@ -6,18 +6,16 @@ import { useTranslations } from "next-intl";
 import Form from "../../../UI/shared/components/Form";
 import { useUpdatePasskeyNameForm } from "@/hooks/forms/useUpdatePasskeyNameForm";
 import { useAuth } from "@/hooks/useAuth";
-import { registerPasskeyAction } from "@/actions/auth/passkey/client.paskey.actions";
 import { useErrors } from "@/hooks/useErrors";
 import { useFormState } from "react-hook-form";
 import { ERROR_CODES } from "@/utils/errors";
-import { tryCatch } from "@/utils/tryCatch";
 
 interface PasskeyRegistrationProps {
-  email: string;
+  addPasskey: (name: string) => Promise<{ error: Error | null }>;
 }
 
 export default function PasskeyRegistration({
-  email,
+  addPasskey,
 }: PasskeyRegistrationProps) {
   const t = useTranslations("PROFILE.PASSKEY");
   const { errorT } = useErrors();
@@ -33,7 +31,7 @@ export default function PasskeyRegistration({
     clearErrors();
     setSuccessText(null);
 
-    const [, error] = await tryCatch(registerPasskeyAction(email, data.name));
+    const { error } = await addPasskey(data.name);
 
     if (error) {
       setError("root", { message: error.message });
@@ -41,7 +39,8 @@ export default function PasskeyRegistration({
       if (
         error.message !== ERROR_CODES.PASSKEY.ERROR_REGISTER &&
         error.message !== ERROR_CODES.PASSKEY.ALREADY_EXISTS
-      ) reconnect();
+      )
+        reconnect();
 
       return;
     }

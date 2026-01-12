@@ -3,3 +3,8 @@ export type Passkey = {
   name: string;
   createdAt: Date;
 };
+
+export type OptimisticPasskeyActions =
+  | { type: "ADD"; payload: Passkey }
+  | { type: "DELETE"; payload: string }
+  | { type: "RENAME"; payload: { id: string; newName: string } };

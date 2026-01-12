@@ -30,7 +30,9 @@
       "ERROR_LOGIN": "Login with Passkey took too long or was cancelled. Please try again.",
       "ERROR_REGISTER": "Register a Passkey took too long or was cancelled. Please try again.",
       "FAILED": "Passkey authentication failed.",
-      "ALREADY_EXISTS": "Passkey already exists for this device"
+      "ALREADY_EXISTS": "Passkey already exists for this device",
+      "RENAME_FAILED": "Failed to rename passkey.",
+      "DELETE_FAILED": "Failed to delete passkey."
     },
     "MAGIC_LINK": {
       "FAILED": "Failed to send Magic Link."
@@ -76,7 +78,9 @@
       "RENAME_PLACEHOLDER": "New name",
       "SAVE": "Save",
       "CANCEL": "Cancel",
-      "RENAME_SUCCESS": "Passkey renamed successfully."
+      "RENAME_SUCCESS": "Passkey renamed successfully.",
+      "DELETE": "Delete",
+      "DELETE_SUCCESS": "Passkey deleted successfully."
     },
     "USERNAME": {
       "TITLE": "Username",

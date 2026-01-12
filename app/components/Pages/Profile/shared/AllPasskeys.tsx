@@ -1,50 +1,51 @@
 "use client";
 
-import { useState, useOptimistic, startTransition } from "react";
+import { useState } from "react";
 import { useTranslations, useFormatter } from "next-intl";
-import { renamePasskeyAction } from "@/actions/auth/passkey/management.passkey.actions";
-import { tryCatch } from "@/utils/tryCatch";
 import { Passkey } from "@/models/passkey.models";
 
 interface AllPasskeysProps {
-  passkeys?: Passkey[];
+  passkeys: Passkey[];
+  renamePasskey: (id: string, newName: string) => void;
+  deletePasskey: (id: string) => void;
+  // renamePasskey: (
+  //   id: string,
+  //   newName: string
+  // ) => Promise<{ error: Error | null }>;
+  // deletePasskey: (id: string) => Promise<{ error: Error | null }>;
 }
 
-export default function AllPasskeys({ passkeys }: AllPasskeysProps) {
+export default function AllPasskeys({
+  passkeys,
+  renamePasskey,
+  deletePasskey,
+}: AllPasskeysProps) {
   const t = useTranslations("PROFILE.PASSKEY");
   const format = useFormatter();
+
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
-  const [optimisticPasskeys, setOptimisticPasskey] = useOptimistic(
-    passkeys || [],
-    (state: Passkey[], { id, name }: { id: string; name: string }) =>
-      state.map((pk) => (pk.id === id ? { ...pk, name } : pk))
-  );
 
-  const handleRename = (id: string) => {
-    startTransition(async () => {
-      setOptimisticPasskey({ id, name: newName });
-      const [, error] = await tryCatch(renamePasskeyAction(id, newName));
-      if (!error) {
-        setEditingId(null);
-        setNewName("");
-      }
-    });
+  const handleRenameSubmit = (id: string) => {
+    renamePasskey(id, newName);
+    setEditingId(null);
+    setNewName("");
   };
 
   return (
     <div className="flex flex-col gap-4 w-full max-w-md mx-auto">
       <h3 className="text-lg font-bold">{t("PASSKEY_LIST_TITLE")}</h3>
-      {!optimisticPasskeys || optimisticPasskeys.length === 0 ? (
+
+      {!passkeys || passkeys.length === 0 ? (
         <p className="text-gray-400">{t("NO_PASSKEYS")}</p>
       ) : (
         <div className="flex flex-col gap-2">
-          {optimisticPasskeys.map((pk) => (
+          {passkeys.map((passkey) => (
             <div
-              key={pk.id}
+              key={passkey.id}
               className="flex items-center justify-between p-3 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700"
             >
-              {editingId === pk.id ? (
+              {editingId === passkey.id ? (
                 <div className="flex gap-2 w-full">
                   <input
                     type="text"
@@ -52,9 +53,10 @@ export default function AllPasskeys({ passkeys }: AllPasskeysProps) {
                     onChange={(e) => setNewName(e.target.value)}
                     className="flex-1 px-2 py-1 border rounded"
                     placeholder={t("RENAME_PLACEHOLDER")}
+                    autoFocus
                   />
                   <button
-                    onClick={() => handleRename(pk.id)}
+                    onClick={() => handleRenameSubmit(passkey.id)}
                     className="text-sm text-green-600 font-medium hover:underline"
                   >
                     {t("SAVE")}
@@ -69,24 +71,36 @@ export default function AllPasskeys({ passkeys }: AllPasskeysProps) {
               ) : (
                 <>
                   <div className="flex flex-col">
-                    <span className="font-medium">{pk.name || "Untitled"}</span>
+                    <span className="font-medium">
+                      {passkey.name || "Untitled"}
+                    </span>
                     <span className="text-xs text-gray-400">
-                      {format.dateTime(new Date(pk.createdAt), {
+                      {format.dateTime(new Date(passkey.createdAt), {
                         year: "numeric",
                         month: "numeric",
                         day: "numeric",
                       })}
                     </span>
                   </div>
-                  <button
-                    onClick={() => {
-                      setEditingId(pk.id);
-                      setNewName(pk.name || "");
-                    }}
-                    className="text-sm text-blue-600 font-medium hover:underline"
-                  >
-                    {t("RENAME")}
-                  </button>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        setEditingId(passkey.id);
+                        setNewName(passkey.name || "");
+                      }}
+                      className="text-sm text-blue-600 font-medium hover:underline"
+                    >
+                      {t("RENAME")}
+                    </button>
+
+                    <button
+                      onClick={() => deletePasskey(passkey.id)}
+                      className="text-sm text-red-600 font-medium hover:underline"
+                    >
+                      {t("DELETE")}
+                    </button>
+                  </div>
                 </>
               )}
             </div>
