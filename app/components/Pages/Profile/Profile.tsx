@@ -7,10 +7,11 @@ import PasskeyManager from "./shared/PasskeysManager";
 
 interface ProfileProps {
   email: string;
+  username: string;
   passkeys?: Passkey[];
 }
 
-export default function Profile({ email, passkeys }: ProfileProps) {
+export default function Profile({ email, username, passkeys }: ProfileProps) {
   const t = useTranslations("PROFILE");
 
   return (
@@ -21,7 +22,14 @@ export default function Profile({ email, passkeys }: ProfileProps) {
 
       <PasskeyManager email={email} initialPasskeys={passkeys} />
 
-      <Link href="/profile/user-name">{t("CHANGE_USER_NAME")}</Link>
+      <Link href="/profile/user-name" className="font-bold">
+        {t.rich("CHANGE_USER_NAME", {
+          username,
+          important: (chunks) => (
+            <span className="font-black">{chunks}</span>
+          ),
+        })}
+      </Link>
     </div>
   );
 }

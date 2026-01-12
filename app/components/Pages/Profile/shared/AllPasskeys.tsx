@@ -46,7 +46,7 @@ export default function AllPasskeys({
           {passkeys.map((passkey) => (
             <div
               key={passkey.id}
-              className="flex items-center justify-between p-3 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+              className="flex items-center justify-between p-3 rounded-lg liquid-glass custom-shadow"
             >
               <div className="flex flex-col">
                 <span className="font-medium">{passkey.name}</span>

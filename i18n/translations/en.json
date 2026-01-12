@@ -68,7 +68,7 @@
   "PROFILE": {
     "TITLE": "Profile",
     "SECURITY": "Security",
-    "CHANGE_USER_NAME": "Change user name",
+    "CHANGE_USER_NAME": "Change user name: <important>{username}</important>",
     "PASSKEY": {
       "TITLE": "Passkey",
       "DESCRIPTION": "Register a passkey to log in without a password or email link.",

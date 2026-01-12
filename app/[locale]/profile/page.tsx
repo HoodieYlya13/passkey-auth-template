@@ -13,12 +13,15 @@ export default async function ProfilePage() {
   const email = await getServerCookie("user_email");
   if (!token || !email) redirect("/auth");
 
+  const username = await getServerCookie("user_name");
+  if (!username) redirect("/profile/user-name");
+
   const passkeys = await getUserPasskeysAction();
 
   return (
     <PageLayout>
       <MagicLinkToast />
-      <Profile email={email} passkeys={passkeys} />
+      <Profile email={email} username={username} passkeys={passkeys} />
     </PageLayout>
   );
 }

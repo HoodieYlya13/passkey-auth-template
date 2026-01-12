@@ -46,7 +46,7 @@ export default function Modal({
       aria-label={ariaLabel}
     >
       <div
-        className="absolute inset-0 bg-background/40 backdrop-blur-sm animate-in fade-in duration-200"
+        className="absolute inset-0 bg-background/20 backdrop-blur-sm animate-in fade-in duration-200"
         onClick={onClose}
         aria-hidden="true"
       />

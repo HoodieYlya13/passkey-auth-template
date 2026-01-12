@@ -106,12 +106,22 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-.custom-shadow {
+/* .custom-shadow {
   box-shadow: 2px 4px 12px #00000014;
   transition: all 0.3s cubic-bezier(0, 0, 0.5, 1);
 }
 
 .custom-shadow-hover:hover {
   box-shadow: 2px 4px 16px #00000029;
+  transform: scale3d(1.01, 1.01, 1.01);
+} */
+
+.custom-shadow {
+  box-shadow: 2px 4px 16px #00000030;
+  transition: all 0.3s cubic-bezier(0, 0, 0.5, 1);
+}
+
+.custom-shadow-hover:hover {
+  box-shadow: 2px 4px 20px #00000060;
   transform: scale3d(1.01, 1.01, 1.01);
 }
