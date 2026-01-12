@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useTranslations, useFormatter } from "next-intl";
 import { Passkey } from "@/models/passkey.models";
-import RenamePasskeyForm from "./RenamePasskeyForm";
-import Modal from "@/app/components/UI/shared/components/Modal";
+import RenamePasskeyModal from "./RenamePasskeyModal";
 
 interface AllPasskeysProps {
   passkeys: Passkey[];
@@ -29,21 +28,16 @@ export default function AllPasskeys({
     <div className="flex flex-col gap-4 w-full max-w-md mx-auto">
       <h3 className="text-lg font-bold">{t("PASSKEY_LIST_TITLE")}</h3>
 
-      <Modal
-        isOpen={!!editingId}
-        onClose={() => setEditingId(null)}
-        ariaLabel={t("RENAME_PASSKEY_ARIA_LABEL")}
-        childrenOnly
-      >
-        {editingId && (
-          <RenamePasskeyForm
-            id={editingId}
-            currentName={passkeys.find((passkey) => passkey.id === editingId)?.name || ""}
-            renamePasskey={renamePasskey}
-            onCancel={() => setEditingId(null)}
-          />
-        )}
-      </Modal>
+      {editingId && (
+        <RenamePasskeyModal
+          id={editingId}
+          currentName={
+            passkeys.find((passkey) => passkey.id === editingId)?.name || ""
+          }
+          renamePasskey={renamePasskey}
+          onClose={() => setEditingId(null)}
+        />
+      )}
 
       {!passkeys || passkeys.length === 0 ? (
         <p className="text-gray-400">{t("NO_PASSKEYS")}</p>
@@ -55,9 +49,7 @@ export default function AllPasskeys({
               className="flex items-center justify-between p-3 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700"
             >
               <div className="flex flex-col">
-                <span className="font-medium">
-                  {passkey.name}
-                </span>
+                <span className="font-medium">{passkey.name}</span>
                 <span className="text-xs text-gray-400">
                   {format.dateTime(new Date(passkey.createdAt), {
                     year: "numeric",

@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useErrors } from "@/hooks/useErrors";
 import { useCommon } from "@/hooks/useCommon";
 import { ERROR_CODES } from "@/utils/errors.utils";
+import Modal from "./Modal";
 
 interface FormProps<T extends FieldValues> {
   children: React.ReactNode;
@@ -18,6 +19,11 @@ interface FormProps<T extends FieldValues> {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   buttonLabel: string;
   successText: string | null;
+  modal?: {
+    isOpen: boolean;
+    onClose: () => void;
+    ariaLabel: string;
+  };
 }
 
 export default function Form<T extends FieldValues>({
@@ -26,6 +32,7 @@ export default function Form<T extends FieldValues>({
   handleSubmit,
   buttonLabel,
   successText,
+  modal,
 }: FormProps<T>) {
   const { errorT } = useErrors();
   const { commonT } = useCommon();
@@ -63,11 +70,17 @@ export default function Form<T extends FieldValues>({
     handleSubmit(e);
   };
 
-  return (
-    <form
-      onSubmit={handleSubmitWithCooldown}
-      className="flex flex-col liquid-glass p-8 sm:p-10 md:p-12 rounded-4xl sm:rounded-[3rem] md:rounded-[3.5rem] shadow-2xl w-full max-w-md sm:max-w-lg md:max-w-xl gap-6 z-10 custom-shadow"
-    >
+  // TODO: use a utility function
+  const baseClasses =
+    "flex flex-col liquid-glass p-8 sm:p-10 md:p-12 rounded-4xl sm:rounded-[3rem] md:rounded-[3.5rem] shadow-2xl w-full max-w-md sm:max-w-lg md:max-w-xl gap-6 z-10 custom-shadow";
+
+  const modalClasses =
+    "relative animate-in fade-in zoom-in-95 duration-500 slide-in-from-bottom-2";
+
+  const formClasses = modal ? `${baseClasses} ${modalClasses}` : baseClasses;
+
+  const formContent = (
+    <form onSubmit={handleSubmitWithCooldown} className={formClasses}>
       {children}
 
       <SubmitButton
@@ -81,4 +94,19 @@ export default function Form<T extends FieldValues>({
       )}
     </form>
   );
+
+  if (modal) {
+    return (
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={modal.onClose}
+        ariaLabel={modal.ariaLabel}
+        childrenOnly
+      >
+        {formContent}
+      </Modal>
+    );
+  }
+
+  return formContent;
 }

@@ -1,5 +1,7 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
+
+const config: Config = {
   theme: {
     extend: {
       colors: {
@@ -12,5 +14,7 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [tailwindcssAnimate],
 };
+
+export default config;

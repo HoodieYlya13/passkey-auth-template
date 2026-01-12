@@ -11,22 +11,22 @@ import Button from "@/app/components/UI/shared/elements/Button";
 import { useAuth } from "@/hooks/useAuth";
 import { ERROR_CODES } from "@/utils/errors.utils";
 
-interface RenamePasskeyFormProps {
+interface RenamePasskeyModalProps {
   id: string;
   currentName: string;
   renamePasskey: (
     id: string,
     newName: string
   ) => Promise<{ error: Error | null }>;
-  onCancel: () => void;
+  onClose: () => void;
 }
 
-export default function RenamePasskeyForm({
+export default function RenamePasskeyModal({
   id,
   currentName,
   renamePasskey,
-  onCancel,
-}: RenamePasskeyFormProps) {
+  onClose,
+}: RenamePasskeyModalProps) {
   const t = useTranslations("PROFILE.PASSKEY");
   const { errorT } = useErrors();
   const form = useUpdatePasskeyNameForm(currentName);
@@ -51,9 +51,9 @@ export default function RenamePasskeyForm({
     }
 
     setSuccessText(t("RENAME_SUCCESS"));
-    
+
     setTimeout(() => {
-      onCancel();
+      onClose();
     }, 1500);
   };
 
@@ -63,6 +63,11 @@ export default function RenamePasskeyForm({
       handleSubmit={handleSubmit(onSubmit)}
       buttonLabel={t("SAVE")}
       successText={successText}
+      modal={{
+        isOpen: !!id,
+        onClose,
+        ariaLabel: t("RENAME_PASSKEY_ARIA_LABEL"),
+      }}
     >
       <h3 className="text-2xl font-bold text-center mb-4">{t("RENAME")}</h3>
 
@@ -77,7 +82,7 @@ export default function RenamePasskeyForm({
         }
       />
 
-      <Button type="button" onClick={onCancel} child={t("CANCEL")} />
+      <Button type="button" onClick={onClose} child={t("CANCEL")} />
     </Form>
   );
 }
