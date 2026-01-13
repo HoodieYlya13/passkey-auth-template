@@ -45,8 +45,8 @@ export default function PasskeyRegistration({
       return;
     }
 
-    reset();
     setSuccessText(t("PASSKEY_REGISTER_SUCCESS"));
+    reset();
   };
 
   return (

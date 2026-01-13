@@ -12,6 +12,7 @@ import {
   verifyRegistrationResponse,
   RegistrationResponseJSON,
 } from "@simplewebauthn/server";
+import { revalidatePath } from "next/cache";
 
 // TODO: send email to user
 export async function getPasskeyRegistrationOptionsAction(
@@ -110,6 +111,8 @@ export async function verifyPasskeyRegistrationAction(
             where: { id: user.id },
             data: { currentChallenge: null },
           });
+
+          revalidatePath("/profile");
 
           return true;
         }
