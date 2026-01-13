@@ -31,6 +31,7 @@
       "ERROR_REGISTER": "Register a Passkey took too long or was cancelled. Please try again.",
       "FAILED": "Passkey authentication failed.",
       "ALREADY_EXISTS": "Passkey already exists for this device",
+      "NAME_ALREADY_EXISTS": "A passkey with this name already exists.",
       "RENAME_FAILED": "Failed to rename passkey.",
       "DELETE_FAILED": "Failed to delete passkey.",
       "HAS_WHITESPACE": "Passkey name cannot have whitespace.",

@@ -5,9 +5,14 @@ import {
   UpdatePasskeyNameValues,
 } from "@/schemas/updatePasskeyNameFormSchema";
 
-export function useUpdatePasskeyNameForm(passkeyName?: string) {
+export function useUpdatePasskeyNameForm(
+  passkeyName?: string,
+  existingNames: string[] = []
+) {
   const form = useForm<UpdatePasskeyNameValues>({
-    resolver: zodResolver(createUpdatePasskeyNameSchema(passkeyName)),
+    resolver: zodResolver(
+      createUpdatePasskeyNameSchema(passkeyName, existingNames)
+    ),
     defaultValues: {
       passkeyName,
     },

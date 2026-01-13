@@ -19,6 +19,7 @@ interface RenamePasskeyModalProps {
     newName: string
   ) => Promise<{ error: Error | null }>;
   onClose: () => void;
+  existingNames: string[];
 }
 
 export default function RenamePasskeyModal({
@@ -26,10 +27,11 @@ export default function RenamePasskeyModal({
   currentName,
   renamePasskey,
   onClose,
+  existingNames,
 }: RenamePasskeyModalProps) {
   const t = useTranslations("PROFILE.PASSKEY");
   const { errorT } = useErrors();
-  const form = useUpdatePasskeyNameForm(currentName);
+  const form = useUpdatePasskeyNameForm(currentName, existingNames);
   const [successText, setSuccessText] = useState<string | null>(null);
   const { reconnect } = useAuth();
 

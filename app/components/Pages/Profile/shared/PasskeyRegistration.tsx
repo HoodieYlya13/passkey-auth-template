@@ -12,19 +12,20 @@ import { ERROR_CODES } from "@/utils/errors.utils";
 
 interface PasskeyRegistrationProps {
   addPasskey: (passkeyName: string) => Promise<{ error: Error | null }>;
+  existingNames: string[];
 }
 
 export default function PasskeyRegistration({
   addPasskey,
+  existingNames,
 }: PasskeyRegistrationProps) {
   const t = useTranslations("PROFILE.PASSKEY");
   const { errorT } = useErrors();
-  const form = useUpdatePasskeyNameForm();
+  const form = useUpdatePasskeyNameForm(undefined, existingNames);
   const { reconnect } = useAuth();
   const [successText, setSuccessText] = useState<string | null>(null);
 
-  const { handleSubmit, control, setError, clearErrors, reset } =
-    form;
+  const { handleSubmit, control, setError, clearErrors, reset } = form;
   const { errors } = useFormState({ control });
 
   const onSubmit = async (data: { passkeyName: string }) => {

@@ -9,6 +9,7 @@ export const ERROR_CODES = {
     ERROR_REGISTER: "PASSKEY.ERROR_REGISTER",
     FAILED: "PASSKEY.FAILED",
     ALREADY_EXISTS: "PASSKEY.ALREADY_EXISTS",
+    NAME_ALREADY_EXISTS: "PASSKEY.NAME_ALREADY_EXISTS",
     RENAME_FAILED: "PASSKEY.RENAME_FAILED",
     DELETE_FAILED: "PASSKEY.DELETE_FAILED",
     HAS_WHITESPACE: "PASSKEY.HAS_WHITESPACE",
@@ -30,16 +31,20 @@ export const ERROR_CODES = {
   },
 } as const;
 
-type DeepValue<T> = T extends string ? T : T extends object ? DeepValue<T[keyof T]> : never;
+type DeepValue<T> = T extends string
+  ? T
+  : T extends object
+    ? DeepValue<T[keyof T]>
+    : never;
 export type ErrorCode = DeepValue<typeof ERROR_CODES>;
 
 function getAllErrorCodes(obj: Record<string, unknown>): string[] {
   return Object.values(obj).flatMap((value) => {
     if (typeof value === "string") return value;
-    
+
     if (typeof value === "object" && value !== null)
       return getAllErrorCodes(value as Record<string, unknown>);
-    
+
     return [];
   });
 }
@@ -71,7 +76,9 @@ export async function tryCatch<T, E = Error>(
   promiseOrFn: Promise<T> | (() => Promise<T>)
 ): Promise<Result<T, E>> {
   try {
-    const data = await (promiseOrFn instanceof Function ? promiseOrFn() : promiseOrFn);
+    const data = await (promiseOrFn instanceof Function
+      ? promiseOrFn()
+      : promiseOrFn);
     return [data, null];
   } catch (error) {
     return [null, error as E];

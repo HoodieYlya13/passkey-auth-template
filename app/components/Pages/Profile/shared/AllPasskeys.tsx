@@ -36,6 +36,7 @@ export default function AllPasskeys({
           }
           renamePasskey={renamePasskey}
           onClose={() => setEditingId(null)}
+          existingNames={passkeys.map((passkey) => passkey.name)}
         />
       )}
 

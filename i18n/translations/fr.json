@@ -31,6 +31,7 @@
       "ERROR_REGISTER": "L'enregistrement d'une Passkey a pris trop de temps ou a été annulée. Veuillez réessayer.",
       "FAILED": "Échec de l'authentification Passkey.",
       "ALREADY_EXISTS": "Passkey déjà existante pour cet appareil",
+      "NAME_ALREADY_EXISTS": "Une Passkey avec ce nom existe déjà.",
       "RENAME_FAILED": "Échec de la mise à jour du nom de la Passkey.",
       "DELETE_FAILED": "Échec de la suppression de la Passkey.",
       "HAS_WHITESPACE": "Le nom de la Passkey ne peut pas contenir d'espace.",

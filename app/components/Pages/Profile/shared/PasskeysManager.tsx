@@ -97,7 +97,10 @@ export default function PasskeyManager({
 
   return (
     <>
-      <PasskeyRegistration addPasskey={handleAddPasskey} />
+      <PasskeyRegistration
+        addPasskey={handleAddPasskey}
+        existingNames={optimisticPasskeys.map((optimisticPasskey) => optimisticPasskey.name)}
+      />
 
       <AllPasskeys
         passkeys={optimisticPasskeys}
