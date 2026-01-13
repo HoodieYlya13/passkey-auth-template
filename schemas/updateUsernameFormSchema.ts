@@ -9,9 +9,12 @@ export const createUpdateUsernameSchema = (defaultUsername = "") =>
       .refine(noWhitespace, {
         message: ERROR_CODES.USERNAME.HAS_WHITESPACE,
       })
-      .refine((val) => val !== defaultUsername, {
-        message: ERROR_CODES.USERNAME.SAME,
-      }),
+      .refine(
+        (val) => defaultUsername === "" || val !== defaultUsername,
+        {
+          message: ERROR_CODES.USERNAME.SAME,
+        }
+      ),
   });
 
 export const UpdateUsernameSchema = createUpdateUsernameSchema("");

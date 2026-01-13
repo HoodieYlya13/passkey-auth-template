@@ -7,7 +7,7 @@ import Form from "../../../UI/shared/components/Form";
 import { useUpdatePasskeyNameForm } from "@/hooks/forms/useUpdatePasskeyNameForm";
 import { useAuth } from "@/hooks/useAuth";
 import { useErrors } from "@/hooks/useErrors";
-import { useFormState } from "react-hook-form";
+import { Controller, useFormState } from "react-hook-form";
 import { ERROR_CODES } from "@/utils/errors.utils";
 
 interface PasskeyRegistrationProps {
@@ -23,7 +23,7 @@ export default function PasskeyRegistration({
   const { reconnect } = useAuth();
   const [successText, setSuccessText] = useState<string | null>(null);
 
-  const { handleSubmit, register, control, setError, clearErrors, reset } =
+  const { handleSubmit, control, setError, clearErrors, reset } =
     form;
   const { errors } = useFormState({ control });
 
@@ -46,7 +46,7 @@ export default function PasskeyRegistration({
     }
 
     setSuccessText(t("PASSKEY_REGISTER_SUCCESS"));
-    reset();
+    reset({ passkeyName: "" });
   };
 
   return (
@@ -60,15 +60,25 @@ export default function PasskeyRegistration({
         <h3 className="text-lg font-bold">{t("TITLE")}</h3>
         <p className="text-sm text-gray-400">{t("DESCRIPTION")}</p>
 
-        <Input
-          id="passkey-name"
-          label={t("NAME_LABEL")}
-          type="text"
-          {...register("passkeyName")}
-          focusOnMount
-          error={
-            errors.passkeyName?.message && errorT(errors.passkeyName?.message)
-          }
+        <Controller
+          name="passkeyName"
+          control={control}
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <Input
+              id="passkey-name"
+              label={t("NAME_LABEL")}
+              type="text"
+              onChange={onChange}
+              onBlur={onBlur}
+              value={value}
+              ref={ref}
+              focusOnMount
+              error={
+                errors.passkeyName?.message &&
+                errorT(errors.passkeyName?.message)
+              }
+            />
+          )}
         />
       </Form>
     </div>

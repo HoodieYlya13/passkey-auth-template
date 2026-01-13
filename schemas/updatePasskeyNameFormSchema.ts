@@ -9,9 +9,12 @@ export const createUpdatePasskeyNameSchema = (defaultPasskeyName = "") =>
       .refine(noWhitespace, {
         message: ERROR_CODES.PASSKEY.HAS_WHITESPACE,
       })
-      .refine((val) => val !== defaultPasskeyName, {
-        message: ERROR_CODES.PASSKEY.SAME,
-      }),
+      .refine(
+        (val) => defaultPasskeyName === "" || val !== defaultPasskeyName,
+        {
+          message: ERROR_CODES.PASSKEY.SAME,
+        }
+      ),
   });
 
 export const UpdatePasskeyNameSchema = createUpdatePasskeyNameSchema("");
