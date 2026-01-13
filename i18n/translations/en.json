@@ -95,15 +95,24 @@
       "USERNAME_UPDATED": "Username updated successfully."
     }
   },
-  "MAGIC_LINK": {
-    "VERIFYING": "Verifying your magic link...",
-    "SUBJECT": "Your Magic Link",
-    "BODY": "Click <a href=\"{link}\">here</a> to log in."
-  },
   "LOCALE_MISMATCH": {
     "TITLE": "Switch Language?",
     "DESCRIPTION": "We detected that your preferred language is <important>{preferredLocale}</important>, but you are viewing the site in <important>{currentLocale}</important>.",
     "KEEP": "Keep {locale}",
     "SWITCH": "Switch to {locale}"
+  },
+  "EMAILS": {
+    "MAGIC_LINK": {
+      "SUBJECT": "Your Magic Link",
+      "BODY": "Click <a href=\"{link}\">here</a> to log in."
+    },
+    "PASSKEY_NEW": {
+      "SUBJECT": "New Passkey Added",
+      "BODY": "A new passkey named {name} has been added to your account."
+    },
+    "PASSKEY_DELETED": {
+      "SUBJECT": "Passkey Deleted",
+      "BODY": "The passkey named {name} has been deleted from your account."
+    }
   }
 }

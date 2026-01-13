@@ -95,15 +95,24 @@
       "USERNAME_UPDATED": "Nom d'utilisateur mis à jour avec succès."
     }
   },
-  "MAGIC_LINK": {
-    "VERIFYING": "Vérification de votre lien magique...",
-    "SUBJECT": "Votre lien de connexion",
-    "BODY": "Cliquez <a href=\"{link}\">ici</a> pour vous connecter."
-  },
   "LOCALE_MISMATCH": {
     "TITLE": "Changer de langue ?",
     "DESCRIPTION": "Nous avons détecté que votre langue préférée est <important>{preferredLocale}</important>, mais vous consultez le site en <important>{currentLocale}</important>.",
     "KEEP": "Garder en {locale}",
     "SWITCH": "Passer en {locale}"
+  },
+  "EMAILS": {
+    "MAGIC_LINK": {
+      "SUBJECT": "Votre lien de connexion",
+      "BODY": "Cliquez <a href=\"{link}\">ici</a> pour vous connecter."
+    },
+    "PASSKEY_NEW": {
+      "SUBJECT": "Nouvelle Passkey ajoutée",
+      "BODY": "Une nouvelle passkey nommée {name} a été ajoutée à votre compte."
+    },
+    "PASSKEY_DELETED": {
+      "SUBJECT": "Passkey supprimée",
+      "BODY": "La passkey nommée {name} a été supprimée de votre compte."
+    }
   }
 }

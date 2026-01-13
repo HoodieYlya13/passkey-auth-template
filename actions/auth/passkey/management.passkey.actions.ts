@@ -5,8 +5,12 @@ import { baseServerAction } from "@/actions/base.server.actions";
 import { SERVERLESS } from "@/utils/config/config.client";
 import { ERROR_CODES } from "@/utils/errors.utils";
 import { prisma } from "@/utils/config/prisma";
-import { getServerCookie } from "@/utils/cookies/cookies.server";
+import {
+  getServerCookie,
+  getPreferredLocale,
+} from "@/utils/cookies/cookies.server";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 
 export async function getUserPasskeysAction() {
   return baseServerAction(
@@ -87,7 +91,6 @@ export async function renamePasskeyAction(
   );
 }
 
-// TODO: send email notification
 export async function deletePasskeyAction(credentialId: string) {
   return baseServerAction(
     "deletePasskeyAction",
@@ -116,6 +119,16 @@ export async function deletePasskeyAction(credentialId: string) {
         });
 
         revalidatePath("/profile");
+
+        const locale = await getPreferredLocale();
+        const t = await getTranslations({ locale, namespace: "EMAILS" });
+
+        const { sendMailAction } = await import("@/actions/mail/mail.actions");
+
+        await sendMailAction(
+          t("PASSKEY_DELETED.SUBJECT", { name: credential.name }),
+          t("PASSKEY_DELETED.BODY", { name: credential.name })
+        );
 
         return true;
       }

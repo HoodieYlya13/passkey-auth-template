@@ -13,8 +13,9 @@ import {
   RegistrationResponseJSON,
 } from "@simplewebauthn/server";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
+import { getPreferredLocale } from "@/utils/cookies/cookies.server";
 
-// TODO: send email to user
 export async function getPasskeyRegistrationOptionsAction(
   email: string,
   passkeyName: string
@@ -113,6 +114,18 @@ export async function verifyPasskeyRegistrationAction(
           });
 
           revalidatePath("/profile");
+
+          const locale = await getPreferredLocale();
+          const t = await getTranslations({ locale, namespace: "EMAILS" });
+
+          const { sendMailAction } = await import(
+            "@/actions/mail/mail.actions"
+          );
+
+          await sendMailAction(
+            t("PASSKEY_NEW.SUBJECT", { name: passkeyName }),
+            t("PASSKEY_NEW.BODY", { name: passkeyName })
+          );
 
           return true;
         }
