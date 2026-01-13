@@ -1,4 +1,4 @@
-import { ERROR_CODES, noWhitespace } from "@/utils/errors.utils";
+import { ERROR_CODES } from "@/utils/errors.utils";
 import { z } from "zod";
 
 export const createUpdatePasskeyNameSchema = (
@@ -9,9 +9,6 @@ export const createUpdatePasskeyNameSchema = (
     passkeyName: z
       .string()
       .max(30, ERROR_CODES.PASSKEY.TOO_LONG)
-      .refine(noWhitespace, {
-        message: ERROR_CODES.PASSKEY.HAS_WHITESPACE,
-      })
       .refine(
         (val) => defaultPasskeyName === "" || val !== defaultPasskeyName,
         {

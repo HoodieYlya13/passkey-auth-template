@@ -34,7 +34,6 @@
       "NAME_ALREADY_EXISTS": "A passkey with this name already exists.",
       "RENAME_FAILED": "Failed to rename passkey.",
       "DELETE_FAILED": "Failed to delete passkey.",
-      "HAS_WHITESPACE": "Passkey name cannot have whitespace.",
       "TOO_LONG": "Passkey name is too long.",
       "SAME": "New passkey name cannot be the same as the current one."
     },
