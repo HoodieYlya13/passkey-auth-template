@@ -23,43 +23,43 @@ export async function getPasskeyLoginOptionsAction() {
   return baseServerAction(
     "authLoginStartPasskey",
     async () => {
-      if (SERVERLESS) {
-        if (!RP_ID) throw new Error(ERROR_CODES.SYST[1]);
+      if (!SERVERLESS) {
+        const response = await authApi.loginStartPasskey();
 
-        const options = await generateAuthenticationOptions({
-          rpID: RP_ID,
-          userVerification: "preferred",
-        });
+        if (!response.ok) throw new Error(ERROR_CODES.AUTH[2]);
 
-        const { token, expiresIn } = await generateSessionToken({
-          challenge: options.challenge,
-          type: "challenge",
-        });
+        let [name, value] = ["", ""];
+        const setCookieHeader = response.headers.get("set-cookie");
+        if (setCookieHeader)
+          setCookieHeader.split(/,(?=\s*[^;]+=[^;]+)/g).forEach((cookieStr) => {
+            [name, value] = cookieStr.split(";")[0].split("=");
+          });
 
-        await setServerCookie("passkey_challenge", token, {
-          maxAge: expiresIn,
-        });
+        if (name && value)
+          await setServerCookie(name, value, {
+            maxAge: 60,
+          });
 
-        return options;
+        return await response.json();
       }
 
-      const response = await authApi.loginStartPasskey();
+      if (!RP_ID) throw new Error(ERROR_CODES.SYST[1]);
 
-      if (!response.ok) throw new Error(ERROR_CODES.AUTH[2]);
+      const options = await generateAuthenticationOptions({
+        rpID: RP_ID,
+        userVerification: "preferred",
+      });
 
-      let [name, value] = ["", ""];
-      const setCookieHeader = response.headers.get("set-cookie");
-      if (setCookieHeader)
-        setCookieHeader.split(/,(?=\s*[^;]+=[^;]+)/g).forEach((cookieStr) => {
-          [name, value] = cookieStr.split(";")[0].split("=");
-        });
+      const { token, expiresIn } = await generateSessionToken({
+        challenge: options.challenge,
+        type: "challenge",
+      });
 
-      if (name && value)
-        await setServerCookie(name, value, {
-          maxAge: 60,
-        });
+      await setServerCookie("passkey_challenge", token, {
+        maxAge: expiresIn,
+      });
 
-      return await response.json();
+      return options;
     },
     {
       rawError: true,
@@ -74,97 +74,97 @@ export async function verifyPasskeyLoginAction(
   return baseServerAction(
     "authLoginPasskeyFinish",
     async () => {
-      if (SERVERLESS) {
-        const challengeToken = await getServerCookie("passkey_challenge");
-        if (!challengeToken) throw new Error(ERROR_CODES.AUTH[3]);
+      if (!SERVERLESS) {
+        const cookieHeader = await getServerCookies();
 
-        const [payload, error] = await tryCatch(
-          verifySessionToken(challengeToken)
-        );
+        const user = await authApi.loginPasskeyFinish(credential, cookieHeader);
 
-        if (
-          error ||
-          !payload ||
-          !payload.challenge ||
-          payload.type !== "challenge"
-        )
-          throw new Error(ERROR_CODES.AUTH[3]);
+        await setUserSessionCookies(user);
 
-        const expectedChallenge = payload.challenge as string;
-
-        const userHandle = credential.response.userHandle;
-        if (!userHandle) throw new Error(ERROR_CODES.AUTH[1]);
-
-        const credentialId = credential.id;
-        const dbCred = await prisma.webAuthnCredential.findFirst({
-          where: { credentialId },
-          select: {
-            id: true,
-            credentialId: true,
-            publicKey: true,
-            signCount: true,
-            user: {
-              select: {
-                id: true,
-                username: true,
-                email: true,
-              },
-            },
-          },
-        });
-
-        if (!dbCred) throw new Error(ERROR_CODES.AUTH[1]);
-
-        const user = dbCred.user;
-
-        const expectedRPID = process.env.RP_ID;
-        if (!expectedRPID || !ORIGIN) throw new Error(ERROR_CODES.SYST[1]);
-
-        const verification = await verifyAuthenticationResponse({
-          response: credential,
-          expectedChallenge: expectedChallenge,
-          expectedOrigin: ORIGIN,
-          expectedRPID,
-          credential: {
-            id: dbCred.credentialId,
-            publicKey: Buffer.from(dbCred.publicKey, "base64"),
-            counter: dbCred.signCount,
-          },
-        });
-
-        if (verification.verified) {
-          const { newCounter } = verification.authenticationInfo;
-          await prisma.webAuthnCredential.update({
-            where: { id: dbCred.id },
-            data: { signCount: Number(newCounter) },
-          });
-
-          if (!ISSUER) throw new Error(ERROR_CODES.SYST[1]);
-
-          const { token, expiresIn } = await generateSessionToken({
-            sub: user.email,
-            issuer: ISSUER,
-          });
-
-          await setUserSessionCookies({
-            ...user,
-            token,
-            expiresIn,
-          });
-
-          return user.username;
-        }
-
-        throw new Error(ERROR_CODES.AUTH[1]);
+        return user.username;
       }
 
-      const cookieHeader = await getServerCookies();
+      const challengeToken = await getServerCookie("passkey_challenge");
+      if (!challengeToken) throw new Error(ERROR_CODES.AUTH[3]);
 
-      const user = await authApi.loginPasskeyFinish(credential, cookieHeader);
+      const [payload, error] = await tryCatch(
+        verifySessionToken(challengeToken)
+      );
 
-      await setUserSessionCookies(user);
+      if (
+        error ||
+        !payload ||
+        !payload.challenge ||
+        payload.type !== "challenge"
+      )
+        throw new Error(ERROR_CODES.AUTH[3]);
 
-      return user.username;
+      const expectedChallenge = payload.challenge as string;
+
+      const userHandle = credential.response.userHandle;
+      if (!userHandle) throw new Error(ERROR_CODES.AUTH[1]);
+
+      const credentialId = credential.id;
+      const dbCred = await prisma.webAuthnCredential.findFirst({
+        where: { credentialId },
+        select: {
+          id: true,
+          credentialId: true,
+          publicKey: true,
+          signCount: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      if (!dbCred) throw new Error(ERROR_CODES.AUTH[1]);
+
+      const user = dbCred.user;
+
+      const expectedRPID = process.env.RP_ID;
+      if (!expectedRPID || !ORIGIN) throw new Error(ERROR_CODES.SYST[1]);
+
+      const verification = await verifyAuthenticationResponse({
+        response: credential,
+        expectedChallenge: expectedChallenge,
+        expectedOrigin: ORIGIN,
+        expectedRPID,
+        credential: {
+          id: dbCred.credentialId,
+          publicKey: Buffer.from(dbCred.publicKey, "base64"),
+          counter: dbCred.signCount,
+        },
+      });
+
+      if (verification.verified) {
+        const { newCounter } = verification.authenticationInfo;
+        await prisma.webAuthnCredential.update({
+          where: { id: dbCred.id },
+          data: { signCount: Number(newCounter) },
+        });
+
+        if (!ISSUER) throw new Error(ERROR_CODES.SYST[1]);
+
+        const { token, expiresIn } = await generateSessionToken({
+          sub: user.email,
+          issuer: ISSUER,
+        });
+
+        await setUserSessionCookies({
+          ...user,
+          token,
+          expiresIn,
+        });
+
+        return user.username;
+      }
+
+      throw new Error(ERROR_CODES.AUTH[1]);
     },
     {
       rawError: true,

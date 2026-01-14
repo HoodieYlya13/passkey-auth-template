@@ -11,19 +11,19 @@ export async function loginTestingModeAction(password: string) {
   return baseServerAction(
     "authTestingMode",
     async () => {
-      if (SERVERLESS) {
-        const isValid = password === APP_PASSWORD;
+      if (!SERVERLESS) {
+        const response = await authApi.loginTestingMode(password);
 
-        if (!isValid) throw new Error(ERROR_CODES.PASSWORD.INCORRECT);
+        if (!response) throw new Error(ERROR_CODES.PASSWORD.INCORRECT);
 
         return await setServerCookie("isAuthorized", "true", {
           maxAge: 60 * 60 * 24 * 31,
         });
       }
 
-      const response = await authApi.loginTestingMode(password);
+      const isValid = password === APP_PASSWORD;
 
-      if (!response) throw new Error(ERROR_CODES.PASSWORD.INCORRECT);
+      if (!isValid) throw new Error(ERROR_CODES.PASSWORD.INCORRECT);
 
       return await setServerCookie("isAuthorized", "true", {
         maxAge: 60 * 60 * 24 * 31,

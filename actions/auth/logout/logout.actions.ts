@@ -11,7 +11,7 @@ export async function logoutAction() {
   return baseServerAction(
     "authLogout",
     async () => {
-      if (SERVERLESS) {
+      if (!SERVERLESS) {
         const userAccessToken = await getUserAccessToken();
 
         if (userAccessToken)

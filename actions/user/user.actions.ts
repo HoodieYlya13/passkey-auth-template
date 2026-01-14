@@ -17,46 +17,48 @@ export async function updateUsernameAction(username: string) {
   return baseServerAction(
     "updateUsername",
     async () => {
-      if (SERVERLESS) {
+      if (!SERVERLESS) {
+        const json = await userApi.updateUsername(username);
+
         const token = await getUserAccessToken();
         if (!token) throw new Error(ERROR_CODES.AUTH[4]);
 
-        const id = await getServerCookie("user_id");
-        if (!id) throw new Error(ERROR_CODES.AUTH[1]);
+        const [payload, jwtError] = await tryCatch(async () =>
+          decodeJwt(token)
+        );
 
-        await prisma.user.update({
-          where: { id },
-          data: { username },
-        });
-
-        const [payload, error] = await tryCatch(verifySessionToken(token));
-
-        if (error || !payload || !payload.exp)
+        if (jwtError || !payload || !payload.exp)
           throw new Error(ERROR_CODES.SYST[1]);
 
         const now = Math.floor(Date.now() / 1000);
         const maxAge = payload.exp - now;
 
-        return await setServerCookie("user_name", username, {
+        return await setServerCookie("user_name", json.username, {
           maxAge,
           httpOnly: false,
         });
       }
 
-      const json = await userApi.updateUsername(username);
-
       const token = await getUserAccessToken();
       if (!token) throw new Error(ERROR_CODES.AUTH[4]);
 
-      const [payload, jwtError] = await tryCatch(async () => decodeJwt(token));
+      const id = await getServerCookie("user_id");
+      if (!id) throw new Error(ERROR_CODES.AUTH[1]);
 
-      if (jwtError || !payload || !payload.exp)
+      await prisma.user.update({
+        where: { id },
+        data: { username },
+      });
+
+      const [payload, error] = await tryCatch(verifySessionToken(token));
+
+      if (error || !payload || !payload.exp)
         throw new Error(ERROR_CODES.SYST[1]);
 
       const now = Math.floor(Date.now() / 1000);
       const maxAge = payload.exp - now;
 
-      return await setServerCookie("user_name", json.username, {
+      return await setServerCookie("user_name", username, {
         maxAge,
         httpOnly: false,
       });
@@ -71,26 +73,24 @@ export async function getCurrentUserAction() {
   return baseServerAction(
     "getCurrentUser",
     async () => {
-      if (SERVERLESS) {
-        const token = await getUserAccessToken();
-        if (!token) throw new Error(ERROR_CODES.AUTH[4]);
+      if (!SERVERLESS) return await userApi.getMe();
 
-        const [payload, error] = await tryCatch(verifySessionToken(token));
+      const token = await getUserAccessToken();
+      if (!token) throw new Error(ERROR_CODES.AUTH[4]);
 
-        if (error) throw new Error(ERROR_CODES.SYST[1]);
+      const [payload, error] = await tryCatch(verifySessionToken(token));
 
-        if (!payload || !payload.sub) throw new Error(ERROR_CODES.AUTH[3]);
+      if (error) throw new Error(ERROR_CODES.SYST[1]);
 
-        const user = await prisma.user.findUnique({
-          where: { email: payload.sub },
-        });
+      if (!payload || !payload.sub) throw new Error(ERROR_CODES.AUTH[3]);
 
-        if (!user) throw new Error(ERROR_CODES.AUTH[1]);
+      const user = await prisma.user.findUnique({
+        where: { email: payload.sub },
+      });
 
-        return user;
-      }
+      if (!user) throw new Error(ERROR_CODES.AUTH[1]);
 
-      return await userApi.getMe();
+      return user;
     },
     {}
   );

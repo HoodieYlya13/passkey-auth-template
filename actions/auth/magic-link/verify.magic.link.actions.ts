@@ -13,49 +13,49 @@ export async function verifyMagicLinkAction(magicLinkToken: string) {
   return baseServerAction(
     "authVerifyMagicLink",
     async () => {
-      if (SERVERLESS) {
-        const tokenHash = await hashToken(magicLinkToken);
-        const user = await prisma.user.findFirst({
-          where: {
-            magicLinkToken: tokenHash,
-            magicLinkTokenExpiration: { gt: new Date() },
-          },
-          select: {
-            id: true,
-            username: true,
-            email: true,
-          },
-        });
+      if (!SERVERLESS) {
+        const user = await authApi.verifyMagicLink(magicLinkToken);
 
-        if (!user) throw new Error(ERROR_CODES.AUTH[1]);
-
-        await prisma.user.update({
-          where: { id: user.id },
-          data: {
-            magicLinkToken: null,
-            magicLinkTokenExpiration: null,
-          },
-        });
-
-        if (!ISSUER) throw new Error(ERROR_CODES.SYST[1]);
-
-        const { token, expiresIn } = await generateSessionToken({
-          sub: user.email,
-          issuer: ISSUER,
-        });
-
-        await setUserSessionCookies({
-          ...user,
-          token,
-          expiresIn,
-        });
+        await setUserSessionCookies(user);
 
         return user.username;
       }
 
-      const user = await authApi.verifyMagicLink(magicLinkToken);
+      const tokenHash = await hashToken(magicLinkToken);
+      const user = await prisma.user.findFirst({
+        where: {
+          magicLinkToken: tokenHash,
+          magicLinkTokenExpiration: { gt: new Date() },
+        },
+        select: {
+          id: true,
+          username: true,
+          email: true,
+        },
+      });
 
-      await setUserSessionCookies(user);
+      if (!user) throw new Error(ERROR_CODES.AUTH[1]);
+
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          magicLinkToken: null,
+          magicLinkTokenExpiration: null,
+        },
+      });
+
+      if (!ISSUER) throw new Error(ERROR_CODES.SYST[1]);
+
+      const { token, expiresIn } = await generateSessionToken({
+        sub: user.email,
+        issuer: ISSUER,
+      });
+
+      await setUserSessionCookies({
+        ...user,
+        token,
+        expiresIn,
+      });
 
       return user.username;
     },
