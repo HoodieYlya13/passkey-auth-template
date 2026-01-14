@@ -81,7 +81,7 @@ export async function sendMagicLinkMailAction(
 export async function sendPasskeyDeletedMailAction(passkeyName: string) {
   const t = await getTranslationsContext("PASSKEY_DELETED");
 
-  const [, error] = await tryCatch(
+  const [error] = await tryCatch(
     sendMailAction(
       t("SUBJECT", { passkeyName }),
       (t.raw("BODY") as string).replace("{passkeyName}", passkeyName)
@@ -96,7 +96,7 @@ export async function sendPasskeyDeletedMailAction(passkeyName: string) {
 export async function sendPasskeyCreatedMailAction(passkeyName: string) {
   const t = await getTranslationsContext("PASSKEY_CREATED");
 
-  const [, error] = await tryCatch(
+  const [error] = await tryCatch(
     sendMailAction(
       t("SUBJECT", { passkeyName }),
       (t.raw("BODY") as string).replace("{passkeyName}", passkeyName)

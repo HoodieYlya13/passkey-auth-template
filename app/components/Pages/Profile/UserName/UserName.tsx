@@ -31,7 +31,7 @@ export default function UserName({ username }: UserNameProps) {
     clearErrors();
     setSuccessText(null);
 
-    const [, error] = await tryCatch(updateUsernameAction(data.username));
+    const [error] = await tryCatch(updateUsernameAction(data.username));
 
     if (error) {
       setError("root", { message: error.message });

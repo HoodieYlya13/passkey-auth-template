@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
       new URL("/auth?error=" + ERROR_CODES.AUTH[4], origin)
     );
 
-  const [username, error] = await tryCatch(verifyMagicLinkAction(token));
+  const [error, username] = await tryCatch(verifyMagicLinkAction(token));
 
   if (error)
     return NextResponse.redirect(

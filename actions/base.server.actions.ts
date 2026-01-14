@@ -13,7 +13,7 @@ export async function baseServerAction<T>(
   } = {},
   authenticationNeeded = true
 ) {
-  const [data, error] = await tryCatch(async () => {
+  const [error, data] = await tryCatch(async () => {
     await checkRateLimit(actionName);
     await isAuthenticated(authenticationNeeded);
     return await actions();

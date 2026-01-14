@@ -67,17 +67,19 @@ export function getErrorMessage(
   return fallback ?? "";
 }
 
-type Result<T, E = Error> = [T, null] | [null, E];
+type Result<T, E = Error> = [error: null, data: T] | [error: E, data: null];
 
 export async function tryCatch<T, E = Error>(
-  promiseOrFn: Promise<T> | (() => Promise<T>)
+  promiseOrFn: Promise<T> | (() => Promise<T> | T)
 ): Promise<Result<T, E>> {
   try {
-    const data = await (promiseOrFn instanceof Function
-      ? promiseOrFn()
-      : promiseOrFn);
-    return [data, null];
+    const prom =
+      typeof promiseOrFn === "function" ? promiseOrFn() : promiseOrFn;
+
+    const data = await prom;
+
+    return [null, data];
   } catch (error) {
-    return [null, error as E];
+    return [error as E, null];
   }
 }

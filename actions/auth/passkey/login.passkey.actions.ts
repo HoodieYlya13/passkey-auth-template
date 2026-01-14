@@ -87,7 +87,7 @@ export async function verifyPasskeyLoginAction(
       const challengeToken = await getServerCookie("passkey_challenge");
       if (!challengeToken) throw new Error(ERROR_CODES.AUTH[3]);
 
-      const [payload, error] = await tryCatch(
+      const [error, payload] = await tryCatch(
         verifySessionToken(challengeToken)
       );
 

@@ -9,7 +9,7 @@ export async function baseClientAction<T>(
     rawError?: boolean;
   } = {}
 ): Promise<T> {
-  const [data, error] = await tryCatch(actions);
+  const [error, data] = await tryCatch(actions);
 
   if (error) {
     console.error(actionName + " error:", error);

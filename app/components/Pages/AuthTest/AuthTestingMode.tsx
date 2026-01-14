@@ -28,7 +28,7 @@ export default function AuthTestingMode() {
     clearErrors();
     setSuccessText(null);
 
-    const [, error] = await tryCatch(loginTestingModeAction(data.password));
+    const [error] = await tryCatch(loginTestingModeAction(data.password));
 
     if (error)
       return setError(

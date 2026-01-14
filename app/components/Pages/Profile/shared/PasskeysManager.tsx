@@ -63,7 +63,7 @@ export default function PasskeyManager({
       startTransition(async () => {
         dispatch({ type: "ADD", payload: temporaryPasskey });
 
-        const [, error] = await tryCatch(registerPasskeyAction(name));
+        const [error] = await tryCatch(registerPasskeyAction(name));
 
         resolve({ error });
       });
@@ -75,7 +75,7 @@ export default function PasskeyManager({
       startTransition(async () => {
         dispatch({ type: "RENAME", payload: { id, newName } });
 
-        const [, error] = await tryCatch(renamePasskeyAction(id, newName));
+        const [error] = await tryCatch(renamePasskeyAction(id, newName));
 
         resolve({ error });
       });
@@ -86,7 +86,7 @@ export default function PasskeyManager({
     startTransition(async () => {
       dispatch({ type: "DELETE", payload: id });
 
-      const [, error] = await tryCatch(deletePasskeyAction(id));
+      const [error] = await tryCatch(deletePasskeyAction(id));
 
       if (error) toast.error(errorT(error.message));
       else toast.success(t("DELETE_SUCCESS"));

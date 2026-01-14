@@ -67,7 +67,7 @@ export async function fetchApi<T>(
 
   if (token) defaultHeaders["Authorization"] = `Bearer ${token}`;
 
-  const [response, fetchError] = await tryCatch(
+  const [fetchError, response] = await tryCatch(
     fetch(url, {
       headers: { ...defaultHeaders, ...headers },
       ...rest,
@@ -77,7 +77,7 @@ export async function fetchApi<T>(
   if (fetchError) throw fetchError;
 
   if (!response.ok) {
-    const [errorData] = await tryCatch(response.json());
+    const [, errorData] = await tryCatch(response.json());
 
     const message =
       errorData && typeof errorData === "object" && "code" in errorData

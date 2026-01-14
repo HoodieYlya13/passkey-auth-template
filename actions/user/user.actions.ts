@@ -23,7 +23,7 @@ export async function updateUsernameAction(username: string) {
         const token = await getUserAccessToken();
         if (!token) throw new Error(ERROR_CODES.AUTH[4]);
 
-        const [payload, jwtError] = await tryCatch(async () =>
+        const [jwtError, payload] = await tryCatch(async () =>
           decodeJwt(token)
         );
 
@@ -50,7 +50,7 @@ export async function updateUsernameAction(username: string) {
         data: { username },
       });
 
-      const [payload, error] = await tryCatch(verifySessionToken(token));
+      const [error, payload] = await tryCatch(verifySessionToken(token));
 
       if (error || !payload || !payload.exp)
         throw new Error(ERROR_CODES.SYST[1]);
@@ -78,7 +78,7 @@ export async function getCurrentUserAction() {
       const token = await getUserAccessToken();
       if (!token) throw new Error(ERROR_CODES.AUTH[4]);
 
-      const [payload, error] = await tryCatch(verifySessionToken(token));
+      const [error, payload] = await tryCatch(verifySessionToken(token));
 
       if (error) throw new Error(ERROR_CODES.SYST[1]);
 
