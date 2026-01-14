@@ -106,13 +106,13 @@
       "SUBJECT": "Votre lien de connexion",
       "BODY": "Cliquez <a href=\"{link}\">ici</a> pour vous connecter."
     },
-    "PASSKEY_NEW": {
-      "SUBJECT": "Nouvelle Passkey ajoutée: {name}",
-      "BODY": "Une nouvelle passkey nommée <strong>{name}</strong> a été ajoutée à votre compte."
+    "PASSKEY_CREATED": {
+      "SUBJECT": "Nouvelle Passkey ajoutée: {passkeyName}",
+      "BODY": "Une nouvelle passkey nommée <strong>{passkeyName}</strong> a été ajoutée à votre compte."
     },
     "PASSKEY_DELETED": {
-      "SUBJECT": "Passkey supprimée: {name}",
-      "BODY": "La passkey nommée <strong>{name}</strong> a été supprimée de votre compte."
+      "SUBJECT": "Passkey supprimée: {passkeyName}",
+      "BODY": "La passkey nommée <strong>{passkeyName}</strong> a été supprimée de votre compte."
     }
   }
 }

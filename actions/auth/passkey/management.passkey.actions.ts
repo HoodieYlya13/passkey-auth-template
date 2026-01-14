@@ -5,13 +5,9 @@ import { baseServerAction } from "@/actions/base.server.actions";
 import { SERVERLESS } from "@/utils/config/config.client";
 import { ERROR_CODES } from "@/utils/errors.utils";
 import { prisma } from "@/utils/config/prisma";
-import {
-  getServerCookie,
-  getPreferredLocale,
-} from "@/utils/cookies/cookies.server";
+import { getServerCookie } from "@/utils/cookies/cookies.server";
 import { revalidatePath } from "next/cache";
-import { getTranslations } from "next-intl/server";
-import { sendMailAction } from "@/actions/mail/mail.actions";
+import { sendPasskeyDeletedMailAction } from "@/actions/mail/mail.actions";
 
 export async function getUserPasskeysAction() {
   return baseServerAction(
@@ -87,15 +83,7 @@ export async function deletePasskeyAction(credentialId: string) {
 
       revalidatePath("/profile");
 
-      const locale = await getPreferredLocale();
-      const t = await getTranslations({ locale, namespace: "EMAILS" });
-
-      await sendMailAction(
-        t("PASSKEY_DELETED.SUBJECT", { name: credential.name }),
-        t("PASSKEY_DELETED.BODY", { name: credential.name })
-      );
-
-      return true;
+      return await sendPasskeyDeletedMailAction(credential.name);
     },
     { fallback: ERROR_CODES.PASSKEY.DELETE_FAILED }
   );

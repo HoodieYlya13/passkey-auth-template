@@ -106,13 +106,13 @@
       "SUBJECT": "Your Magic Link",
       "BODY": "Click <a href=\"{link}\">here</a> to log in."
     },
-    "PASSKEY_NEW": {
-      "SUBJECT": "New Passkey Added: {name}",
-      "BODY": "A new passkey named <strong>{name}</strong> has been added to your account."
+    "PASSKEY_CREATED": {
+      "SUBJECT": "New Passkey Added: {passkeyName}",
+      "BODY": "A new passkey named <strong>{passkeyName}</strong> has been added to your account."
     },
     "PASSKEY_DELETED": {
-      "SUBJECT": "Passkey Deleted: {name}",
-      "BODY": "The passkey named <strong>{name}</strong> has been removed from your account."
+      "SUBJECT": "Passkey Deleted: {passkeyName}",
+      "BODY": "The passkey named <strong>{passkeyName}</strong> has been removed from your account."
     }
   }
 }

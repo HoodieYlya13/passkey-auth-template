@@ -5,11 +5,9 @@ import { authApi } from "@/api/auth.api";
 import { hashToken } from "@/utils/auth.utils";
 import { SERVERLESS } from "@/utils/config/config.client";
 import { ORIGIN } from "@/utils/config/config.server";
-import { getPreferredLocale } from "@/utils/cookies/cookies.server";
 import { ERROR_CODES } from "@/utils/errors.utils";
 import { prisma } from "@/utils/config/prisma";
-import { getTranslations } from "next-intl/server";
-import { sendMailAction } from "@/actions/mail/mail.actions";
+import { sendMagicLinkMailAction } from "@/actions/mail/mail.actions";
 
 export async function loginMagicLinkAction(email: string) {
   return baseServerAction(
@@ -38,20 +36,8 @@ export async function loginMagicLinkAction(email: string) {
       });
 
       const magicLink = `${ORIGIN}/auth/magic-link?token=${token}`;
-      const locale = await getPreferredLocale();
-      const t = await getTranslations({
-        locale,
-        namespace: "EMAILS.MAGIC_LINK",
-      });
 
-      const emailBody = (t.raw("BODY") as string).replace("{link}", magicLink);
-
-      await sendMailAction(t("SUBJECT"), emailBody, email, false);
-
-      if (process.env.NODE_ENV !== "production")
-        console.log(`🔗 Magic Link: ${magicLink}`);
-
-      return true;
+      return await sendMagicLinkMailAction(email, magicLink);
     },
     {
       fallback: ERROR_CODES.MAGIC_LINK.FAILED,

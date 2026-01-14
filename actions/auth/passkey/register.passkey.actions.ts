@@ -12,12 +12,8 @@ import {
   type RegistrationResponseJSON,
 } from "@simplewebauthn/server";
 import { revalidatePath } from "next/cache";
-import { getTranslations } from "next-intl/server";
-import {
-  getPreferredLocale,
-  getServerCookie,
-} from "@/utils/cookies/cookies.server";
-import { sendMailAction } from "@/actions/mail/mail.actions";
+import { getServerCookie } from "@/utils/cookies/cookies.server";
+import { sendPasskeyCreatedMailAction } from "@/actions/mail/mail.actions";
 
 export async function getPasskeyRegistrationOptionsAction(passkeyName: string) {
   return baseServerAction(
@@ -123,15 +119,7 @@ export async function verifyPasskeyRegistrationAction(
 
         revalidatePath("/profile");
 
-        const locale = await getPreferredLocale();
-        const t = await getTranslations({ locale, namespace: "EMAILS" });
-
-        await sendMailAction(
-          t("PASSKEY_NEW.SUBJECT", { name: passkeyName }),
-          t("PASSKEY_NEW.BODY", { name: passkeyName })
-        );
-
-        return true;
+        return await sendPasskeyCreatedMailAction(passkeyName);
       }
 
       throw new Error(ERROR_CODES.AUTH[1]);
