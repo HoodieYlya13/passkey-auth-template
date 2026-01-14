@@ -2,143 +2,141 @@
 
 import { baseServerAction } from "@/actions/base.server.actions";
 import { authApi } from "@/api/auth.api";
-import { APP_NAME } from "@/utils/config/config.client";
-import { SERVERLESS } from "@/utils/config/config.client";
+import { APP_NAME, SERVERLESS } from "@/utils/config/config.client";
 import { ORIGIN, RP_ID } from "@/utils/config/config.server";
 import { ERROR_CODES } from "@/utils/errors.utils";
 import { prisma } from "@/utils/config/prisma";
 import {
   generateRegistrationOptions,
   verifyRegistrationResponse,
-  RegistrationResponseJSON,
+  type RegistrationResponseJSON,
 } from "@simplewebauthn/server";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
-import { getPreferredLocale } from "@/utils/cookies/cookies.server";
+import {
+  getPreferredLocale,
+  getServerCookie,
+} from "@/utils/cookies/cookies.server";
+import { sendMailAction } from "@/actions/mail/mail.actions";
 
-export async function getPasskeyRegistrationOptionsAction(
-  email: string,
-  passkeyName: string
-) {
+export async function getPasskeyRegistrationOptionsAction(passkeyName: string) {
   return baseServerAction(
     "authRegisterPasskeyStart",
     async () => {
-      if (SERVERLESS) {
-        const user = await prisma.user.findUnique({
-          where: { email }, // TODO: replace by userId
-          include: { credentials: true },
-        });
-
-        if (!user || !user.username) throw new Error(ERROR_CODES.AUTH[1]);
-
-        if (!RP_ID) throw new Error(ERROR_CODES.SYST[1]);
-
-        const options = await generateRegistrationOptions({
-          rpName: APP_NAME,
-          rpID: RP_ID,
-          userID: new TextEncoder().encode(user.id),
-          userName: user.username,
-          excludeCredentials: user.credentials.map((cred) => ({
-            id: cred.credentialId,
-            transports: ["internal"],
-          })),
-          authenticatorSelection: {
-            residentKey: "preferred",
-            userVerification: "preferred",
-            authenticatorAttachment: "platform",
-          },
-        });
-
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { currentChallenge: options.challenge },
-        });
-
-        return options;
+      if (!SERVERLESS) {
+        const userEmail = await getServerCookie("user_email");
+        if (!userEmail) throw new Error(ERROR_CODES.AUTH[1]);
+        
+        const response = await authApi.registerPasskeyStart(
+          userEmail,
+          passkeyName
+        );
+        return await response.json();
       }
 
-      const response = await authApi.registerPasskeyStart(email, passkeyName);
+      const userId = await getServerCookie("user_id");
+      if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
 
-      return await response.json();
+      if (!RP_ID) throw new Error(ERROR_CODES.SYST[1]);
+
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: { credentials: true },
+      });
+
+      if (!user || !user.username) throw new Error(ERROR_CODES.AUTH[1]);
+
+      const options = await generateRegistrationOptions({
+        rpName: APP_NAME,
+        rpID: RP_ID,
+        userID: new TextEncoder().encode(userId),
+        userName: user.username,
+        excludeCredentials: user.credentials.map((cred) => ({
+          id: cred.credentialId,
+          transports: ["internal"],
+        })),
+        authenticatorSelection: {
+          residentKey: "preferred",
+          userVerification: "preferred",
+          authenticatorAttachment: "platform",
+        },
+      });
+
+      await prisma.user.update({
+        where: { id: userId },
+        data: { currentChallenge: options.challenge },
+      });
+
+      return options;
     },
-    {
-      rawError: true,
-    },
-    false
+    { rawError: true }
   );
 }
 
 export async function verifyPasskeyRegistrationAction(
   credential: RegistrationResponseJSON,
-  email: string,
   passkeyName: string
 ) {
   return baseServerAction(
     "authRegisterPasskeyFinish",
     async () => {
-      if (SERVERLESS) {
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user) throw new Error(ERROR_CODES.AUTH[1]);
-
-        const expectedRPID = RP_ID;
-        if (!expectedRPID || !ORIGIN || !user.currentChallenge)
-          throw new Error(ERROR_CODES.SYST[1]);
-
-        const verification = await verifyRegistrationResponse({
-          response: credential,
-          expectedChallenge: user.currentChallenge,
-          expectedOrigin: ORIGIN,
-          expectedRPID,
-        });
-
-        if (verification.verified && verification.registrationInfo) {
-          const { credential } = verification.registrationInfo;
-          const { id, publicKey, counter } = credential;
-
-          const credentialId = id;
-          const publicKeyStr = Buffer.from(publicKey).toString("base64");
-
-          await prisma.webAuthnCredential.create({
-            data: {
-              userId: user.id,
-              credentialId,
-              publicKey: publicKeyStr,
-              signCount: Number(counter),
-              name: passkeyName,
-            },
-          });
-
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { currentChallenge: null },
-          });
-
-          revalidatePath("/profile");
-
-          const locale = await getPreferredLocale();
-          const t = await getTranslations({ locale, namespace: "EMAILS" });
-
-          const { sendMailAction } = await import(
-            "@/actions/mail/mail.actions"
-          );
-
-          await sendMailAction(
-            t("PASSKEY_NEW.SUBJECT", { name: passkeyName }),
-            t("PASSKEY_NEW.BODY", { name: passkeyName })
-          );
-
-          return true;
-        }
-        throw new Error(ERROR_CODES.AUTH[1]);
+      if (!SERVERLESS) {
+        const userEmail = await getServerCookie("user_email");
+        if (!userEmail) throw new Error(ERROR_CODES.AUTH[1]);
+        await authApi.registerPasskeyFinish(credential, userEmail, passkeyName);
+        return true;
       }
 
-      await authApi.registerPasskeyFinish(credential, email, passkeyName);
+      const userId = await getServerCookie("user_id");
+      if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
 
-      return true;
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user || !user.currentChallenge) throw new Error(ERROR_CODES.AUTH[1]);
+
+      if (!RP_ID || !ORIGIN) throw new Error(ERROR_CODES.SYST[1]);
+
+      const verification = await verifyRegistrationResponse({
+        response: credential,
+        expectedChallenge: user.currentChallenge,
+        expectedOrigin: ORIGIN,
+        expectedRPID: RP_ID,
+      });
+
+      if (verification.verified && verification.registrationInfo) {
+        const { credential: regCred } = verification.registrationInfo;
+
+        await prisma.$transaction([
+          prisma.webAuthnCredential.create({
+            data: {
+              userId,
+              credentialId: regCred.id,
+              publicKey: Buffer.from(regCred.publicKey).toString("base64"),
+              signCount: Number(regCred.counter),
+              name: passkeyName,
+            },
+          }),
+          prisma.user.update({
+            where: { id: userId },
+            data: { currentChallenge: null },
+          }),
+        ]);
+
+        revalidatePath("/profile");
+
+        const locale = await getPreferredLocale();
+        const t = await getTranslations({ locale, namespace: "EMAILS" });
+
+        await sendMailAction(
+          t("PASSKEY_NEW.SUBJECT", { name: passkeyName }),
+          t("PASSKEY_NEW.BODY", { name: passkeyName })
+        );
+
+        return true;
+      }
+
+      throw new Error(ERROR_CODES.AUTH[1]);
     },
-    {
-      rawError: true,
-    },
-    false
+    { rawError: true },
+    true
   );
 }

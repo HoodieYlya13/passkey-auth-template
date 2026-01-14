@@ -10,8 +10,7 @@ import { getUserPasskeysAction } from "@/actions/auth/passkey/management.passkey
 
 export default async function ProfilePage() {
   const token = await getUserAccessToken();
-  const email = await getServerCookie("user_email");
-  if (!token || !email) redirect("/auth");
+  if (!token) redirect("/auth");
 
   const username = await getServerCookie("user_name");
   if (!username) redirect("/profile/user-name");
@@ -21,7 +20,7 @@ export default async function ProfilePage() {
   return (
     <PageLayout>
       <MagicLinkToast />
-      <Profile email={email} username={username} passkeys={passkeys} />
+      <Profile username={username} passkeys={passkeys} />
     </PageLayout>
   );
 }

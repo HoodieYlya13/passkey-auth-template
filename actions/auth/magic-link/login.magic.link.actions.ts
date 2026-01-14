@@ -9,55 +9,49 @@ import { getPreferredLocale } from "@/utils/cookies/cookies.server";
 import { ERROR_CODES } from "@/utils/errors.utils";
 import { prisma } from "@/utils/config/prisma";
 import { getTranslations } from "next-intl/server";
+import { sendMailAction } from "@/actions/mail/mail.actions";
 
 export async function loginMagicLinkAction(email: string) {
   return baseServerAction(
     "authLoginMagicLink",
     async () => {
-      if (SERVERLESS) {
-        let user = await prisma.user.findUnique({ where: { email } });
-        if (!user)
-          user = await prisma.user.create({
-            data: { email },
-          });
+      if (!SERVERLESS) return await authApi.loginMagicLink(email);
 
-        const token = crypto.randomUUID();
-        const tokenHash = await hashToken(token);
-        const expiration = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+      if (!ORIGIN) throw new Error(ERROR_CODES.SYST[1]);
 
-        await prisma.user.update({
-          where: { id: user.id },
-          data: {
-            magicLinkToken: tokenHash,
-            magicLinkTokenExpiration: expiration,
-          },
-        });
+      const user = await prisma.user.upsert({
+        where: { email },
+        update: {},
+        create: { email },
+      });
 
-        if (!ORIGIN) throw new Error(ERROR_CODES.SYST[1]);
+      const token = crypto.randomUUID();
+      const tokenHash = await hashToken(token);
+      const expiration = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
 
-        const magicLink = `${ORIGIN}/auth/magic-link?token=${token}`;
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          magicLinkToken: tokenHash,
+          magicLinkTokenExpiration: expiration,
+        },
+      });
 
-        const locale = await getPreferredLocale();
-        const t = await getTranslations({
-          locale,
-          namespace: "EMAILS.MAGIC_LINK",
-        });
+      const magicLink = `${ORIGIN}/auth/magic-link?token=${token}`;
+      const locale = await getPreferredLocale();
+      const t = await getTranslations({
+        locale,
+        namespace: "EMAILS.MAGIC_LINK",
+      });
 
-        const { sendMailAction } = await import("@/actions/mail/mail.actions");
+      const emailBody = (t.raw("BODY") as string).replace("{link}", magicLink);
 
-        await sendMailAction(
-          t("SUBJECT"),
-          (t.raw("BODY") as string).replace("{link}", magicLink),
-          email,
-          false
-        );
+      await sendMailAction(t("SUBJECT"), emailBody, email, false);
 
-        console.log(`Magic Link: ${magicLink}`);
+      if (process.env.NODE_ENV !== "production")
+        console.log(`🔗 Magic Link: ${magicLink}`);
 
-        return true;
-      }
-
-      return await authApi.loginMagicLink(email);
+      return true;
     },
     {
       fallback: ERROR_CODES.MAGIC_LINK.FAILED,

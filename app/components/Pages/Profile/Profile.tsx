@@ -6,12 +6,11 @@ import { Passkey } from "@/models/passkey.models";
 import PasskeyManager from "./shared/PasskeysManager";
 
 interface ProfileProps {
-  email: string;
   username: string;
   passkeys?: Passkey[];
 }
 
-export default function Profile({ email, username, passkeys }: ProfileProps) {
+export default function Profile({ username, passkeys }: ProfileProps) {
   const t = useTranslations("PROFILE");
 
   return (
@@ -20,7 +19,7 @@ export default function Profile({ email, username, passkeys }: ProfileProps) {
 
       <h2 className="text-xl font-bold mb-4">{t("SECURITY")}</h2>
 
-      <PasskeyManager email={email} initialPasskeys={passkeys} />
+      <PasskeyManager initialPasskeys={passkeys} />
 
       <Link href="/profile/user-name" className="font-bold">
         {t.rich("CHANGE_USER_NAME", {

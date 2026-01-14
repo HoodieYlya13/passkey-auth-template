@@ -35,12 +35,10 @@ function passkeyReducer(
 }
 
 interface PasskeyManagerProps {
-  email: string;
   initialPasskeys?: Passkey[];
 }
 
 export default function PasskeyManager({
-  email,
   initialPasskeys = [],
 }: PasskeyManagerProps) {
   const t = useTranslations("PROFILE.PASSKEY");
@@ -65,7 +63,7 @@ export default function PasskeyManager({
       startTransition(async () => {
         dispatch({ type: "ADD", payload: temporaryPasskey });
 
-        const [, error] = await tryCatch(registerPasskeyAction(email, name));
+        const [, error] = await tryCatch(registerPasskeyAction(name));
 
         resolve({ error });
       });
@@ -99,7 +97,9 @@ export default function PasskeyManager({
     <>
       <PasskeyRegistration
         addPasskey={handleAddPasskey}
-        existingNames={optimisticPasskeys.map((optimisticPasskey) => optimisticPasskey.name)}
+        existingNames={optimisticPasskeys.map(
+          (optimisticPasskey) => optimisticPasskey.name
+        )}
       />
 
       <AllPasskeys

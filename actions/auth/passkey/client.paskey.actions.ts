@@ -30,21 +30,15 @@ export async function loginPasskeyAction() {
   );
 }
 
-export async function registerPasskeyAction(
-  email: string,
-  passkeyName: string
-) {
+export async function registerPasskeyAction(passkeyName: string) {
   return await baseClientAction(
     "registerPasskeyAction",
     async () => {
-      const options = await getPasskeyRegistrationOptionsAction(
-        email,
-        passkeyName
-      );
+      const options = await getPasskeyRegistrationOptionsAction(passkeyName);
 
       const attResp = await startRegistration({ optionsJSON: options });
 
-      return await verifyPasskeyRegistrationAction(attResp, email, passkeyName);
+      return await verifyPasskeyRegistrationAction(attResp, passkeyName);
     },
     {
       fallback: ERROR_CODES.PASSKEY.ERROR_REGISTER,

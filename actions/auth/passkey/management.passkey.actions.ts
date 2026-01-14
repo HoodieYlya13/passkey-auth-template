@@ -11,6 +11,7 @@ import {
 } from "@/utils/cookies/cookies.server";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
+import { sendMailAction } from "@/actions/mail/mail.actions";
 
 export async function getUserPasskeysAction() {
   return baseServerAction(
@@ -19,28 +20,17 @@ export async function getUserPasskeysAction() {
       const userId = await getServerCookie("user_id");
       if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
 
-      if (SERVERLESS) {
-        const user = await prisma.user.findUnique({
-          where: { id: userId },
-          include: {
-            credentials: {
-              select: {
-                id: true,
-                name: true,
-                createdAt: true,
-              },
-              orderBy: { createdAt: "desc" },
-            },
-          },
-        });
+      if (!SERVERLESS) throw new Error("Not implemented for external API"); // TODO: Implement external API call if not serverless
 
-        if (!user) throw new Error(ERROR_CODES.AUTH[1]);
-
-        return user.credentials;
-      }
-
-      // TODO: Implement external API call if not serverless
-      throw new Error("Not implemented for external API");
+      return await prisma.webAuthnCredential.findMany({
+        where: { userId },
+        select: {
+          id: true,
+          name: true,
+          createdAt: true,
+        },
+        orderBy: { createdAt: "desc" },
+      });
     },
     {}
   );
@@ -56,38 +46,23 @@ export async function renamePasskeyAction(
       const userId = await getServerCookie("user_id");
       if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
 
-      if (SERVERLESS) {
-        const user = await prisma.user.findUnique({
-          where: { id: userId },
-        });
+      if (!SERVERLESS) throw new Error("Not implemented for external API"); // TODO: Implement external API call if not serverless
 
-        if (!user) throw new Error(ERROR_CODES.AUTH[1]);
+      const count = await prisma.webAuthnCredential.count({
+        where: { id: credentialId, userId },
+      });
 
-        const credential = await prisma.webAuthnCredential.findFirst({
-          where: {
-            id: credentialId,
-            userId: user.id,
-          },
-        });
+      if (count === 0) throw new Error(ERROR_CODES.SYST[2]);
 
-        if (!credential) throw new Error(ERROR_CODES.SYST[2]);
+      await prisma.webAuthnCredential.update({
+        where: { id: credentialId },
+        data: { name: newName },
+      });
 
-        await prisma.webAuthnCredential.update({
-          where: { id: credentialId },
-          data: { name: newName },
-        });
-
-        revalidatePath("/profile");
-
-        return true;
-      }
-
-      // TODO: Implement external API call if not serverless
-      throw new Error("Not implemented for external API");
+      revalidatePath("/profile");
+      return true;
     },
-    {
-      fallback: ERROR_CODES.PASSKEY.RENAME_FAILED,
-    }
+    { fallback: ERROR_CODES.PASSKEY.RENAME_FAILED }
   );
 }
 
@@ -98,46 +73,30 @@ export async function deletePasskeyAction(credentialId: string) {
       const userId = await getServerCookie("user_id");
       if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
 
-      if (SERVERLESS) {
-        const user = await prisma.user.findUnique({
-          where: { id: userId },
-        });
+      if (!SERVERLESS) throw new Error("Not implemented for external API"); // TODO: Implement external API call if not serverless
 
-        if (!user) throw new Error(ERROR_CODES.AUTH[1]);
+      const credential = await prisma.webAuthnCredential.findFirst({
+        where: { id: credentialId, userId },
+      });
 
-        const credential = await prisma.webAuthnCredential.findFirst({
-          where: {
-            id: credentialId,
-            userId: user.id,
-          },
-        });
+      if (!credential) throw new Error(ERROR_CODES.SYST[2]);
 
-        if (!credential) throw new Error(ERROR_CODES.SYST[2]);
+      await prisma.webAuthnCredential.delete({
+        where: { id: credentialId },
+      });
 
-        await prisma.webAuthnCredential.delete({
-          where: { id: credentialId },
-        });
+      revalidatePath("/profile");
 
-        revalidatePath("/profile");
+      const locale = await getPreferredLocale();
+      const t = await getTranslations({ locale, namespace: "EMAILS" });
 
-        const locale = await getPreferredLocale();
-        const t = await getTranslations({ locale, namespace: "EMAILS" });
+      await sendMailAction(
+        t("PASSKEY_DELETED.SUBJECT", { name: credential.name }),
+        t("PASSKEY_DELETED.BODY", { name: credential.name })
+      );
 
-        const { sendMailAction } = await import("@/actions/mail/mail.actions");
-
-        await sendMailAction(
-          t("PASSKEY_DELETED.SUBJECT", { name: credential.name }),
-          t("PASSKEY_DELETED.BODY", { name: credential.name })
-        );
-
-        return true;
-      }
-
-      // TODO: Implement external API call if not serverless
-      throw new Error("Not implemented for external API");
+      return true;
     },
-    {
-      fallback: ERROR_CODES.PASSKEY.DELETE_FAILED,
-    }
+    { fallback: ERROR_CODES.PASSKEY.DELETE_FAILED }
   );
 }
