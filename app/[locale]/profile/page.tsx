@@ -2,7 +2,6 @@ import PageLayout from "../../components/UI/PageLayout/PageLayout";
 import { getServerCookie } from "@/utils/cookies/cookies.server";
 import { redirect } from "next/navigation";
 import Profile from "@/app/components/Pages/Profile/Profile";
-import MagicLinkToast from "@/app/components/Pages/Auth/MagicLink/MagicLinkToast";
 import { getUserPasskeysAction } from "@/actions/auth/passkey/management.passkey.actions";
 import { AUTH_ERRORS, tryCatch } from "@/utils/errors.utils";
 
@@ -12,11 +11,11 @@ export default async function ProfilePage() {
 
   const [error, passkeys] = await tryCatch(getUserPasskeysAction());
 
-  if (error && AUTH_ERRORS.includes(error.message)) redirect("/auth/session-clear");
+  if (error && AUTH_ERRORS.includes(error.message))
+    redirect("/auth/session-clear");
 
   return (
     <PageLayout>
-      <MagicLinkToast />
       <Profile username={username} passkeys={passkeys ?? undefined} />
     </PageLayout>
   );

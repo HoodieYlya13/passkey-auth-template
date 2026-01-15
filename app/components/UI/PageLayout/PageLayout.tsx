@@ -9,6 +9,7 @@ import {
   getPreferredLocale,
   getServerCookie,
 } from "@/utils/cookies/cookies.server";
+import QueryParamsToast from "./QueryParamsToast";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -33,6 +34,8 @@ export default async function PageLayout({
 
   return (
     <div className="flex flex-col font-black transition-colors duration-300">
+      <QueryParamsToast />
+
       {showNavBar && <NavBar locale={locale} localeMismatch={localeMismatch} />}
 
       {auroraBackground && <Aurora speed={0.3} />}

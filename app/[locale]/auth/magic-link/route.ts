@@ -20,6 +20,6 @@ export async function GET(request: NextRequest) {
     );
 
   return NextResponse.redirect(
-    new URL(`/profile?username=${username}`, origin)
+    new URL(`/profile${username && `?username=${username}`}`, origin)
   );
 }
