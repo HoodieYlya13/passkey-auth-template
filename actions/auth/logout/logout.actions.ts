@@ -16,7 +16,7 @@ export async function logoutAction() {
       if (!SERVERLESS) {
         const [error] = await tryCatch(authApi.logout());
 
-        if (error) console.log(error);
+        if (error) console.error(error);
 
         await deleteUserSessionCookies();
       }
@@ -30,5 +30,17 @@ export async function logoutAction() {
     },
     {},
     false
+  );
+}
+
+export async function deleteUserSessionAction() {
+  return baseServerAction(
+    "deleteUserSession",
+    async () => {
+      const [error] = await tryCatch(deleteUserSessionCookies());
+
+      if (error) console.error("Delete user session error", error);
+    },
+    {}
   );
 }

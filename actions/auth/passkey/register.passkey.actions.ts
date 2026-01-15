@@ -21,7 +21,7 @@ export async function getPasskeyRegistrationOptionsAction(passkeyName: string) {
     async () => {
       if (!SERVERLESS) {
         const userEmail = await getServerCookie("user_email");
-        if (!userEmail) throw new Error(ERROR_CODES.AUTH[1]);
+        if (!userEmail) throw new Error(ERROR_CODES.AUTH[4]);
 
         return authApi.registerPasskeyStart(userEmail, passkeyName);
       }
@@ -61,7 +61,7 @@ export async function getPasskeyRegistrationOptionsAction(passkeyName: string) {
 
       return options;
     },
-    { rawError: true }
+    {}
   );
 }
 
@@ -74,7 +74,7 @@ export async function verifyPasskeyRegistrationAction(
     async () => {
       if (!SERVERLESS) {
         const userEmail = await getServerCookie("user_email");
-        if (!userEmail) throw new Error(ERROR_CODES.AUTH[1]);
+        if (!userEmail) throw new Error(ERROR_CODES.AUTH[4]);
         
         await authApi.registerPasskeyFinish(credential, userEmail, passkeyName);
         
@@ -84,7 +84,7 @@ export async function verifyPasskeyRegistrationAction(
       }
 
       const userId = await getServerCookie("user_id");
-      if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
+      if (!userId) throw new Error(ERROR_CODES.AUTH[4]);
 
       const user = await prisma.user.findUnique({ where: { id: userId } });
       if (!user || !user.currentChallenge) throw new Error(ERROR_CODES.AUTH[1]);
@@ -124,7 +124,7 @@ export async function verifyPasskeyRegistrationAction(
 
       throw new Error(ERROR_CODES.AUTH[1]);
     },
-    { rawError: true },
+    {},
     true
   );
 }

@@ -9,7 +9,6 @@ import { useErrors } from "@/hooks/useErrors";
 import { useFormState } from "react-hook-form";
 import Button from "@/app/components/UI/shared/elements/Button";
 import { useAuth } from "@/hooks/useAuth";
-import { ERROR_CODES } from "@/utils/errors.utils";
 
 interface RenamePasskeyModalProps {
   id: string;
@@ -33,7 +32,7 @@ export default function RenamePasskeyModal({
   const { errorT } = useErrors();
   const form = useUpdatePasskeyNameForm(currentName, existingNames);
   const [successText, setSuccessText] = useState<string | null>(null);
-  const { reconnect } = useAuth();
+  const { verifySession } = useAuth();
 
   const { handleSubmit, register, control, setError, clearErrors } = form;
   const { errors } = useFormState({ control });
@@ -45,9 +44,7 @@ export default function RenamePasskeyModal({
     if (error) {
       setError("root", { message: error.message });
 
-      const authErrors: string[] = Object.values(ERROR_CODES.AUTH);
-
-      if (authErrors.includes(error.message)) reconnect();
+      verifySession(error);
 
       return;
     }

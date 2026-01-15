@@ -24,7 +24,7 @@ function VisibilityButton({
         if (position !== null) input.setSelectionRange(position, position);
         input.focus();
       } catch (e) {
-        console.error(e);
+        console.error("Visibility button error", e);
       }
     }, 0);
   };

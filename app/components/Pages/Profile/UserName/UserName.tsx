@@ -10,7 +10,7 @@ import { updateUsernameAction } from "@/actions/user/user.actions";
 import { useErrors } from "@/hooks/useErrors";
 import { useAuth } from "@/hooks/useAuth";
 import { useFormState } from "react-hook-form";
-import { ERROR_CODES, tryCatch } from "@/utils/errors.utils";
+import { tryCatch } from "@/utils/errors.utils";
 
 interface UserNameProps {
   username?: string;
@@ -22,7 +22,7 @@ export default function UserName({ username }: UserNameProps) {
   const form = useUpdateUsernameForm(username);
   const [successText, setSuccessText] = useState<string | null>(null);
   const router = useRouter();
-  const { reconnect } = useAuth();
+  const { verifySession } = useAuth();
 
   const { handleSubmit, register, control, setError, clearErrors } = form;
   const { errors } = useFormState({ control });
@@ -36,9 +36,7 @@ export default function UserName({ username }: UserNameProps) {
     if (error) {
       setError("root", { message: error.message });
 
-      const authErrors: string[] = Object.values(ERROR_CODES.AUTH);
-
-      if (authErrors.includes(error.message)) reconnect();
+      verifySession(error);
 
       return;
     }

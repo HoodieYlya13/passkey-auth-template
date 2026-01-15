@@ -43,9 +43,7 @@ export async function getPasskeyLoginOptionsAction() {
 
       return options;
     },
-    {
-      rawError: true,
-    },
+    {},
     false
   );
 }
@@ -148,9 +146,7 @@ export async function verifyPasskeyLoginAction(
 
       throw new Error(ERROR_CODES.AUTH[1]);
     },
-    {
-      rawError: true,
-    },
+    {},
     false
   );
 }

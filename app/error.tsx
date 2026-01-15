@@ -7,7 +7,7 @@ export default function Error({ error }: { error: Error }) {
   const router = useRouter();
 
   useEffect(() => {
-    console.error(error);
+    console.error("Error 404:", error);
     router.replace("/");
   }, [error, router]);
 

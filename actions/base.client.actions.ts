@@ -6,15 +6,12 @@ export async function baseClientAction<T>(
   errorHandling: {
     fallback?: string;
     overrides?: Record<string, string>;
-    rawError?: boolean;
   } = {}
 ): Promise<T> {
   const [error, data] = await tryCatch(actions);
 
   if (error) {
-    console.error(actionName + " error:", error);
-
-    if (errorHandling.rawError) throw error;
+    console.error(`${actionName} error: ${error}`);
 
     const message = getErrorMessage(
       error,

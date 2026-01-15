@@ -8,7 +8,6 @@ import { useUpdatePasskeyNameForm } from "@/hooks/forms/useUpdatePasskeyNameForm
 import { useAuth } from "@/hooks/useAuth";
 import { useErrors } from "@/hooks/useErrors";
 import { Controller, useFormState } from "react-hook-form";
-import { ERROR_CODES } from "@/utils/errors.utils";
 
 interface PasskeyRegistrationProps {
   addPasskey: (passkeyName: string) => Promise<{ error: Error | null }>;
@@ -22,7 +21,7 @@ export default function PasskeyRegistration({
   const t = useTranslations("PROFILE.PASSKEY");
   const { errorT } = useErrors();
   const form = useUpdatePasskeyNameForm(undefined, existingNames);
-  const { reconnect } = useAuth();
+  const { verifySession } = useAuth();
   const [successText, setSuccessText] = useState<string | null>(null);
 
   const { handleSubmit, control, setError, clearErrors, reset } = form;
@@ -37,11 +36,7 @@ export default function PasskeyRegistration({
     if (error) {
       setError("root", { message: error.message });
 
-      if (
-        error.message !== ERROR_CODES.PASSKEY.ERROR_REGISTER &&
-        error.message !== ERROR_CODES.PASSKEY.ALREADY_EXISTS
-      )
-        reconnect();
+      verifySession(error);
 
       return;
     }

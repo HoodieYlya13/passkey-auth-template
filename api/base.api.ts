@@ -15,24 +15,6 @@ export interface APIErrorResponse {
   timestamp: string;
 }
 
-export class ApiError extends Error {
-  status: number;
-  data: unknown;
-  code?: string;
-  timestamp?: string;
-
-  constructor(status: number, message: string, data?: unknown) {
-    super(message);
-    this.status = status;
-    this.data = data;
-
-    if (data && typeof data === "object" && "code" in data)
-      this.code = (data as APIErrorResponse).code;
-    if (data && typeof data === "object" && "timestamp" in data)
-      this.timestamp = (data as APIErrorResponse).timestamp;
-  }
-}
-
 export async function fetchApi<T>(
   endpoint: string,
   options: FetchOptions = {}
@@ -69,12 +51,30 @@ export async function fetchApi<T>(
   if (!response.ok) {
     const [, errorData] = await tryCatch(response.json());
 
-    const message =
+    let message =
       errorData && typeof errorData === "object" && "code" in errorData
         ? (errorData as APIErrorResponse).code
-        : response.statusText || "";
+        : "";
 
-    throw new ApiError(response.status, message, errorData);
+    if (message) {
+      const match = message.match(/^([A-Z]+)_0*(\d+)$/);
+      if (match) {
+        const type = match[1] as keyof typeof ERROR_CODES;
+        const index = parseInt(match[2], 10);
+
+        if (type in ERROR_CODES) {
+          const category = ERROR_CODES[type];
+          if (
+            typeof category === "object" &&
+            category !== null &&
+            index in category
+          )
+            message = (category as Record<number, string>)[index];
+        }
+      }
+    }
+
+    throw new Error(message);
   }
 
   if (response.status === 204) return {} as T;

@@ -1,26 +1,36 @@
 import { useRouter } from "next/navigation";
-import { logoutAction } from "@/actions/auth/logout/logout.actions";
-import { tryCatch } from "@/utils/errors.utils";
+import {
+  deleteUserSessionAction,
+  logoutAction,
+} from "@/actions/auth/logout/logout.actions";
+import { ERROR_CODES, tryCatch } from "@/utils/errors.utils";
 
 export const useAuth = () => {
   const router = useRouter();
 
   const logout = async () => {
     const [error] = await tryCatch(logoutAction());
-    
+
     if (error) console.error("Logout failed", error);
     router.refresh();
   };
 
-  const reconnect = async () => {
-    const [error] = await tryCatch(logoutAction());
+  const verifySession = async (error: Error) => {
+    const authErrors: string[] = Object.values(ERROR_CODES.AUTH);
 
-    if (error) console.error("Reconnect failed", error);
-    router.push("/auth");
+    if (authErrors.includes(error.message)) {
+      const [deleteUserSessionError] = await tryCatch(
+        deleteUserSessionAction()
+      );
+
+      if (deleteUserSessionError)
+        console.error("Logout failed", deleteUserSessionError);
+      router.push("/auth");
+    }
   };
 
   return {
     logout,
-    reconnect,
+    verifySession,
   };
 };

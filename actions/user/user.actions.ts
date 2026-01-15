@@ -40,10 +40,8 @@ export async function updateUsernameAction(username: string) {
       }
 
       const token = await getUserAccessToken();
-      if (!token) throw new Error(ERROR_CODES.AUTH[4]);
-
       const id = await getServerCookie("user_id");
-      if (!id) throw new Error(ERROR_CODES.AUTH[1]);
+      if (!token || !id) throw new Error(ERROR_CODES.AUTH[4]);
 
       await prisma.user.update({
         where: { id },

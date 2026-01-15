@@ -13,6 +13,7 @@ import PasskeyRegistration from "./PasskeyRegistration";
 import AllPasskeys from "./AllPasskeys";
 import { toast } from "sonner";
 import { useErrors } from "@/hooks/useErrors";
+import { useAuth } from "@/hooks/useAuth";
 
 function passkeyReducer(
   state: Passkey[],
@@ -43,6 +44,7 @@ export default function PasskeyManager({
 }: PasskeyManagerProps) {
   const t = useTranslations("PROFILE.PASSKEY");
   const { errorT } = useErrors();
+  const { verifySession } = useAuth();
 
   const [optimisticPasskeys, dispatch] = useOptimistic(
     initialPasskeys,
@@ -89,8 +91,10 @@ export default function PasskeyManager({
 
       const [error] = await tryCatch(deletePasskeyAction(id));
 
-      if (error) toast.error(errorT(error.message));
-      else toast.success(t("DELETE_SUCCESS"));
+      if (error) {
+        toast.error(errorT(error.message)); // TODO: maybe put the toast in the verify session function
+        verifySession(error);
+      } else toast.success(t("DELETE_SUCCESS"));
     });
   };
 

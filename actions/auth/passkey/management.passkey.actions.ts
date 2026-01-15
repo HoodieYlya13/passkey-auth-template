@@ -14,7 +14,7 @@ export async function getUserPasskeysAction() {
     "getUserPasskeysAction",
     async () => {
       const userId = await getServerCookie("user_id");
-      if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
+      if (!userId) throw new Error(ERROR_CODES.AUTH[4]);
 
       if (!SERVERLESS) return await authApi.getUserPasskeys(userId);
 
@@ -40,7 +40,7 @@ export async function renamePasskeyAction(
     "renamePasskeyAction",
     async () => {
       const userId = await getServerCookie("user_id");
-      if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
+      if (!userId) throw new Error(ERROR_CODES.AUTH[4]);
 
       if (!SERVERLESS) {
         await authApi.renamePasskey(userId, credentialId, newName);
@@ -73,7 +73,7 @@ export async function deletePasskeyAction(credentialId: string) {
     "deletePasskeyAction",
     async () => {
       const userId = await getServerCookie("user_id");
-      if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
+      if (!userId) throw new Error(ERROR_CODES.AUTH[4]);
 
       if (!SERVERLESS) {
         await authApi.deletePasskey(userId, credentialId);
