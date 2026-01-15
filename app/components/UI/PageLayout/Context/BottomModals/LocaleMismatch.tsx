@@ -8,6 +8,7 @@ import {
   setClientCookie,
 } from "@/utils/cookies/cookies.client";
 import { useTranslations } from "next-intl";
+import BottomModal from "../../../shared/components/BottomModal";
 
 interface LocaleMismatchProps {
   locale: LocaleLanguages;
@@ -21,8 +22,6 @@ export default function LocaleMismatch({
   const [isVisible, setIsVisible] = useState(true);
   const router = useRouter();
   const t = useTranslations("LOCALE_MISMATCH");
-
-  if (!isVisible) return null;
 
   const handleSwitch = async () => {
     const pathname = window.location.pathname;
@@ -57,35 +56,34 @@ export default function LocaleMismatch({
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 bg-background/90 p-6 rounded-xl shadow-2xl border liquid-glass-border-color custom-shadow flex flex-col gap-4 max-w-sm animate-in slide-in-from-bottom-5 fade-in duration-300">
-      <div className="flex flex-col gap-1">
-        <h3 className="font-semibold text-lg">{t("TITLE")}</h3>
-        <p className="text-sm text-gray-600">
-          {t.rich("DESCRIPTION", {
-            important: (chunks) => (
-              <span className="font-medium text-foreground uppercase">
-                {chunks}
-              </span>
-            ),
-            preferredLocale: locale,
-            currentLocale: localeMismatch,
-          })}
-        </p>
-      </div>
-      <div className="flex gap-3">
-        <button
-          onClick={handleSwitch}
-          className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-300 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
-        >
-          {t("KEEP", { locale: localeMismatch.toUpperCase() })}
-        </button>
-        <button
-          onClick={handleStay}
-          className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-300 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
-        >
-          {t("SWITCH", { locale: locale.toUpperCase() })}
-        </button>
-      </div>
-    </div>
+    <BottomModal
+      title={t("TITLE")}
+      isVisible={isVisible}
+      description={t.rich("DESCRIPTION", {
+        important: (chunks) => (
+          <span className="font-medium text-foreground uppercase">
+            {chunks}
+          </span>
+        ),
+        preferredLocale: locale,
+        currentLocale: localeMismatch,
+      })}
+      actions={
+        <>
+          <button
+            onClick={handleSwitch}
+            className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-300 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
+          >
+            {t("KEEP", { locale: localeMismatch.toUpperCase() })}
+          </button>
+          <button
+            onClick={handleStay}
+            className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-300 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
+          >
+            {t("SWITCH", { locale: locale.toUpperCase() })}
+          </button>
+        </>
+      }
+    />
   );
 }

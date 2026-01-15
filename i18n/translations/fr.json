@@ -117,5 +117,10 @@
       "SUBJECT": "Passkey supprimée: {passkeyName}",
       "BODY": "La passkey nommée <strong>{passkeyName}</strong> a été supprimée de votre compte."
     }
+  },
+  "COOKIE_CONSENT": {
+    "TITLE": "Politique de Cookies",
+    "DESCRIPTION": "Nous utilisons des cookies nécessaires au bon fonctionnement du site. Aucune donnée personnelle n'est utilisée à des fins commerciales.",
+    "ACKNOWLEDGE": "J'ai compris"
   }
 }

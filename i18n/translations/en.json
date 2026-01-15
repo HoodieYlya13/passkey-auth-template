@@ -117,5 +117,10 @@
       "SUBJECT": "Passkey Deleted: {passkeyName}",
       "BODY": "The passkey named <strong>{passkeyName}</strong> has been removed from your account."
     }
+  },
+  "COOKIE_CONSENT": {
+    "TITLE": "Cookie Policy",
+    "DESCRIPTION": "We use necessary cookies to ensure the website functions properly. No personal data is used for commercial purposes.",
+    "ACKNOWLEDGE": "I understand"
   }
 }

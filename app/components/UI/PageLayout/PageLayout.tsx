@@ -1,15 +1,16 @@
 import Footer from "./Footer/Footer";
 import NavBar from "./NavBar/NavBar";
-import UserGeoInfo from "./UserGeoInfo/UserGeoInfo";
+import UserGeoInfo from "./Context/UserGeoInfo/UserGeoInfo";
 import clsx from "clsx";
 import Aurora from "../shared/components/Aurora";
-import LocaleMismatch from "./LocaleMismatch";
+import LocaleMismatch from "./Context/BottomModals/LocaleMismatch";
 import { LocaleLanguages } from "@/i18n/utils";
 import {
   getPreferredLocale,
   getServerCookie,
 } from "@/utils/cookies/cookies.server";
-import QueryParamsToast from "./QueryParamsToast";
+import QueryParamsToast from "./Context/QueryParamsToast";
+import CookieConsent from "./Context/BottomModals/CookieConsent";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -32,6 +33,8 @@ export default async function PageLayout({
     | LocaleLanguages
     | undefined;
 
+  const hasCookieConsent = !!(await getServerCookie("cookie_consent"));
+
   return (
     <div className="flex flex-col font-black transition-colors duration-300">
       <QueryParamsToast />
@@ -43,6 +46,8 @@ export default async function PageLayout({
       {localeMismatch && (
         <LocaleMismatch locale={locale} localeMismatch={localeMismatch} />
       )}
+
+      {!hasCookieConsent && <CookieConsent initialHasConsent={hasCookieConsent} />}
 
       <div className="flex flex-col z-10">
         <main
