@@ -21,10 +21,13 @@
       "002": "Clé publique invalide."
     },
     "AUTH": {
-      "001": "Échec de l'authentification",
-      "002": "Non autorisé",
-      "003": "Session invalide",
-      "004": "Session expirée"
+      "001": "Échec de l'authentification.",
+      "002": "Non autorisé.",
+      "003": "Session invalide.",
+      "004": "Session expirée."
+    },
+    "USER": {
+      "001": "Utilisateur non trouvé."
     },
     "PASSKEY": {
       "ERROR_LOGIN": "La connexion avec Passkey a pris trop de temps ou a été annulée. Veuillez réessayer.",

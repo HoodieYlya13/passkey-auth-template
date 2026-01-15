@@ -26,6 +26,9 @@
       "003": "Invalid session.",
       "004": "Session expired."
     },
+    "USER": {
+      "001": "User not found."
+    },
     "PASSKEY": {
       "ERROR_LOGIN": "Login with Passkey took too long or was cancelled. Please try again.",
       "ERROR_REGISTER": "Register a Passkey took too long or was cancelled. Please try again.",

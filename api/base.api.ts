@@ -51,28 +51,10 @@ export async function fetchApi<T>(
   if (!response.ok) {
     const [, errorData] = await tryCatch(response.json());
 
-    let message =
+    const message =
       errorData && typeof errorData === "object" && "code" in errorData
         ? (errorData as APIErrorResponse).code
         : "";
-
-    if (message) {
-      const match = message.match(/^([A-Z]+)_0*(\d+)$/);
-      if (match) {
-        const type = match[1] as keyof typeof ERROR_CODES;
-        const index = parseInt(match[2], 10);
-
-        if (type in ERROR_CODES) {
-          const category = ERROR_CODES[type];
-          if (
-            typeof category === "object" &&
-            category !== null &&
-            index in category
-          )
-            message = (category as Record<number, string>)[index];
-        }
-      }
-    }
 
     throw new Error(message);
   }
