@@ -12,7 +12,7 @@ export const useAuth = () => {
     router.refresh();
   };
 
-  const reconnect = async () => { // TODO: reconnect in the server action
+  const reconnect = async () => {
     const [error] = await tryCatch(logoutAction());
 
     if (error) console.error("Reconnect failed", error);

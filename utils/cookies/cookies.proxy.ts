@@ -40,3 +40,13 @@ export function deleteProxyCookie(name: string, response: NextResponse) {
     httpOnly: true,
   });
 }
+
+export function deleteUserSessionProxyCookies(response: NextResponse) {
+  for (const name of [
+    "user_access_token",
+    "user_email",
+    "user_id",
+    "user_name",
+  ])
+    deleteProxyCookie(name, response);
+}

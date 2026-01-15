@@ -3,7 +3,11 @@ import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 import { DEFAULT_LOCALE, TESTING_MODE } from "./utils/config/config.client";
 import { SUPPORTED_LOCALES } from "./i18n/utils";
-import { getProxyCookie, setProxyCookie } from "./utils/cookies/cookies.proxy";
+import {
+  deleteUserSessionProxyCookies,
+  getProxyCookie,
+  setProxyCookie,
+} from "./utils/cookies/cookies.proxy";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -37,6 +41,12 @@ export async function proxy(req: NextRequest) {
       redirectUrl.pathname = "/profile/user-name";
       return NextResponse.redirect(redirectUrl);
     }
+  } else if (pathname.includes("/profile")) {
+    const redirectUrl = req.nextUrl.clone();
+    redirectUrl.pathname = "/auth";
+    const response = NextResponse.redirect(redirectUrl);
+    deleteUserSessionProxyCookies(response);
+    return response;
   }
 
   const pathLocale = pathname.split("/")[1];
@@ -62,11 +72,10 @@ export async function proxy(req: NextRequest) {
     (SUPPORTED_LOCALES as readonly string[]).includes(pathLocale) &&
     preferredLocale &&
     pathLocale !== preferredLocale
-  ) {
+  )
     setProxyCookie(res, "locale_mismatch", pathLocale, {
       httpOnly: false,
     });
-  }
 
   return res;
 }

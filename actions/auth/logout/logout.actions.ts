@@ -6,16 +6,17 @@ import {
 } from "@/utils/cookies/cookies.server";
 import { SERVERLESS } from "@/utils/config/config.client";
 import { baseServerAction } from "@/actions/base.server.actions";
+import { authApi } from "@/api/auth.api";
+import { tryCatch } from "@/utils/errors.utils";
 
 export async function logoutAction() {
   return baseServerAction(
     "authLogout",
     async () => {
       if (!SERVERLESS) {
-        const userAccessToken = await getUserAccessToken();
+        const [error] = await tryCatch(authApi.logout());
 
-        if (userAccessToken)
-          // TODO: delete the cookie in the backend too
+        if (error) console.log(error);
 
         await deleteUserSessionCookies();
       }
@@ -25,7 +26,7 @@ export async function logoutAction() {
       if (userAccessToken)
         // TODO: delete the cookie in the backend too
 
-      await deleteUserSessionCookies();
+        await deleteUserSessionCookies();
     },
     {},
     false

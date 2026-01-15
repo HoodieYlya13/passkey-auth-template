@@ -9,6 +9,8 @@ import { AuthResponse } from "@/models/auth.models";
 import { Passkey } from "@/models/passkey.models";
 
 export const authApi = {
+  logout: () => fetchApi<void>("/auth/logout", { method: "POST" }),
+
   loginMagicLink: (email: string) =>
     fetchApi<{ success: boolean }>("/auth/magic-link/request", {
       method: "POST",
