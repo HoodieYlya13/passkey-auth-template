@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations, useFormatter } from "next-intl";
 import { Passkey } from "@/models/passkey.models";
 import RenamePasskeyModal from "./RenamePasskeyModal";
+import clsx from "clsx";
 
 interface AllPasskeysProps {
   passkeys: Passkey[];
@@ -47,7 +48,9 @@ export default function AllPasskeys({
           {passkeys.map((passkey) => (
             <div
               key={passkey.id}
-              className="flex items-center justify-between p-3 rounded-lg liquid-glass custom-shadow"
+              className={clsx("flex items-center justify-between p-3 rounded-lg liquid-glass custom-shadow", {
+                "opacity-50": passkey.pending,
+              })}
             >
               <div className="flex flex-col">
                 <span className="font-medium">{passkey.name}</span>

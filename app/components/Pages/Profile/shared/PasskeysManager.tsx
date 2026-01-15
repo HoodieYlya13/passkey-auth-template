@@ -57,6 +57,7 @@ export default function PasskeyManager({
       id: temporaryId,
       name: name,
       createdAt: new Date(),
+      pending: true,
     };
 
     return new Promise<{ error: Error | null }>(async (resolve) => {
