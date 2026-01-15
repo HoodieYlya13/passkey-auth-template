@@ -23,25 +23,7 @@ export async function getPasskeyLoginOptionsAction() {
   return baseServerAction(
     "authLoginStartPasskey",
     async () => {
-      if (!SERVERLESS) {
-        const response = await authApi.loginStartPasskey();
-
-        if (!response.ok) throw new Error(ERROR_CODES.AUTH[2]);
-
-        let [name, value] = ["", ""];
-        const setCookieHeader = response.headers.get("set-cookie");
-        if (setCookieHeader)
-          setCookieHeader.split(/,(?=\s*[^;]+=[^;]+)/g).forEach((cookieStr) => {
-            [name, value] = cookieStr.split(";")[0].split("=");
-          });
-
-        if (name && value)
-          await setServerCookie(name, value, {
-            maxAge: 60,
-          });
-
-        return await response.json();
-      }
+      if (!SERVERLESS) return await authApi.loginStartPasskey();
 
       if (!RP_ID) throw new Error(ERROR_CODES.SYST[1]);
 

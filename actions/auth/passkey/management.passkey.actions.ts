@@ -1,7 +1,7 @@
 "use server";
 
 import { baseServerAction } from "@/actions/base.server.actions";
-// import { authApi } from "@/api/auth.api";
+import { authApi } from "@/api/auth.api";
 import { SERVERLESS } from "@/utils/config/config.client";
 import { ERROR_CODES } from "@/utils/errors.utils";
 import { prisma } from "@/utils/config/prisma";
@@ -16,7 +16,7 @@ export async function getUserPasskeysAction() {
       const userId = await getServerCookie("user_id");
       if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
 
-      if (!SERVERLESS) throw new Error("Not implemented for external API"); // TODO: Implement external API call if not serverless
+      if (!SERVERLESS) return await authApi.getUserPasskeys(userId);
 
       return await prisma.webAuthnCredential.findMany({
         where: { userId },
@@ -42,7 +42,13 @@ export async function renamePasskeyAction(
       const userId = await getServerCookie("user_id");
       if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
 
-      if (!SERVERLESS) throw new Error("Not implemented for external API"); // TODO: Implement external API call if not serverless
+      if (!SERVERLESS) {
+        await authApi.renamePasskey(userId, credentialId, newName);
+
+        revalidatePath("/profile");
+
+        return true;
+      }
 
       const count = await prisma.webAuthnCredential.count({
         where: { id: credentialId, userId },
@@ -69,7 +75,13 @@ export async function deletePasskeyAction(credentialId: string) {
       const userId = await getServerCookie("user_id");
       if (!userId) throw new Error(ERROR_CODES.AUTH[1]);
 
-      if (!SERVERLESS) throw new Error("Not implemented for external API"); // TODO: Implement external API call if not serverless
+      if (!SERVERLESS) {
+        await authApi.deletePasskey(userId, credentialId);
+
+        revalidatePath("/profile");
+
+        return true;
+      }
 
       const credential = await prisma.webAuthnCredential.findFirst({
         where: { id: credentialId, userId },

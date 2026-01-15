@@ -22,12 +22,8 @@ export async function getPasskeyRegistrationOptionsAction(passkeyName: string) {
       if (!SERVERLESS) {
         const userEmail = await getServerCookie("user_email");
         if (!userEmail) throw new Error(ERROR_CODES.AUTH[1]);
-        
-        const response = await authApi.registerPasskeyStart(
-          userEmail,
-          passkeyName
-        );
-        return await response.json();
+
+        return authApi.registerPasskeyStart(userEmail, passkeyName);
       }
 
       const userId = await getServerCookie("user_id");
@@ -79,7 +75,11 @@ export async function verifyPasskeyRegistrationAction(
       if (!SERVERLESS) {
         const userEmail = await getServerCookie("user_email");
         if (!userEmail) throw new Error(ERROR_CODES.AUTH[1]);
+        
         await authApi.registerPasskeyFinish(credential, userEmail, passkeyName);
+        
+        revalidatePath("/profile");
+
         return true;
       }
 

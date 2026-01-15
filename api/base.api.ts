@@ -1,5 +1,8 @@
 import { ORIGIN } from "@/utils/config/config.server";
-import { getUserAccessToken } from "@/utils/cookies/cookies.server";
+import {
+  getUserAccessToken,
+  setServerCookieHeader,
+} from "@/utils/cookies/cookies.server";
 import { ERROR_CODES, tryCatch } from "@/utils/errors.utils";
 
 type FetchOptions = RequestInit & {
@@ -30,23 +33,10 @@ export class ApiError extends Error {
   }
 }
 
-export async function fetchApi<Response>(
-  endpoint: string,
-  options: FetchOptions | undefined,
-  rawResponse: true
-): Promise<Response>;
-
 export async function fetchApi<T>(
   endpoint: string,
-  options?: FetchOptions,
-  rawResponse?: boolean
-): Promise<T>;
-
-export async function fetchApi<T>(
-  endpoint: string,
-  options: FetchOptions = {},
-  rawResponse: boolean = false
-): Promise<T | Response> {
+  options: FetchOptions = {}
+): Promise<T> {
   const { userAuthenticated = true, headers, ...rest } = options;
 
   let token = null;
@@ -89,7 +79,12 @@ export async function fetchApi<T>(
 
   if (response.status === 204) return {} as T;
 
-  if (rawResponse) return response;
+  const setCookieHeader = response.headers.get("set-cookie");
+  if (setCookieHeader) await setServerCookieHeader(setCookieHeader);
 
-  return response.json();
+  const text = await response.text();
+
+  const data = text && text.trim().length > 0 ? JSON.parse(text) : {};
+
+  return data;
 }

@@ -1,11 +1,24 @@
-import GeoFallbackFetcher from "./GeoFallbackFetcher";
-import { getUserCountry, getUserIp } from "@/utils/cookies/cookies.server";
+"use client";
 
-export default async function UserGeoInfo() {
-  const userIp = await getUserIp();
-  const userCountry = await getUserCountry();
+import { setClientCookie } from "@/utils/cookies/cookies.client";
+import { useEffect } from "react";
 
-  if (!userIp || !userCountry) return <GeoFallbackFetcher />;
+export default function GeoFallbackFetcher() {
+  useEffect(() => {
+    fetch("https://ipinfo.io/json")
+      .then((res) => res.json())
+      .then((geo) => {
+        if (geo?.ip) setClientCookie("user_ip", geo.ip);
+        let country = "unknown";
+        if (typeof geo?.country === "string" && geo.country.length === 2)
+          country = geo.country.toUpperCase();
+
+        setClientCookie("user_country", country);
+      })
+      .catch((err) => {
+        console.warn("GeoFallbackFetcher error:", err);
+      });
+  }, []);
 
   return null;
 }

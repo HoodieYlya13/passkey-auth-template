@@ -31,6 +31,27 @@ export async function setServerCookie(
   });
 }
 
+export async function setServerCookieHeader(setCookieHeader: string) {
+  const cookies = setCookieHeader.split(/,(?=\s*[^;]+=[^;]+)/g);
+
+  for (const cookieStr of cookies) {
+    const parts = cookieStr.split(";").map((p) => p.trim());
+    const [nameValue] = parts;
+    const [name, value] = nameValue.split("=");
+
+    let maxAge = 300;
+    const maxAgePart = parts.find((p) =>
+      p.toLowerCase().startsWith("max-age=")
+    );
+    if (maxAgePart) {
+      const parsedMaxAge = parseInt(maxAgePart.split("=")[1], 10);
+      if (!isNaN(parsedMaxAge)) maxAge = parsedMaxAge;
+    }
+
+    if (name && value) await setServerCookie(name, value, { maxAge });
+  }
+}
+
 export async function getServerCookie(
   name: string
 ): Promise<string | undefined> {
