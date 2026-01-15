@@ -57,13 +57,13 @@ export default function LocaleMismatch({
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 bg-background p-6 rounded-xl shadow-2xl border border-gray-100 flex flex-col gap-4 max-w-sm animate-in slide-in-from-bottom-5 fade-in duration-300">
+    <div className="fixed bottom-5 right-5 z-50 bg-background/90 p-6 rounded-xl shadow-2xl border liquid-glass-border-color custom-shadow flex flex-col gap-4 max-w-sm animate-in slide-in-from-bottom-5 fade-in duration-300">
       <div className="flex flex-col gap-1">
-        <h3 className="font-semibold text-lg text-gray-900">{t("TITLE")}</h3>
+        <h3 className="font-semibold text-lg">{t("TITLE")}</h3>
         <p className="text-sm text-gray-600">
           {t.rich("DESCRIPTION", {
             important: (chunks) => (
-              <span className="font-medium text-gray-900 uppercase">
+              <span className="font-medium text-foreground uppercase">
                 {chunks}
               </span>
             ),
@@ -75,13 +75,13 @@ export default function LocaleMismatch({
       <div className="flex gap-3">
         <button
           onClick={handleSwitch}
-          className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
+          className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-300 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
         >
           {t("KEEP", { locale: localeMismatch.toUpperCase() })}
         </button>
         <button
           onClick={handleStay}
-          className="flex-1 px-4 py-2 text-sm font-medium hover:bg-gray-800 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
+          className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-300 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
         >
           {t("SWITCH", { locale: locale.toUpperCase() })}
         </button>

@@ -34,7 +34,7 @@ export default function NavBarClient({
   token,
 }: NavBarClientProps) {
   return (
-    <nav className="w-full flex items-center justify-between px-4 bg-background">
+    <nav className="w-full flex items-center justify-between px-4">
       <Link href="/" className="flex items-center gap-2 md:gap-3">
         <Image
           src="/favicon.ico"
