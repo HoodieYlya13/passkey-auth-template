@@ -3,7 +3,7 @@ import {
   deleteUserSessionAction,
   logoutAction,
 } from "@/actions/auth/logout/logout.actions";
-import { ERROR_CODES, tryCatch } from "@/utils/errors.utils";
+import { AUTH_ERRORS, tryCatch } from "@/utils/errors.utils";
 
 export const useAuth = () => {
   const router = useRouter();
@@ -16,9 +16,7 @@ export const useAuth = () => {
   };
 
   const verifySession = async (error: Error) => {
-    const authErrors: string[] = Object.values(ERROR_CODES.AUTH);
-
-    if (authErrors.includes(error.message)) {
+    if (AUTH_ERRORS.includes(error.message)) {
       const [deleteUserSessionError] = await tryCatch(
         deleteUserSessionAction()
       );

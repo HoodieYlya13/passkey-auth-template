@@ -15,6 +15,7 @@ import { useErrors } from "@/hooks/useErrors";
 import { useCommon } from "@/hooks/useCommon";
 import { useFormState, useWatch } from "react-hook-form";
 import { tryCatch } from "@/utils/errors.utils";
+import { SERVERLESS, TESTING_MODE } from "@/utils/config/config.client";
 
 function getEmailProvider(email?: string) {
   if (!email) return null;
@@ -114,6 +115,8 @@ export default function Auth() {
     const [error] = await tryCatch(loginMagicLinkAction(data.email));
 
     if (error) return setError("root", { message: error.message });
+
+    if (TESTING_MODE && !SERVERLESS) setEmailProviderLink({ name: "Test", url: "http://localhost:8025/" });
 
     setSuccessText(t("MAGIC_LINK_SENT"));
   };

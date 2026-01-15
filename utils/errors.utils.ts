@@ -83,3 +83,5 @@ export async function tryCatch<T, E = Error>(
     return [error as E, null];
   }
 }
+
+export const AUTH_ERRORS: string[] = Object.values(ERROR_CODES.AUTH);
