@@ -1,7 +1,11 @@
 "use server";
 
 import { baseServerAction } from "@/actions/base.server.actions";
-import { EMAIL_FROM, RESEND_API_KEY } from "@/utils/config/config.server";
+import {
+  EMAIL_FROM_MAGIC_LINK,
+  EMAIL_FROM_PASSKEY,
+  RESEND_API_KEY,
+} from "@/utils/config/config.server";
 import { getServerCookie } from "@/utils/cookies/cookies.server";
 import { ERROR_CODES, tryCatch } from "@/utils/errors.utils";
 import { getPreferredLocale } from "@/utils/cookies/cookies.server";
@@ -18,6 +22,7 @@ async function getTranslationsContext(namespace: string) {
 }
 
 export async function sendMailAction(
+  from: string,
   subject: string,
   html: string,
   to?: string,
@@ -42,12 +47,13 @@ export async function sendMailAction(
 
       const { Resend } = await import("resend");
 
-      if (!RESEND_API_KEY || !EMAIL_FROM) throw new Error(ERROR_CODES.SYST[1]);
+      if (!RESEND_API_KEY || !from)
+        throw new Error(ERROR_CODES.SYST[1]);
 
       const resend = new Resend(RESEND_API_KEY);
 
       const { error } = await resend.emails.send({
-        from: EMAIL_FROM,
+        from,
         to: email,
         subject,
         html,
@@ -70,7 +76,7 @@ export async function sendMagicLinkMailAction(
 
   const emailBody = (t.raw("BODY") as string).replace("{link}", magicLink);
 
-  await sendMailAction(t("SUBJECT"), emailBody, email, false);
+  await sendMailAction(EMAIL_FROM_MAGIC_LINK, t("SUBJECT"), emailBody, email, false);
 
   if (process.env.NODE_ENV !== "production")
     console.log(`🔗 Magic Link: ${magicLink}`);
@@ -83,6 +89,7 @@ export async function sendPasskeyDeletedMailAction(passkeyName: string) {
 
   const [error] = await tryCatch(
     sendMailAction(
+      EMAIL_FROM_PASSKEY,
       t("SUBJECT", { passkeyName }),
       (t.raw("BODY") as string).replace("{passkeyName}", passkeyName)
     )
@@ -98,6 +105,7 @@ export async function sendPasskeyCreatedMailAction(passkeyName: string) {
 
   const [error] = await tryCatch(
     sendMailAction(
+      EMAIL_FROM_PASSKEY,
       t("SUBJECT", { passkeyName }),
       (t.raw("BODY") as string).replace("{passkeyName}", passkeyName)
     )

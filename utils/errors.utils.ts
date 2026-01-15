@@ -4,7 +4,7 @@ export const ERROR_CODES = {
   SYST: { 1: "SYST.001", 2: "SYST.002" },
   JWT: { 1: "JWT.001", 2: "JWT.002" },
   AUTH: { 1: "AUTH.001", 2: "AUTH.002", 3: "AUTH.003", 4: "AUTH.004" },
-  USER: { 1: "USER.001" },
+  USER: { 1: "USER.001" }, // TODO: implement those errors for serverless
   PASSKEY: {
     ERROR_LOGIN: "PASSKEY.ERROR_LOGIN",
     ERROR_REGISTER: "PASSKEY.ERROR_REGISTER",

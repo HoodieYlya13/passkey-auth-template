@@ -22,7 +22,7 @@ export default function UserName({ username }: UserNameProps) {
   const form = useUpdateUsernameForm(username);
   const [successText, setSuccessText] = useState<string | null>(null);
   const router = useRouter();
-  const { verifySession } = useAuth();
+  const { shouldReconnect } = useAuth();
 
   const { handleSubmit, register, control, setError, clearErrors } = form;
   const { errors } = useFormState({ control });
@@ -36,7 +36,7 @@ export default function UserName({ username }: UserNameProps) {
     if (error) {
       setError("root", { message: error.message });
 
-      verifySession(error);
+      shouldReconnect(error);
 
       return;
     }

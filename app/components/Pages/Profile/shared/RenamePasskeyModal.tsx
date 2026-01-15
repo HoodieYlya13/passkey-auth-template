@@ -32,7 +32,7 @@ export default function RenamePasskeyModal({
   const { errorT } = useErrors();
   const form = useUpdatePasskeyNameForm(currentName, existingNames);
   const [successText, setSuccessText] = useState<string | null>(null);
-  const { verifySession } = useAuth();
+  const { shouldReconnect } = useAuth();
 
   const { handleSubmit, register, control, setError, clearErrors } = form;
   const { errors } = useFormState({ control });
@@ -44,7 +44,7 @@ export default function RenamePasskeyModal({
     if (error) {
       setError("root", { message: error.message });
 
-      verifySession(error);
+      shouldReconnect(error);
 
       return;
     }

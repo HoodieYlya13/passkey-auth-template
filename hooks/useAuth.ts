@@ -15,7 +15,7 @@ export const useAuth = () => {
     router.refresh();
   };
 
-  const verifySession = async (error: Error) => {
+  const shouldReconnect = async (error: Error) => {
     if (AUTH_ERRORS.includes(error.message)) {
       const [deleteUserSessionError] = await tryCatch(
         deleteUserSessionAction()
@@ -29,6 +29,6 @@ export const useAuth = () => {
 
   return {
     logout,
-    verifySession,
+    shouldReconnect,
   };
 };

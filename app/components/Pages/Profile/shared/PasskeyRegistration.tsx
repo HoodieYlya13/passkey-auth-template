@@ -21,7 +21,7 @@ export default function PasskeyRegistration({
   const t = useTranslations("PROFILE.PASSKEY");
   const { errorT } = useErrors();
   const form = useUpdatePasskeyNameForm(undefined, existingNames);
-  const { verifySession } = useAuth();
+  const { shouldReconnect } = useAuth();
   const [successText, setSuccessText] = useState<string | null>(null);
 
   const { handleSubmit, control, setError, clearErrors, reset } = form;
@@ -36,7 +36,7 @@ export default function PasskeyRegistration({
     if (error) {
       setError("root", { message: error.message });
 
-      verifySession(error);
+      shouldReconnect(error);
 
       return;
     }

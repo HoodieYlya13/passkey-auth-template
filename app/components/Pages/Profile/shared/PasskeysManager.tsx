@@ -44,7 +44,7 @@ export default function PasskeyManager({
 }: PasskeyManagerProps) {
   const t = useTranslations("PROFILE.PASSKEY");
   const { errorT } = useErrors();
-  const { verifySession } = useAuth();
+  const { shouldReconnect } = useAuth();
 
   const [optimisticPasskeys, dispatch] = useOptimistic(
     initialPasskeys,
@@ -93,7 +93,7 @@ export default function PasskeyManager({
 
       if (error) {
         toast.error(errorT(error.message)); // TODO: maybe put the toast in the verify session function
-        verifySession(error);
+        shouldReconnect(error);
       } else toast.success(t("DELETE_SUCCESS"));
     });
   };

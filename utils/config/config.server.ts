@@ -5,7 +5,12 @@ export const ORIGIN = process.env.ORIGIN;
 // Serverless
 export const APP_PASSWORD = process.env.APP_PASSWORD || "Password";
 export const RESEND_API_KEY = process.env.RESEND_API_KEY;
-export const EMAIL_FROM = process.env.EMAIL_FROM || "Magic Link <magic-link@noreply.hy13dev.com>";
+export const EMAIL_FROM_MAGIC_LINK =
+  process.env.EMAIL_FROM_MAGIC_LINK ||
+  "Magic Link <magic-link@noreply.hy13dev.com>";
+export const EMAIL_FROM_PASSKEY =
+  process.env.EMAIL_FROM_PASSKEY ||
+  "Passkey <passkey@noreply.hy13dev.com>";
 export const RP_ID = process.env.RP_ID || "localhost";
 export const ISSUER = process.env.ISSUER || "app-name-passkey-auth-template";
 export const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY;
