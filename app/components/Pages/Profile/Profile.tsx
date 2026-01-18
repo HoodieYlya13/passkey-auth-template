@@ -14,7 +14,7 @@ export default function Profile({ username, passkeys }: ProfileProps) {
   const t = useTranslations("PROFILE");
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 py-4">
+    <div className="flex flex-col items-center justify-center gap-8 p-5 py-10 md:p-10">
       <h1 className="text-3xl font-bold">{t("TITLE")}</h1>
 
       <h2 className="text-xl font-bold mb-4">{t("SECURITY")}</h2>

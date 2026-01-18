@@ -110,6 +110,12 @@ export async function getPreferredLocale(toUpperCase = false) {
     : ((locale || DEFAULT_LOCALE) as LocaleLanguages);
 }
 
+export async function getLocaleMismatch(): Promise<LocaleLanguages | undefined> {
+  return (await getServerCookie("locale_mismatch")) as
+    | LocaleLanguages
+    | undefined;
+}
+
 export async function getUserAccessToken(): Promise<string | undefined> {
   return await getServerCookie("user_access_token");
 }

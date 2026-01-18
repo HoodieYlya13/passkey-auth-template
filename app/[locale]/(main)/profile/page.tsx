@@ -1,4 +1,3 @@
-import PageLayout from "../../components/UI/PageLayout/PageLayout";
 import { getServerCookie } from "@/utils/cookies/cookies.server";
 import { redirect } from "next/navigation";
 import Profile from "@/app/components/Pages/Profile/Profile";
@@ -14,9 +13,5 @@ export default async function ProfilePage() {
   if (error && AUTH_ERRORS.includes(error.message))
     redirect("/auth/session-clear");
 
-  return (
-    <PageLayout>
-      <Profile username={username} passkeys={passkeys ?? undefined} />
-    </PageLayout>
-  );
+  return <Profile username={username} passkeys={passkeys ?? undefined} />
 }

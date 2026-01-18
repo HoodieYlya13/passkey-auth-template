@@ -46,7 +46,7 @@ export default function UserName({ username }: UserNameProps) {
   };
 
   return (
-    <div className="flex w-full grow justify-center items-center py-4">
+    <div className="flex w-full grow justify-center items-center p-5 py-10 md:p-10">
       <Form
         form={form}
         handleSubmit={handleSubmit(onSubmit)}

@@ -10,8 +10,16 @@ import {
   Theme,
   ThemeProvider,
 } from "../components/UI/shared/components/ThemeProvider";
-import { getServerCookie } from "@/utils/cookies/cookies.server";
+import {
+  getLocaleMismatch,
+  getPreferredLocale,
+  getServerCookie,
+} from "@/utils/cookies/cookies.server";
 import { Toaster } from "../components/UI/shared/components/Toaster";
+import UserGeoInfo from "../components/UI/PageLayout/Context/UserGeoInfo/UserGeoInfo";
+import { LocaleLanguages } from "@/i18n/utils";
+import LocaleMismatch from "../components/UI/PageLayout/Context/BottomModals/LocaleMismatch";
+import CookieConsent from "../components/UI/PageLayout/Context/BottomModals/CookieConsent";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -30,6 +38,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export async function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -47,23 +59,35 @@ export async function generateMetadata({
 
 export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
-  const theme = ((await getServerCookie("theme")) || "dark") as Theme;
-
   if (!hasLocale(routing.locales, locale)) notFound();
 
+  const theme = ((await getServerCookie("theme")) || "dark") as Theme;
+  const preferredLocale = (await getPreferredLocale()) as LocaleLanguages;
+  const localeMismatch = (await getLocaleMismatch()) as LocaleLanguages;
+  const hasCookieConsent = !!(await getServerCookie("cookie_consent"));
+
   return (
-    <html
-      lang={locale}
-      suppressHydrationWarning
-      className={theme === "dark" ? "dark" : ""}
-    >
+    <html lang={locale} className={theme === "dark" ? "dark" : ""}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextIntlClientProvider>
           <ThemeProvider defaultTheme={theme}>
             {children}
+
             <Toaster />
+
+            {localeMismatch && (
+              <LocaleMismatch
+                locale={preferredLocale}
+                localeMismatch={localeMismatch}
+              />
+            )}
+
+            {!hasCookieConsent && (
+              <CookieConsent initialHasConsent={hasCookieConsent} />
+            )}
+            <UserGeoInfo />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

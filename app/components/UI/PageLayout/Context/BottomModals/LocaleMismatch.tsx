@@ -23,7 +23,7 @@ export default function LocaleMismatch({
   const router = useRouter();
   const t = useTranslations("LOCALE_MISMATCH");
 
-  const handleSwitch = async () => {
+  const handleStay = async () => {
     const pathname = window.location.pathname;
     const search = window.location.search;
     const hash = window.location.hash;
@@ -32,6 +32,8 @@ export default function LocaleMismatch({
     segments[1] = localeMismatch;
     const newPath = segments.join("/") + search + hash;
 
+    setIsVisible(false);
+
     setClientCookie("preferred_locale", localeMismatch);
 
     deleteClientCookie("locale_mismatch");
@@ -39,7 +41,7 @@ export default function LocaleMismatch({
     router.push(newPath);
   };
 
-  const handleStay = async () => {
+  const handleSwitch = async () => {
     const pathname = window.location.pathname;
     const search = window.location.search;
     const hash = window.location.hash;
@@ -47,9 +49,9 @@ export default function LocaleMismatch({
     const segments = pathname.split("/");
     segments[1] = locale;
     const newPath = segments.join("/") + search + hash;
-
-    setIsVisible(false);
+    
     setClientCookie("preferred_locale", locale);
+
     deleteClientCookie("locale_mismatch");
 
     router.push(newPath);
@@ -71,13 +73,13 @@ export default function LocaleMismatch({
       actions={
         <>
           <button
-            onClick={handleSwitch}
+            onClick={handleStay}
             className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-300 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
           >
             {t("KEEP", { locale: localeMismatch.toUpperCase() })}
           </button>
           <button
-            onClick={handleStay}
+            onClick={handleSwitch}
             className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-300 rounded-lg transition-colors cursor-pointer custom-shadow custom-shadow-hover"
           >
             {t("SWITCH", { locale: locale.toUpperCase() })}

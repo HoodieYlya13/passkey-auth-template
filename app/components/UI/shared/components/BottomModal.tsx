@@ -23,7 +23,7 @@ export default function BottomModal({
   return (
     <div
       className={clsx(
-        "fixed bottom-5 right-5 z-50 bg-background/90 p-6 rounded-xl shadow-2xl border liquid-glass-border-color custom-shadow flex flex-col gap-4 max-w-sm animate-in slide-in-from-bottom-5 fade-in duration-300",
+        "fixed bottom-5 left-5 ml-auto right-5 z-50 bg-background/90 p-6 rounded-xl shadow-2xl border liquid-glass-border-color custom-shadow flex flex-col gap-4 max-w-sm animate-in slide-in-from-bottom-5 fade-in duration-300",
         className
       )}
     >

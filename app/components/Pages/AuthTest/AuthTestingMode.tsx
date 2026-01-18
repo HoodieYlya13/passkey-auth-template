@@ -10,6 +10,7 @@ import { useErrors } from "@/hooks/useErrors";
 import { useFormState } from "react-hook-form";
 import { useState } from "react";
 import { ERROR_CODES, tryCatch } from "@/utils/errors.utils";
+import Aurora from "../../UI/shared/components/Aurora";
 
 export default function AuthTestingMode() {
   const t = useTranslations("AUTH");
@@ -35,7 +36,7 @@ export default function AuthTestingMode() {
         error.message === ERROR_CODES.PASSWORD.INCORRECT ? "password" : "root",
         {
           message: error.message,
-        }
+        },
       );
 
     setSuccessText(t("ACCESS_GRANTED"));
@@ -43,23 +44,27 @@ export default function AuthTestingMode() {
   };
 
   return (
-    <section className="flex flex-1 w-full items-center justify-center p-4">
-      <Form
-        form={form}
-        handleSubmit={handleSubmit(onSubmit)}
-        buttonLabel={t("LOGIN")}
-        successText={successText}
-      >
-        <Input
-          id="password"
-          type="password"
-          label={t("PASSWORD")}
-          {...register("password")}
-          error={errors.password?.message && errorT(errors.password.message)}
-          autoComplete="current-password"
-          focusOnMount
-        />
-      </Form>
-    </section>
+    <div className="grow flex flex-col min-h-dvh">
+      <section className="flex flex-1 w-full items-center justify-center p-4">
+        <Form
+          form={form}
+          handleSubmit={handleSubmit(onSubmit)}
+          buttonLabel={t("LOGIN")}
+          successText={successText}
+        >
+          <Input
+            id="password"
+            type="password"
+            label={t("PASSWORD")}
+            {...register("password")}
+            error={errors.password?.message && errorT(errors.password.message)}
+            autoComplete="current-password"
+            focusOnMount
+          />
+        </Form>
+      </section>
+      
+      <Aurora speed={0.3} />
+    </div>
   );
 }

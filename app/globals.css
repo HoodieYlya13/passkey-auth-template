@@ -16,6 +16,7 @@
 
 :root {
   --size: max(100vw, 100vh);
+  --nav-height: 5rem;
   --background: #ffffff;
   --foreground: #000000;
 }

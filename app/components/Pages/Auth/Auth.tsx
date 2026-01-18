@@ -131,7 +131,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="flex w-full grow justify-center items-center py-4">
+    <div className="flex w-full grow justify-center items-center p-5 md:p-10">
       <Form
         form={form}
         handleSubmit={onMagicLinkLogin}
