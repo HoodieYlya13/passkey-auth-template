@@ -37,7 +37,7 @@ export default function NavBarClient({
     <nav className="w-full flex items-center justify-between px-4">
       <Link
         href="/"
-        prefetch={true}
+        prefetch
         className="flex items-center gap-2 md:gap-3"
       >
         <Image
@@ -56,7 +56,7 @@ export default function NavBarClient({
 
         <LocaleSwitcher storedLocale={locale} localeMismatch={localeMismatch} />
 
-        <Link href={token ? "/profile" : "/auth"} prefetch={true}>
+        <Link href={token ? "/profile" : "/auth"} prefetch>
           <MyAccountIcon />
         </Link>
 
