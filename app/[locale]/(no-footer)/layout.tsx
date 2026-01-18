@@ -6,13 +6,13 @@ export default async function NoFooterLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: LocaleLanguages }>;
+  params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
 
   return (
     <div className="flex flex-col font-black transition-colors duration-300">
-      <NavBar locale={locale} />
+      <NavBar locale={locale as LocaleLanguages} />
 
       <main className="grow flex flex-col min-h-dvh pt-(--nav-height)">
         {children}
