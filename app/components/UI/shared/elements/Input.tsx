@@ -50,7 +50,7 @@ function VisibilityButton({
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="size-5 sm:size-6 md:size-7"
-        viewBox="0 -960 960 960"
+        viewBox="30 -930 900 900"
         fill="currentColor"
       >
         {showPassword ? (
@@ -120,4 +120,5 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     </>
   );
 });
+
 export default Input;
