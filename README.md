@@ -34,30 +34,30 @@ An ultra-premium, production-ready, passwordless authentication template built o
 ## 📁 Architecture & Directory Structure
 
 ```
-├── actions/                  # React 19 Server Actions ('use server')
-│   ├── auth/                 # Authentication-related actions
-│   │   ├── logout/           # Session destruction & cookie cleanup
-│   │   ├── magic-link/       # Magic link dispatching & verification
-│   │   ├── passkey/          # WebAuthn register/login credential handshakes
-│   │   └── testing-mode/     # Password-gating action for staging shields
-│   ├── user/                 # User profile metadata updates
-│   ├── base.client.actions.ts# Common client-side action wrappers
-│   └── base.server.actions.ts# Rate-limit, auth-checking & error-handling action wrapper
-├── app/                      # Next.js App Router (Network Boundary)
-│   ├── [locale]/             # i18n Root Directory (Locales route segment)
-│   │   ├── (main)/           # Layout wrapper for standard profile & homepage
-│   │   ├── (no-footer)/      # Login / verification layouts without footer decoration
-│   │   └── auth-testing-mode/# Development staging gate login screen
-│   ├── components/           # Atomic Design Page Components & UI elements
-│   ├── globals.css           # Tailwind CSS v4 design tokens and customized styles
-│   └── layout.tsx            # Global metadata configuration
-├── hooks/                    # Reusable React Hooks (Forms, translation helpers, errors)
-├── i18n/                     # Internationalization configuration, routing & translations
-├── models/                   # TypeScript interfaces & models
-├── prisma/                   # Prisma database schemas (PostgreSQL connector)
-├── proxy.ts                  # Root proxy for Next.js 16 network-boundary routing
-├── schemas/                  # Zod validation schemas for inputs & API calls
-└── utils/                    # Shared helper functions (Auth utilities, cookies, errors)
+├── actions/                   # React 19 Server Actions ('use server')
+│   ├── auth/                  # Authentication-related actions
+│   │   ├── logout/            # Session destruction & cookie cleanup
+│   │   ├── magic-link/        # Magic link dispatching & verification
+│   │   ├── passkey/           # WebAuthn register/login credential handshakes
+│   │   └── testing-mode/      # Password-gating action for staging shields
+│   ├── user/                  # User profile metadata updates
+│   ├── base.client.actions.ts # Common client-side action wrappers
+│   └── base.server.actions.ts # Rate-limit, auth-checking & error-handling action wrapper
+├── app/                       # Next.js App Router (Network Boundary)
+│   ├── [locale]/              # i18n Root Directory (Locales route segment)
+│   │   ├── (main)/            # Layout wrapper for standard profile & homepage
+│   │   ├── (no-footer)/       # Login / verification layouts without footer decoration
+│   │   └── auth-testing-mode/ # Development staging gate login screen
+│   ├── components/            # Atomic Design Page Components & UI elements
+│   ├── globals.css            # Tailwind CSS v4 design tokens and customized styles
+│   └── layout.tsx             # Global metadata configuration
+├── hooks/                     # Reusable React Hooks (Forms, translation helpers, errors)
+├── i18n/                      # Internationalization configuration, routing & translations
+├── models/                    # TypeScript interfaces & models
+├── prisma/                    # Prisma database schemas (PostgreSQL connector)
+├── proxy.ts                   # Root proxy for Next.js 16 network-boundary routing
+├── schemas/                   # Zod validation schemas for inputs & API calls
+└── utils/                     # Shared helper functions (Auth utilities, cookies, errors)
 ```
 
 ---
