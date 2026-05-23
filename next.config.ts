@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     turbopackFileSystemCacheForDev: true,
   },
   reactCompiler: true,
+  cacheComponents: true,
   allowedDevOrigins: ["localhost:3000", "192.168.1.102:3000"],
 };
 

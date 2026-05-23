@@ -20,6 +20,7 @@ import UserGeoInfo from "../components/UI/PageLayout/Context/UserGeoInfo/UserGeo
 import { LocaleLanguages } from "@/i18n/utils";
 import LocaleMismatch from "../components/UI/PageLayout/Context/BottomModals/LocaleMismatch";
 import CookieConsent from "../components/UI/PageLayout/Context/BottomModals/CookieConsent";
+import { Suspense } from "react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -57,39 +58,60 @@ export async function generateMetadata({
   };
 }
 
-export default async function LocaleLayout({ children, params }: LayoutProps) {
-  const { locale } = await params;
-  if (!hasLocale(routing.locales, locale)) notFound();
-
+async function LocaleLayoutContent({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const theme = ((await getServerCookie("theme")) || "dark") as Theme;
   const preferredLocale = (await getPreferredLocale()) as LocaleLanguages;
   const localeMismatch = (await getLocaleMismatch()) as LocaleLanguages;
   const hasCookieConsent = !!(await getServerCookie("cookie_consent"));
 
   return (
-    <html lang={locale} className={theme === "dark" ? "dark" : ""}>
+    <NextIntlClientProvider>
+      <ThemeProvider defaultTheme={theme}>
+        {/* Inject dark theme class immediately during stream rendering to prevent FOUC */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.documentElement.className = "${theme === "dark" ? "dark" : ""}";`,
+          }}
+        />
+
+        {children}
+
+        <Toaster />
+
+        {localeMismatch && (
+          <LocaleMismatch
+            locale={preferredLocale}
+            localeMismatch={localeMismatch}
+          />
+        )}
+
+        {!hasCookieConsent && (
+          <CookieConsent initialHasConsent={hasCookieConsent} />
+        )}
+        <UserGeoInfo />
+      </ThemeProvider>
+    </NextIntlClientProvider>
+  );
+}
+
+export default async function LocaleLayout({ children, params }: LayoutProps) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+
+  return (
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NextIntlClientProvider>
-          <ThemeProvider defaultTheme={theme}>
+        <Suspense fallback={null}>
+          <LocaleLayoutContent>
             {children}
-
-            <Toaster />
-
-            {localeMismatch && (
-              <LocaleMismatch
-                locale={preferredLocale}
-                localeMismatch={localeMismatch}
-              />
-            )}
-
-            {!hasCookieConsent && (
-              <CookieConsent initialHasConsent={hasCookieConsent} />
-            )}
-            <UserGeoInfo />
-          </ThemeProvider>
-        </NextIntlClientProvider>
+          </LocaleLayoutContent>
+        </Suspense>
       </body>
     </html>
   );
