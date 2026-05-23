@@ -26,6 +26,9 @@ This template supports two flexible architectural modes to fit any infrastructur
 - **🔐 Passkey-First Authentication (WebAuthn)**
   - Cryptographically secure, phishing-resistant, and passwordless authentication using `@simplewebauthn/browser` and `@simplewebauthn/server` (in serverless mode).
   - Seamlessly register, rename, and delete multiple passkeys via standard WebAuthn APIs.
+- **⚡ Optimistic UI & Premium UX (React 19)**
+  - Instant, zero-latency user feedback on all credential mutations (Add, Rename, and Delete passkeys) leveraging React 19's native `useOptimistic` state reducer.
+  - Form operations react immediately in the UI and automatically roll back or raise Sonner toast warnings if the background server action encounters an error.
 - **✉️ Passwordless Magic Link Fallback**
   - Instant magic link login fallback utilizing **Resend** for bulletproof email delivery.
   - Smart Client-side Email Provider detection: Automatically shows deep-links to Gmail, Yahoo, Outlook, Proton Mail, etc. based on the entered email domain.
