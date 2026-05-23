@@ -4,10 +4,27 @@ An ultra-premium, production-ready, passwordless authentication template built o
 
 ---
 
+## 🏗️ Dual-Architecture Design
+
+This template supports two flexible architectural modes to fit any infrastructure or deployment model, toggled seamlessly via the `NEXT_PUBLIC_SERVERLESS` environment variable.
+
+### ⚡ 1. Serverless Mode (`NEXT_PUBLIC_SERVERLESS=true`) [Default]
+* **Monorepo / Self-Contained**: The application runs completely serverless without requiring a separate backend.
+* **Direct Database Access**: Direct PostgreSQL querying utilizing the integrated **Prisma ORM**.
+* **Direct WebAuthn Verification**: Cryptographic challenge generation and registration/login credential verifications are performed directly within Next.js Server Actions using `@simplewebauthn/server`.
+* **Direct Mailing**: Dispatch emails directly from Server Actions using the built-in **Resend** integration.
+
+### 🖥️ 2. Dedicated Backend Client Mode (`NEXT_PUBLIC_SERVERLESS=false`)
+* **Lightweight UI Gateway**: The Next.js app acts purely as a highly optimized, localized front-end proxy.
+* **API Proxy Boundary**: Next.js Server Actions delegate all core logic, databases transactions, cryptography operations, session token generation, and email dispatches to a dedicated external API server (e.g. built in Java, Go, Spring Boot, etc.).
+* **API Delegation Layer**: Utilizes a central, robust `fetchApi` mechanism located in `api/` to seamlessly manage bearer authorization headers, delegate dynamic proxy `set-cookie` headers, and map remote API errors cleanly to localized UI errors.
+
+---
+
 ## ✨ Features
 
 - **🔐 Passkey-First Authentication (WebAuthn)**
-  - Cryptographically secure, phishing-resistant, and passwordless authentication using `@simplewebauthn/browser` and `@simplewebauthn/server`.
+  - Cryptographically secure, phishing-resistant, and passwordless authentication using `@simplewebauthn/browser` and `@simplewebauthn/server` (in serverless mode).
   - Seamlessly register, rename, and delete multiple passkeys via standard WebAuthn APIs.
 - **✉️ Passwordless Magic Link Fallback**
   - Instant magic link login fallback utilizing **Resend** for bulletproof email delivery.
@@ -28,6 +45,7 @@ An ultra-premium, production-ready, passwordless authentication template built o
   - **Theme Engine**: System-adaptive light/dark mode with dynamic `ThemeProvider`.
   - **Sonner Toasts**: High-fidelity theme-adaptive notifications integrated with localized strings.
   - **Developer Shield (Testing Mode)**: Lock down development or staging sites behind a secure `APP_PASSWORD` login using the `auth-testing-mode` route.
+  - **🗃️ Secure DB Warming & Inactive User Cleanup (Serverless Mode)**: Nightly secured cron endpoint (`/api/cron`) to keep Upstash Redis and Postgres databases active and warm, while purging unconfirmed signup records created > 24 hours ago.
 
 ---
 
@@ -38,11 +56,15 @@ An ultra-premium, production-ready, passwordless authentication template built o
 │   ├── auth/                  # Authentication-related actions
 │   │   ├── logout/            # Session destruction & cookie cleanup
 │   │   ├── magic-link/        # Magic link dispatching & verification
-│   │   ├── passkey/           # WebAuthn register/login credential handshakes
+│   │   ├── passkey/           # WebAuthn register/login credential handshakes (Dual-mode support)
 │   │   └── testing-mode/      # Password-gating action for staging shields
 │   ├── user/                  # User profile metadata updates
 │   ├── base.client.actions.ts # Common client-side action wrappers
 │   └── base.server.actions.ts # Rate-limit, auth-checking & error-handling action wrapper
+├── api/                       # API integration layer for dedicated backend communication (used when !SERVERLESS)
+│   ├── base.api.ts            # Central fetch client with proxy session token forwarding
+│   ├── auth.api.ts            # Auth-related external API endpoints definition
+│   └── user.api.ts            # User-related external API endpoints definition
 ├── app/                       # Next.js App Router (Network Boundary)
 │   ├── [locale]/              # i18n Root Directory (Locales route segment)
 │   │   ├── (main)/            # Layout wrapper for standard profile & homepage
@@ -71,7 +93,7 @@ Follow these steps to set up the project locally.
 Ensure you have the following installed:
 - **Node.js** (v18.x or later, Node 20+ recommended)
 - **npm**, **yarn**, **pnpm**, or **bun**
-- **PostgreSQL** database (local, Docker, or managed like Neon/Vercel)
+- **PostgreSQL** database (only required for Serverless mode)
 - **Redis** database (for rate limiting, e.g., Upstash)
 
 ### 2. Install Dependencies
@@ -80,7 +102,7 @@ Ensure you have the following installed:
 npm install
 ```
 
-### 3. Database Setup (Prisma)
+### 3. Database Setup (Serverless mode only)
 
 Initialize your PostgreSQL database and run migrations to create the tables:
 
@@ -104,29 +126,57 @@ Here is a guide to the key variables:
 
 | Environment Variable | Description | Example / Recommended Value |
 | :--- | :--- | :--- |
+| `NEXT_PUBLIC_SERVERLESS` | Toggle between Serverless (`true`) and Dedicated Backend (`false`) modes | `true` |
 | `NEXT_PUBLIC_APP_NAME` | Display name of the application | `Passkey Auth` |
 | `NEXT_PUBLIC_DEFAULT_LOCALE` | Default language fallback | `en` |
 | `NEXT_PUBLIC_TESTING_MODE` | Enable application shield password gating | `true` |
 | `APP_PASSWORD` | Access password if `TESTING_MODE` is enabled | `your-secure-dev-password` |
-| `ORIGIN` | WebApp base URL (critical for WebAuthn RP verification) | `http://localhost:3000` |
+| `ORIGIN` | App Base URL or Dedicated Backend API URL (when `!SERVERLESS`) | `http://localhost:3000` |
 | `RP_ID` | Relying Party ID for WebAuthn (domain name) | `localhost` |
 | `ISSUER` | JWT Issuer for user session tokens | `passkey-auth-issuer` |
 | `JWT_PRIVATE_KEY` | Secret used to sign session JWTs | `generate-a-strong-secret-key` |
-| `POSTGRES_PRISMA_URL` | PostgreSQL connection pool URL | `postgres://user:pass@host:5432/db?pgbouncer=true` |
-| `POSTGRES_URL_NON_POOLING` | Direct PostgreSQL URL for migrations | `postgres://user:pass@host:5432/db` |
+| `POSTGRES_PRISMA_URL` | PostgreSQL connection pool URL (Serverless mode) | `postgres://user:pass@host:5432/db?pgbouncer=true` |
+| `POSTGRES_URL_NON_POOLING` | Direct PostgreSQL URL for migrations (Serverless mode) | `postgres://user:pass@host:5432/db` |
 | `UPSTASH_REDIS_REST_URL` | Redis URL for Upstash Rate Limit | `https://...upstash.io` |
 | `UPSTASH_REDIS_REST_TOKEN`| Redis Token for Upstash Rate Limit | `your-upstash-token` |
-| `RESEND_API_KEY` | API Key from Resend for Magic Links | `re_...` |
-| `EMAIL_FROM` | Verified sender address for Magic Links | `onboarding@resend.dev` |
+| `RESEND_API_KEY` | API Key from Resend for Magic Links (Serverless mode) | `re_...` |
+| `EMAIL_FROM` | Verified sender address for Magic Links (Serverless mode) | `onboarding@resend.dev` |
+| `CRON_SECRET` | Secret token to authorize DB warming and cleanup cron jobs | `any-secure-random-token` |
 
-### 5. Running local mail catcher (Optional)
-If you want to test Magic Links locally without configuring an external SMTP/Resend API, you can run a local email interceptor like **Mailpit**:
+### 5. Local Email Testing
 
+The magic link testing flow adapts to your active mode:
+
+* **In Serverless Mode (`NEXT_PUBLIC_SERVERLESS=true`)**: During local development (`NODE_ENV !== "production"`), outbound emails (Magic Links, Passkey creation/deletion alerts) are not actually dispatched. Instead, a clean preview and the clickable login link are printed **directly to your terminal console** for instant testing.
+* **In Dedicated Backend Mode (`NEXT_PUBLIC_SERVERLESS=false`)**: If `NEXT_PUBLIC_TESTING_MODE` is enabled, the client's "Check your email" link automatically redirects to a local **Mailpit** web console at `http://localhost:8025/` (useful when your external backend is configured to dump mail into Mailpit).
+
+If you want to run Mailpit locally for your dedicated backend:
 ```bash
 # Using Docker
 docker run -d -p 8025:8025 -p 1025:1025 axllent/mailpit
 ```
-When running Next.js locally, the application automatically redirects the "Check your email" link to `http://localhost:8025/` in development mode for seamless local testing.
+
+---
+
+## 🗄️ Database Warming & Daily Cleanup (Serverless Mode)
+
+To prevent free-tier databases (like Neon Postgres or Upstash Redis) from spinning down during periods of inactivity and causing cold starts, a secured daily cron endpoint is integrated at `/api/cron`. In **Serverless Mode**, this route also purges unconfirmed users (users who requested a magic link but never clicked it, meaning they have no `username` and no registered passkeys after 24 hours).
+
+### How it Works:
+1. **GitHub Action**: A scheduled GitHub Action runs every 24 hours (configurable in `.github/workflows/database-ping-cleanup.yml`).
+2. **API Verification**: The workflow triggers `GET https://your-domain.com/api/cron` passing an `Authorization: Bearer <CRON_SECRET>` header.
+3. **Execution**:
+   - Pings Upstash Redis to keep it warmed.
+   - Pings Neon PostgreSQL (in Serverless mode).
+   - Deletes inactive signups created > 24 hours ago.
+
+### Configuration (Staging/Production Setup):
+1. **Hosting Environment (e.g. Vercel)**:
+   Add `CRON_SECRET` to your environment variables with a strong, random key.
+2. **GitHub Actions Secrets**:
+   Go to your GitHub repository **Settings** -> **Secrets and variables** -> **Actions** and add two Secrets:
+   - `APP_DOMAIN`: Your live app domain (e.g., `your-app.vercel.app` or `your-domain.com`).
+   - `CRON_SECRET`: The exact same secret token configured in your hosting environment.
 
 ---
 

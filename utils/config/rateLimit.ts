@@ -12,11 +12,11 @@ function getRedisClient() {
   if (!url || !token) {
     if (process.env.NODE_ENV === "development")
       return console.warn(
-        "UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN not found. Rate limiting will be disabled."
+        "UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN not found. Rate limiting will be disabled.",
       );
 
     throw new Error(
-      "UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN are required"
+      "UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN are required",
     );
   }
 
@@ -42,8 +42,7 @@ function getLimiter(identifier: string, redis: Redis) {
 }
 
 export async function checkRateLimit(identifier: string) {
-  const isTesting = TESTING_MODE === "true";
-  const shouldLimit = isTesting ? identifier === "authTestingMode" : true;
+  const shouldLimit = TESTING_MODE ? identifier === "authTestingMode" : true;
 
   if (shouldLimit) {
     const redis = getRedisClient();

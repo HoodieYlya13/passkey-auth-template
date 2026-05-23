@@ -14,20 +14,20 @@ const intlMiddleware = createMiddleware(routing);
 export async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
-  let res: NextResponse = NextResponse.next();
+  if (pathname.startsWith("/api/")) return NextResponse.next();
 
-  const isTesting = TESTING_MODE === "true";
+  let res: NextResponse = NextResponse.next();
 
   res = intlMiddleware(req);
 
   const isAuthorized = getProxyCookie(req, "isAuthorized");
-  if (isTesting && !pathname.endsWith("/auth-testing-mode") && !isAuthorized) {
+  if (TESTING_MODE && !pathname.endsWith("/auth-testing-mode") && !isAuthorized) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = "/auth-testing-mode";
     return NextResponse.redirect(redirectUrl);
   }
 
-  if ((!isTesting || isAuthorized) && pathname.endsWith("/auth-testing-mode")) {
+  if ((!TESTING_MODE || isAuthorized) && pathname.endsWith("/auth-testing-mode")) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = "/";
     return NextResponse.redirect(redirectUrl);
