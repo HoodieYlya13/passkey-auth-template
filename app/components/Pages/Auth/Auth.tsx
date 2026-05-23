@@ -131,14 +131,16 @@ export default function Auth() {
   };
 
   return (
-    <div className="flex w-full grow justify-center items-center p-5 md:p-10">
+    <div className="flex-1 flex w-full justify-center items-center p-6 relative">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(120,119,198,0.06),transparent_55%)] pointer-events-none" />
+
       <Form
         form={form}
         handleSubmit={onMagicLinkLogin}
         buttonLabel={t("SEND_MAGIC_LINK")}
         successText={successText}
       >
-        <h2 className="text-2xl font-bold text-center">{t("LOGIN_TITLE")}</h2>
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-foreground tracking-tight mb-2">{t("LOGIN_TITLE")}</h2>
         <div className="flex flex-col gap-4">
           <Button
             onClick={onPasskeyLogin}
@@ -152,12 +154,12 @@ export default function Auth() {
             </p>
           )}
 
-          <div className="inline-flex items-center justify-center my-4">
-            <div className="w-full border-t border-gray-700" />
-            <div className="w-full px-4 text-sm text-gray-500 text-center">
+          <div className="inline-flex items-center justify-center my-2">
+            <div className="w-full border-t border-gray-200 dark:border-white/10" />
+            <div className="w-full px-4 text-xs font-semibold uppercase tracking-wider text-gray-400 text-center">
               {t("OR")}
             </div>
-            <div className="w-full border-t border-gray-700" />
+            <div className="w-full border-t border-gray-200 dark:border-white/10" />
           </div>
 
           <div className="flex flex-col gap-2">

@@ -42,19 +42,19 @@ export default function AllPasskeys({
       )}
 
       {!passkeys || passkeys.length === 0 ? (
-        <p className="text-gray-400">{t("NO_PASSKEYS")}</p>
+        <p className="text-gray-500 dark:text-gray-400 font-medium">{t("NO_PASSKEYS")}</p>
       ) : (
         <div className="flex flex-col gap-2">
           {passkeys.map((passkey) => (
             <div
               key={passkey.id}
-              className={clsx("flex items-center justify-between p-3 rounded-lg liquid-glass custom-shadow", {
+              className={clsx("flex items-center justify-between py-3 px-4 rounded-xl liquid-glass border liquid-glass-border-color custom-shadow", {
                 "opacity-50": passkey.pending,
               })}
             >
               <div className="flex flex-col">
-                <span className="font-medium">{passkey.name}</span>
-                <span className="text-xs text-gray-400">
+                <span className="font-semibold text-sm sm:text-base text-foreground">{passkey.name}</span>
+                <span className="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">
                   {format.dateTime(new Date(passkey.createdAt), {
                     year: "numeric",
                     month: "numeric",
@@ -63,17 +63,17 @@ export default function AllPasskeys({
                 </span>
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex gap-4">
                 <button
                   onClick={() => setEditingId(passkey.id)}
-                  className="text-sm text-blue-600 font-medium hover:underline"
+                  className="text-xs sm:text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-semibold transition-colors cursor-pointer"
                 >
                   {t("RENAME")}
                 </button>
 
                 <button
                   onClick={() => deletePasskey(passkey.id)}
-                  className="text-sm text-red-600 font-medium hover:underline"
+                  className="text-xs sm:text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-semibold transition-colors cursor-pointer"
                 >
                   {t("DELETE")}
                 </button>

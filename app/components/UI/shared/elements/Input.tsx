@@ -49,7 +49,7 @@ function VisibilityButton({
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="size-5 sm:size-6 md:size-7"
+        className="size-5"
         viewBox="30 -930 900 900"
         fill="currentColor"
       >
@@ -91,7 +91,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
   return (
     <>
-      <div className="relative input-focus-glow rounded-2xl sm:rounded-3xl md:rounded-[1.75rem]">
+      <div className="relative input-focus-glow rounded-xl">
         <input
           {...rest}
           id={id}
@@ -99,7 +99,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           type={type !== "password" ? type : showPassword ? "text" : "password"}
           placeholder={label}
           className={clsx(
-            "liquid-glass-backdrop liquid-glass-background border block w-full rounded-2xl sm:rounded-3xl md:rounded-[1.75rem] shadow-sm placeholder-gray-400 outline-none p-2 sm:p-3 md:p-4 transition-all duration-300 ease-in-out focus:ring focus:ring-white focus:shadow-white hover:ring hover:ring-white hover:shadow-white custom-shadow custom-shadow-hover",
+            "liquid-glass-backdrop liquid-glass-background border block w-full rounded-xl shadow-sm placeholder-gray-400 outline-none py-2.5 px-3.5 sm:py-3 sm:px-4 text-sm sm:text-base transition-all duration-300 ease-in-out focus:ring focus:ring-white/20 focus:shadow-white/10 hover:ring hover:ring-white/20 hover:shadow-white/10 custom-shadow custom-shadow-hover",
             error ? "border-red-500" : "liquid-glass-border-color",
             { "pr-10": type === "password" }
           )}

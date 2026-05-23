@@ -17,9 +17,10 @@ const renderIcon = (t: string) => (
   <div className="rounded-full hover:bg-background/10 transition-colors">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      height="32px"
-      width="32px"
+      height="24px"
+      width="24px"
       viewBox="30 -930 900 900"
+      className="size-6 text-foreground/50 hover:text-foreground transition-colors"
       fill="currentColor"
     >
       <path d={getIconPath(t)} />

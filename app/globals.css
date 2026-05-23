@@ -26,30 +26,15 @@
   --foreground: #ffffff;
 }
 
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: gray var(--background);
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none !important;
 }
 
-/* WebKit browsers (Chrome, Safari, Edge) */
-*::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: gray;
-  border-radius: 6px;
-  border: 2px solid var(--background);
-}
-
-*::-webkit-scrollbar-thumb:hover {
-  background-color: var(--background);
+html,
+body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
 @layer utilities {
@@ -88,9 +73,14 @@
 }
 
 .liquid-glass {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.03);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px); /* Safari support */
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dark .liquid-glass {
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -100,10 +90,18 @@
 }
 
 .liquid-glass-background {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.dark .liquid-glass-background {
   background: rgba(255, 255, 255, 0.05);
 }
 
 .liquid-glass-border-color {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.dark .liquid-glass-border-color {
   border-color: rgba(255, 255, 255, 0.2);
 }
 

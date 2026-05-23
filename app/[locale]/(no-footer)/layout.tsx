@@ -11,7 +11,7 @@ export default async function NoFooterLayout({
   const { locale } = await params;
 
   return (
-    <div className="flex flex-col font-black transition-colors duration-300">
+    <div className="flex flex-col min-h-screen min-h-dvh font-sans antialiased transition-colors duration-300">
       <NavBar locale={locale as LocaleLanguages} />
 
       <main className="grow flex flex-col min-h-dvh pt-(--nav-height)">

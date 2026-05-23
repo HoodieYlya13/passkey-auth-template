@@ -7,6 +7,29 @@
     "META": {
       "TITLE": "{name}",
       "DESCRIPTION": "Bienvenue dans {name} !"
+    },
+    "HERO": {
+      "TITLE": "Sans mot de passe. Sécurisé.",
+      "DESCRIPTION": "Découvrez le futur de l'authentification. Connexions fluides sans mot de passe optimisées par des clés d'accès (passkeys) sécurisées et des liens magiques."
+    },
+    "CTA": {
+      "GO_TO_PROFILE": "Aller au profil",
+      "GET_STARTED": "Commencer",
+      "SIGNED_IN_AS": "Connecté en tant que <important>{username}</important>"
+    },
+    "FEATURES": {
+      "BIOMETRICS": {
+        "TITLE": "Biométrie d'abord",
+        "DESCRIPTION": "Connectez-vous instantanément avec Apple TouchID, FaceID ou Windows Hello. Aucun mot de passe à retenir."
+      },
+      "CRYPTOGRAPHY": {
+        "TITLE": "Clés cryptographiques",
+        "DESCRIPTION": "Cryptographie asymétrique haute sécurité qui est totalement immunisée contre les attaques de phishing."
+      },
+      "ENGINE": {
+        "TITLE": "À la pointe",
+        "DESCRIPTION": "Propulsé par Next.js 16, React 19, Tailwind CSS et des architectures d'API standard WebAuthn."
+      }
     }
   },
   "ERRORS": {
@@ -122,5 +145,10 @@
     "TITLE": "Politique de Cookies",
     "DESCRIPTION": "Nous utilisons des cookies nécessaires au bon fonctionnement du site. Aucune donnée personnelle n'est utilisée à des fins commerciales.",
     "ACKNOWLEDGE": "J'ai compris"
+  },
+  "FOOTER": {
+    "ALL_RIGHTS_RESERVED": "Tous droits réservés.",
+    "PRIVACY_POLICY": "Politique de confidentialité",
+    "TERMS_OF_SERVICE": "Conditions d'utilisation"
   }
 }

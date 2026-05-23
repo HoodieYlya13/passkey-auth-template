@@ -46,15 +46,17 @@ export default function UserName({ username }: UserNameProps) {
   };
 
   return (
-    <div className="flex w-full grow justify-center items-center p-5 py-10 md:p-10">
+    <div className="flex-1 flex w-full justify-center items-center p-6 relative">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(120,119,198,0.06),transparent_55%)] pointer-events-none" />
+
       <Form
         form={form}
         handleSubmit={handleSubmit(onSubmit)}
         buttonLabel={t("UPDATE")}
         successText={successText}
       >
-        <h3 className="text-lg font-bold">{t("TITLE")}</h3>
-        <p className="text-sm text-gray-400">{t("DESCRIPTION")}</p>
+        <h3 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight mb-1">{t("TITLE")}</h3>
+        <p className="text-xs sm:text-sm text-foreground/70 font-medium mb-4">{t("DESCRIPTION")}</p>
 
         <Input
           id="username"

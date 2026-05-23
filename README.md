@@ -31,9 +31,9 @@ This template supports two flexible architectural modes to fit any infrastructur
   - Smart Client-side Email Provider detection: Automatically shows deep-links to Gmail, Yahoo, Outlook, Proton Mail, etc. based on the entered email domain.
   - Development integration with local mail catchers (e.g., Mailpit on port `8025`).
 - **⚡ Bleeding Edge Tech Stack**
-  - **Next.js 16** with experimental Turbopack caching.
+  - **Next.js 16.2.6** with Turbopack and **Cache Components** (`cacheComponents: true`) enabled.
   - **React 19** incorporating the React Compiler (`reactCompiler: true`), Promise-based Async Request APIs (`cookies()`, `headers()`, `params`), Server Actions (`'use server'`), and optimal client hooks (`useActionState`, `useOptimistic`).
-  - **Tailwind CSS v4** featuring responsive animations, modern custom CSS glassmorphism themes (`liquid-glass`), and sleek gradients.
+  - **Tailwind CSS v4** featuring responsive animations, adaptive dark/light custom CSS glassmorphism themes (`liquid-glass`), and smooth gradients.
 - **🌐 Robust Internationalization (i18n)**
   - Full multi-language support (English `en` & French `fr`) using `next-intl`.
   - Smart automatic browser language detection, Preferred Language Cookie persistence, and smooth localized UI transitions.
@@ -46,6 +46,16 @@ This template supports two flexible architectural modes to fit any infrastructur
   - **Sonner Toasts**: High-fidelity theme-adaptive notifications integrated with localized strings.
   - **Developer Shield (Testing Mode)**: Lock down development or staging sites behind a secure `APP_PASSWORD` login using the `auth-testing-mode` route.
   - **🗃️ Secure DB Warming & Inactive User Cleanup (Serverless Mode)**: Nightly secured cron endpoint (`/api/cron`) to keep Upstash Redis and Postgres databases active and warm, while purging unconfirmed signup records created > 24 hours ago.
+
+---
+
+## ⚡ Partial Prerendering (PPR) & Cache Components
+
+This template fully adopts Next.js 16's new **Cache Components** architecture, replacing outdated dynamic rendering behaviors with an explicit, opt-in caching and streaming layout model:
+
+- **Static HTML Shells (`○`)**: Root structures and surrounding page frames (layouts, static headings, styling classes, and loading fallbacks) are statically prerendered at compile time. This allows the template to serve instant, lightweight initial page loads to users.
+- **Dynamic Server-Streamed Content (`◐`)**: Dynamic session-dependent blocks (such as user profile details, WebAuthn passkey listings, or active cookie-consent checks) are isolated within React `<Suspense>` boundaries. Next.js server-streams these dynamic components once request-time data (like authentication tokens or database records) is resolved in real-time.
+- **Hydration Protection**: The root `<html>` tag uses `suppressHydrationWarning` to gracefully support the streaming client-side dark-theme injection script, which prevents visual theme flickering (FOUC) while keeping React's hydration 100% clean.
 
 ---
 
@@ -207,6 +217,7 @@ This template conforms perfectly to the most rigorous React 19 and Next.js 16 st
 2. **Awaited Async Request APIs**: In alignment with Next.js 16, promises like `cookies()` and dynamic `params` are strictly awaited before use.
 3. **React Compiler Optimization**: No boilerplate `useMemo`, `useCallback`, or `React.memo` calls. Code is kept clean, readable, and natively optimized by the React Compiler.
 4. **Form Handling via Actions**: Traditional `useEffect` fetching has been banned. Form submissions use React 19's native action state workflows.
+5. **Partial Prerendering (PPR) by Design**: Dynamic cookie-based operations and Server Action handshakes are cleanly encapsulated within component boundaries inside layouts and page components using React 19 `<Suspense>`, allowing Next.js to prerender static pages instantly and stream dynamic components down when requested.
 
 ---
 
