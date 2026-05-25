@@ -62,4 +62,3 @@
   },
   "lessons_learned": "Architecting this cutting-edge Next.js 16 and React 19 passwordless authentication template proved the immense power of the modern Network Boundary (proxy.ts) pattern. Moving heavy database and cryptographic operations out of the routing layer and into dedicated Server Actions ensures a highly performant, predictable routing architecture. Furthermore, adopting the React 19 Compiler and native state reducers like useOptimistic demonstrated that we can eliminate traditional state management libraries and complex memoization logic (useMemo/useCallback) entirely, achieving instant, beautiful, and fluid interfaces with absolute type safety and maximum clean code."
 }
-
